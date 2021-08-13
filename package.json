@@ -5,7 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "vega": "^5.20.2",
-    "vega-lite": "^5.1.0"
+    "vega-lite": "@4.17.0"
   },
   "scripts": {
     "start": "parcel src/index.html & tsc --watch src/index.ts"
