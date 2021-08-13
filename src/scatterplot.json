@@ -1,0 +1,30 @@
+{
+  "description": "A scatterplot showing horsepower and miles per gallons for various cars.",
+  "data": {
+    "url": "https://raw.githubusercontent.com/vega/vega-datasets/master/data/gapminder.json"
+  },
+  "mark": "point",
+  "encoding": {
+    "x": {
+      "field": "fertility",
+      "type": "quantitative"
+    },
+    "y": {
+      "field": "life_expect",
+      "type": "quantitative"
+    }
+  },
+  "time": {
+    "field": "year",
+    "scale": {
+      "type": "linear",
+      "range": [
+        0,
+        50000
+      ]
+    },
+    "continuity": {
+      "field": "country"
+    }
+  }
+}
