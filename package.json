@@ -1,0 +1,13 @@
+{
+  "name": "vl-animation",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "vega": "^5.20.2",
+    "vega-lite": "^5.1.0"
+  },
+  "scripts": {
+    "start": "parcel src/index.html & tsc --watch src/index.ts"
+  }
+}
