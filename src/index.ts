@@ -25,9 +25,7 @@ type VlAnimationSpec = vl.TopLevelSpec & { "time": VlAnimationComponent };
 
 const vlaSpec: VlAnimationSpec = scatterplot;
 
-const vlaToVl = (vlaSpec: VlAnimationSpec): { vlSpec: vl.TopLevelSpec, vlaComp: VlAnimationComponent } => {
-  return { vlSpec: vlaSpec, vlaComp: vlaSpec.time };
-}
+//
 
 const injectVlaInVega = (vlaComp: VlAnimationComponent, vgSpec: vega.Spec): vega.Spec => {
   const newVgSpec = Object.assign({}, vgSpec);
@@ -152,36 +150,11 @@ const injectVlaInVega = (vlaComp: VlAnimationComponent, vgSpec: vega.Spec): vega
   return newVgSpec;
 }
 
-const vlaStuff = vlaToVl(vlaSpec);
-
-const vgSpec = vl.compile(vlaStuff.vlSpec).spec;
-
-const injectedVgSpec = injectVlaInVega(vlaStuff.vlaComp, vgSpec);
+const vgSpec = vl.compile(vlaSpec).spec;
+const injectedVgSpec = injectVlaInVega(vlaSpec.time, vgSpec);
 
 initVega(injectedVgSpec);
 
 (window as any).view.addSignalListener('fyear', (_, value: string) => {
   document.getElementById('year').innerHTML = value;
 })
-
-
-// const vlSpec: vl.TopLevelSpec = {
-//   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-//   "description": "A simple bar chart with embedded data.",
-//   "data": {
-//     "values": [
-//       {"a": "A", "b": 28}, {"a": "B", "b": 55}, {"a": "C", "b": 43},
-//       {"a": "D", "b": 91}, {"a": "E", "b": 81}, {"a": "F", "b": 53},
-//       {"a": "G", "b": 19}, {"a": "H", "b": 87}, {"a": "I", "b": 52}
-//     ]
-//   },
-//   "mark": "bar",
-//   "encoding": {
-//     "x": {"field": "a", "type": "nominal", "axis": {"labelAngle": 0}},
-//     "y": {"field": "b", "type": "quantitative"}
-//   }
-// };
-
-
-
-initVega(vgSpec);
