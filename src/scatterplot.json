@@ -11,19 +11,19 @@
     "y": {
       "field": "life_expect",
       "type": "quantitative"
-    }
-  },
-  "time": {
-    "field": "year",
-    "scale": {
-      "type": "linear",
-      "range": [
-        0,
-        50000
-      ]
     },
-    "continuity": {
-      "field": "country"
+    "time": {
+      "field": "year",
+      "scale": {
+        "type": "linear",
+        "range": [
+          0,
+          50000
+        ]
+      },
+      "continuity": {
+        "field": "country"
+      }
     }
   }
 }

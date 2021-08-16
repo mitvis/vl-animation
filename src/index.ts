@@ -22,9 +22,10 @@ type VlAnimationComponent = {
 };
 
 
-type VlAnimationSpec = vl.TopLevelSpec & { "time": VlAnimationComponent };
+type VlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": VlAnimationComponent } };
 
-const vlaSpec: VlAnimationSpec = scatterplot as VlAnimationSpec; // rip type safety on input file
+// rip type safety on input file. (still get some structural typechecking!)
+const vlaSpec: VlAnimationSpec = scatterplot as VlAnimationSpec;
 
 const injectVlaInVega = (vlaComp: VlAnimationComponent, vgSpec: vega.Spec): vega.Spec => {
   const newVgSpec = Object.assign({}, vgSpec);
@@ -150,7 +151,7 @@ const injectVlaInVega = (vlaComp: VlAnimationComponent, vgSpec: vega.Spec): vega
 }
 
 const vgSpec = vl.compile(vlaSpec).spec;
-const injectedVgSpec = injectVlaInVega(vlaSpec.time, vgSpec);
+const injectedVgSpec = injectVlaInVega(vlaSpec.encoding.time, vgSpec);
 
 initVega(injectedVgSpec);
 
