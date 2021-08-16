@@ -21,11 +21,10 @@ type VlAnimationComponent = {
   "continuity": { "field": string }
 };
 
+
 type VlAnimationSpec = vl.TopLevelSpec & { "time": VlAnimationComponent };
 
-const vlaSpec: VlAnimationSpec = scatterplot;
-
-//
+const vlaSpec: VlAnimationSpec = scatterplot as VlAnimationSpec; // rip type safety on input file
 
 const injectVlaInVega = (vlaComp: VlAnimationComponent, vgSpec: vega.Spec): vega.Spec => {
   const newVgSpec = Object.assign({}, vgSpec);
@@ -155,6 +154,6 @@ const injectedVgSpec = injectVlaInVega(vlaSpec.time, vgSpec);
 
 initVega(injectedVgSpec);
 
-(window as any).view.addSignalListener('fyear', (_, value: string) => {
+(window as any).view.addSignalListener('fyear', (_: any, value: string) => {
   document.getElementById('year').innerHTML = value;
 })
