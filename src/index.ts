@@ -51,7 +51,8 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
 
   let stackTransform: vega.Transforms[] = [];
   if ((vlaSpec as TopLevelUnitSpec).mark === 'bar') {
-    stackTransform = newVgSpec.data[1].transform;
+    stackTransform = clone(newVgSpec.data[1].transform);
+    (stackTransform[0] as vega.StackTransform).field = 'lerp_' + (stackTransform[0] as vega.StackTransform).field;
   }
 
   const newDatasets: vega.Data[] = [
