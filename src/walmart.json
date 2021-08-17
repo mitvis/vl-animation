@@ -1,0 +1,46 @@
+{
+  "width": 500,
+  "height": 300,
+  "data": {
+    "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/0921abf7b722978b4df003366868ddaf66f20560/store_openings.csv"
+  },
+  "transform": [{
+    "lookup": "ZIPCODE",
+    "from": {
+      "data":  {
+        "url": "https://raw.githubusercontent.com/vega/vega-datasets/master/data/zipcodes.csv"
+      },
+      "key": "zip_code",
+      "fields": ["latitude", "longitude"]
+    }
+  },
+  {"filter": "isValid(datum.latitude) && isValid(datum.longitude)"}],
+  "projection": {
+    "type": "albersUsa"
+  },
+  "mark": "circle",
+  "encoding": {
+    "longitude": {
+      "field": "longitude",
+      "type": "quantitative"
+    },
+    "latitude": {
+      "field": "latitude",
+      "type": "quantitative"
+    },
+    "time": {
+      "field": "OPENDATE",
+      "scale": {
+        "type": "linear",
+        "range": [
+          0,
+          50000
+        ]
+      },
+      "continuity": {
+        "field": "storenum"
+      },
+      "persist": "cumulative"
+    }
+  }
+}
