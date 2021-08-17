@@ -27,13 +27,13 @@ type VlAnimationTimeEncoding = {
 type VlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": VlAnimationTimeEncoding } };
 
 // import * as gapminder from './gapminder.json';
-import * as barchartrace from './bar-chart-race.json';
-// import * as walmart from './walmart.json';
+// import * as barchartrace from './bar-chart-race.json';
+import * as walmart from './walmart.json';
 
 // rip type safety on input file. (still get some structural typechecking!)
 // const vlaSpec: VlAnimationSpec = gapminder as VlAnimationSpec;
-const vlaSpec: VlAnimationSpec = barchartrace as VlAnimationSpec;
-// const vlaSpec: VlAnimationSpec = walmart as VlAnimationSpec;
+// const vlaSpec: VlAnimationSpec = barchartrace as VlAnimationSpec;
+const vlaSpec: VlAnimationSpec = walmart as VlAnimationSpec;
 
 const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec => {
   const newVgSpec = clone(vgSpec);
@@ -108,7 +108,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   const newSignals: vega.Signal[] = [
     {
       "name": "increment",
-      "init": "(max_extent - min_extent) / (length(domain('time')) - 1)"
+      "init": "max(1, round((max_extent - min_extent) / (length(domain('time')) - 1)))"
     },
     {
       "name": "min_extent",
