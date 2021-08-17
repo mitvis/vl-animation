@@ -12,7 +12,7 @@ const initVega = (vgSpec: vega.Spec) => {
     .run(); // Update and render the view
 }
 
-type VlAnimationComponent = {
+type VlAnimationTimeEncoding = {
   "field": string,
   "scale": {
     "type": "linear",
@@ -21,25 +21,27 @@ type VlAnimationComponent = {
   "continuity": { "field": string }
 };
 
-
-type VlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": VlAnimationComponent } };
+type VlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": VlAnimationTimeEncoding } };
 
 // rip type safety on input file. (still get some structural typechecking!)
 const vlaSpec: VlAnimationSpec = scatterplot as VlAnimationSpec;
 
-const injectVlaInVega = (vlaComp: VlAnimationComponent, vgSpec: vega.Spec): vega.Spec => {
+const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec => {
   const newVgSpec = Object.assign({}, vgSpec);
   const dataset = newVgSpec.data[0];
-  const scales = newVgSpec.scales;
+  const encodings = Object.entries(vlaSpec.encoding);
+  const timeEncoding = vlaSpec.encoding.time;
 
-  const formulaTransforms: vega.FormulaTransform[] = scales.filter(s => (s.domain as vega.ScaleDataRef)?.field).map(s => {
-    const field = (s.domain as vega.ScaleDataRef).field;
-    return {
-      "type": "formula",
-      "as": `lerp_${field}`,
-      "expr": `lerp([datum.${field}, datum.next.${field}], fyear_tween)`
-    };
-  })
+  const formulaTransforms: vega.FormulaTransform[] =
+    encodings.filter(([k, v]) => k !== 'time' && v.field && v.type && v.type === 'quantitative')
+    .map(([_, v]) => {
+      const field = v.field;
+      return {
+        "type": "formula",
+        "as": `lerp_${field}`,
+        "expr": `lerp([datum.${field}, datum.next.${field}], fyear_tween)`
+      };
+    })
 
   const newDatasets: vega.Data[] = [
     {
@@ -48,7 +50,7 @@ const injectVlaInVega = (vlaComp: VlAnimationComponent, vgSpec: vega.Spec): vega
       "transform": [
         {
           "type": "filter",
-          "expr": `(datum["${vlaComp.field}"]) == fyear`
+          "expr": `(datum["${timeEncoding.field}"]) == fyear`
         }
       ]
     },
@@ -58,7 +60,7 @@ const injectVlaInVega = (vlaComp: VlAnimationComponent, vgSpec: vega.Spec): vega
       "transform": [
         {
           "type": "filter",
-          "expr": `(datum["${vlaComp.field}"]) == fyear2`
+          "expr": `(datum["${timeEncoding.field}"]) == fyear2`
         }
       ]
     },
@@ -69,16 +71,14 @@ const injectVlaInVega = (vlaComp: VlAnimationComponent, vgSpec: vega.Spec): vega
         {
           "type": "lookup",
           "from": dataset.name + "_2",
-          "key": vlaComp.continuity.field,
-          "fields": [vlaComp.continuity.field],
+          "key": timeEncoding.continuity.field,
+          "fields": [timeEncoding.continuity.field],
           "as": ["next"]
         },
         ...formulaTransforms
       ]
     }
   ]
-
-
 
   const newSignals: vega.Signal[] = [
     {
@@ -128,7 +128,7 @@ const injectVlaInVega = (vlaComp: VlAnimationComponent, vgSpec: vega.Spec): vega
   {
     "name": "time",
     "type": "ordinal", // lol
-    "domain": { "data": dataset.name, "field": vlaComp.field }
+    "domain": { "data": dataset.name, "field": timeEncoding.field }
   };
 
   newVgSpec.data.push(...newDatasets);
@@ -151,7 +151,7 @@ const injectVlaInVega = (vlaComp: VlAnimationComponent, vgSpec: vega.Spec): vega
 }
 
 const vgSpec = vl.compile(vlaSpec).spec;
-const injectedVgSpec = injectVlaInVega(vlaSpec.encoding.time, vgSpec);
+const injectedVgSpec = injectVlaInVega(vlaSpec, vgSpec);
 
 initVega(injectedVgSpec);
 
