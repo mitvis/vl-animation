@@ -40,20 +40,14 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   const dataset = newVgSpec.marks[0].from.data;
   const timeEncoding = vlaSpec.encoding.time;
 
-  if (!timeEncoding.continuity?.field) {
-    timeEncoding.continuity = {
-      "field": "_id_"
-    };
-  }
-
   const datasetSpec = newVgSpec.data.find(d => d.name === dataset);
   datasetSpec.transform.push({
+    "type": "identifier",
+    "as": "_id_"
+  }, {
     "type": "formula",
     "as": "clean_year",
     "expr": `isNumber(datum['${timeEncoding.field}']) ? datum['${timeEncoding.field}'] : utcyear(datum['${timeEncoding.field}'])`
-  }, {
-    "type": "identifier",
-    "as": "_id_"
   });
 
   let stackTransform: vega.Transforms[] = [];
@@ -94,8 +88,11 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
         },
         ...stackTransform
       ]
-    },
-    {
+    }
+  ]
+
+  if (timeEncoding.continuity) {
+    newDatasets.push({
       "name": dataset + "_3",
       "source": dataset + "_1",
       "transform": [
@@ -111,8 +108,8 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
           "expr": "isValid(datum.next)"
         }
       ]
-    }
-  ]
+    });
+  }
 
   const newSignals: vega.Signal[] = [
     {
@@ -177,16 +174,22 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   newVgSpec.signals = newVgSpec.signals || [];
   newVgSpec.signals.push(...newSignals);
 
+  if (timeEncoding.continuity) {
+    newVgSpec.marks[0].from.data = dataset + '_3';
+  }
+  else {
+    newVgSpec.marks[0].from.data = dataset + '_1';
+  }
+
   if (timeEncoding.persist === 'cumulative') {
     const newMark = clone(newVgSpec.marks[0]);
     newMark.name = newMark.name + '_persist';
     newMark.from.data = dataset + '_0';
-    // newMark.encode.update.opacity = {"value": 0.3}
+    newMark.encode.update.opacity = {"value": 0.3}
     // newMark.encode.update.size = {"value": 1}
+    // newMark.encode.update.fill = {"value": "#0000ff"}
     newVgSpec.marks.push(newMark)
   }
-
-  newVgSpec.marks[0].from.data = dataset + '_3';
 
   type ScaleFieldValueRef = {scale: vega.Field, field: vega.Field};
   Object.entries(newVgSpec.marks[0].encode.update).forEach(([k, v]) => {
@@ -216,7 +219,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       }
 
       newVgSpec.marks[0].encode.update[k] = {
-        "signal": `lerp([scale('${scale}', datum.${field}), scale('${timeEncoding.rescale ? scale + '_next' : scale}', datum.next.${field})], fyear_tween)`
+        "signal": `isValid(datum.next) ? lerp([scale('${scale}', datum.${field}), scale('${timeEncoding.rescale ? scale + '_next' : scale}', datum.next.${field})], fyear_tween) : scale('${scale}', datum.${field})`
       }
     }
   })
