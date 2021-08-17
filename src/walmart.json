@@ -37,9 +37,6 @@
           50000
         ]
       },
-      "continuity": {
-        "field": "storenum"
-      },
       "persist": "cumulative"
     }
   }

@@ -40,11 +40,20 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   const dataset = newVgSpec.marks[0].from.data;
   const timeEncoding = vlaSpec.encoding.time;
 
+  if (!timeEncoding.continuity?.field) {
+    timeEncoding.continuity = {
+      "field": "_id_"
+    };
+  }
+
   const datasetSpec = newVgSpec.data.find(d => d.name === dataset);
   datasetSpec.transform.push({
     "type": "formula",
     "as": "clean_year",
     "expr": `isNumber(datum['${timeEncoding.field}']) ? datum['${timeEncoding.field}'] : utcyear(datum['${timeEncoding.field}'])`
+  }, {
+    "type": "identifier",
+    "as": "_id_"
   });
 
   let stackTransform: vega.Transforms[] = [];
