@@ -2,8 +2,6 @@ import * as vega from 'vega';
 import * as vl from 'vega-lite';
 import clone from 'lodash.clonedeep';
 import { TopLevelUnitSpec } from 'vega-lite/build/src/spec/unit';
-// import * as gapminder from './gapminder.json';
-import * as barchartrace from './bar-chart-race.json';
 
 const initVega = (vgSpec: vega.Spec) => {
   const runtime = vega.parse(vgSpec);
@@ -21,21 +19,33 @@ type VlAnimationTimeEncoding = {
     "type": "linear",
     "range": [number, number]
   },
-  "continuity": { "field": string },
-  "rescale"?: boolean
+  "continuity"?: { "field": string },
+  "rescale"?: boolean,
+  "persist"?: "cumulative"
 };
 
 type VlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": VlAnimationTimeEncoding } };
 
+// import * as gapminder from './gapminder.json';
+import * as barchartrace from './bar-chart-race.json';
+// import * as walmart from './walmart.json';
+
 // rip type safety on input file. (still get some structural typechecking!)
 // const vlaSpec: VlAnimationSpec = gapminder as VlAnimationSpec;
 const vlaSpec: VlAnimationSpec = barchartrace as VlAnimationSpec;
+// const vlaSpec: VlAnimationSpec = walmart as VlAnimationSpec;
 
 const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec => {
   const newVgSpec = clone(vgSpec);
-  // const dataset = newVgSpec.marks[0].from.data;
-  const dataset = newVgSpec.data[0].name;
+  const dataset = newVgSpec.marks[0].from.data;
   const timeEncoding = vlaSpec.encoding.time;
+
+  const datasetSpec = newVgSpec.data.find(d => d.name === dataset);
+  datasetSpec.transform.push({
+    "type": "formula",
+    "as": "clean_year",
+    "expr": `isNumber(datum['${timeEncoding.field}']) ? datum['${timeEncoding.field}'] : utcyear(datum['${timeEncoding.field}'])`
+  });
 
   let stackTransform: vega.Transforms[] = [];
   if ((vlaSpec as TopLevelUnitSpec).mark === 'bar') {
@@ -44,12 +54,23 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
 
   const newDatasets: vega.Data[] = [
     {
+      "name": dataset + "_0",
+      "source": dataset,
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.clean_year < fyear"
+        },
+        ...stackTransform
+      ]
+    },
+    {
       "name": dataset + "_1",
       "source": dataset,
       "transform": [
         {
           "type": "filter",
-          "expr": `toString(isNumber(datum["${timeEncoding.field}"]) ? datum["${timeEncoding.field}"] : utcyear(datum["${timeEncoding.field}"])) == toString(fyear)`
+          "expr": "datum.clean_year == fyear"
         },
         ...stackTransform
       ]
@@ -60,7 +81,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       "transform": [
         {
           "type": "filter",
-          "expr": `toString(isNumber(datum["${timeEncoding.field}"]) ? datum["${timeEncoding.field}"] : utcyear(datum["${timeEncoding.field}"])) == toString(fyear2)`
+          "expr": "datum.clean_year == fyear2"
         },
         ...stackTransform
       ]
@@ -91,11 +112,11 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     },
     {
       "name": "min_extent",
-      "init": "isNumber(extent(domain('time'))[0]) ? extent(domain('time'))[0] : utcyear(extent(domain('time'))[0])"
+      "init": "extent(domain('time'))[0]"
     },
     {
       "name": "max_extent",
-      "init": "isNumber(extent(domain('time'))[1]) ? extent(domain('time'))[1] : utcyear(extent(domain('time'))[1])"
+      "init": "extent(domain('time'))[1]"
     },
     {
       "name": "fyear",
@@ -139,13 +160,22 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   const newScale: vega.Scale =
   {
     "name": "time",
-    "type": "ordinal", // lol
-    "domain": { "data": dataset, "field": timeEncoding.field }
+    "type": "ordinal",
+    "domain": { "data": dataset, "field": "clean_year" }
   };
 
   newVgSpec.data.push(...newDatasets);
   newVgSpec.signals = newVgSpec.signals || [];
   newVgSpec.signals.push(...newSignals);
+
+  if (timeEncoding.persist === 'cumulative') {
+    const newMark = clone(newVgSpec.marks[0]);
+    newMark.name = newMark.name + '_persist';
+    newMark.from.data = dataset + '_0';
+    // newMark.encode.update.opacity = {"value": 0.3}
+    // newMark.encode.update.size = {"value": 1}
+    newVgSpec.marks.push(newMark)
+  }
 
   newVgSpec.marks[0].from.data = dataset + '_3';
 
@@ -198,6 +228,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     }
   })
 
+  newVgSpec.scales = newVgSpec.scales || [];
   newVgSpec.scales.push(newScale);
 
   console.log(JSON.stringify(newVgSpec, null, 2));
