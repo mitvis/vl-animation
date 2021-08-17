@@ -1,0 +1,33 @@
+{
+  "data": {
+    "url": "TODO"
+  },
+  "mark": "point",
+  "encoding": {
+    "color": {
+      "field": "category"
+    },
+    "x": {
+      "field": "value",
+      "type": "quantitative"
+    },
+    "y": {
+      "field": "name",
+      "type": "quantitative",
+      "sort": {"field": "value"}
+    },
+    "time": {
+      "field": "date",
+      "scale": {
+        "type": "linear",
+        "range": [
+          0,
+          50000
+        ]
+      },
+      "continuity": {
+        "field": "name"
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import * as vega from 'vega';
 import * as vl from 'vega-lite';
-import * as scatterplot from './scatterplot.json';
+import * as gapminder from './gapminder.json';
 
 const initVega = (vgSpec: vega.Spec) => {
   const runtime = vega.parse(vgSpec);
@@ -24,7 +24,7 @@ type VlAnimationTimeEncoding = {
 type VlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": VlAnimationTimeEncoding } };
 
 // rip type safety on input file. (still get some structural typechecking!)
-const vlaSpec: VlAnimationSpec = scatterplot as VlAnimationSpec;
+const vlaSpec: VlAnimationSpec = gapminder as VlAnimationSpec;
 
 const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec => {
   const newVgSpec = Object.assign({}, vgSpec);
