@@ -1,5 +1,7 @@
 import * as vega from 'vega';
 import * as vl from 'vega-lite';
+import clone from 'lodash.clonedeep';
+import { TopLevelUnitSpec } from 'vega-lite/build/src/spec/unit';
 // import * as gapminder from './gapminder.json';
 import * as barchartrace from './bar-chart-race.json';
 
@@ -19,7 +21,8 @@ type VlAnimationTimeEncoding = {
     "type": "linear",
     "range": [number, number]
   },
-  "continuity": { "field": string }
+  "continuity": { "field": string },
+  "rescale"?: boolean
 };
 
 type VlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": VlAnimationTimeEncoding } };
@@ -29,21 +32,27 @@ type VlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": VlAnimationTime
 const vlaSpec: VlAnimationSpec = barchartrace as VlAnimationSpec;
 
 const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec => {
-  const newVgSpec = Object.assign({}, vgSpec);
-  const dataset = newVgSpec.marks[0].from.data;
+  const newVgSpec = clone(vgSpec);
+  // const dataset = newVgSpec.marks[0].from.data;
+  const dataset = newVgSpec.data[0].name;
   const encodings = Object.entries(vlaSpec.encoding);
   const timeEncoding = vlaSpec.encoding.time;
 
-  const formulaTransforms: vega.FormulaTransform[] =
-    encodings.filter(([k, v]) => k !== 'time' && v.field && v.type && v.type === 'quantitative')
-    .map(([_, v]) => {
-      const field = v.field;
-      return {
-        "type": "formula",
-        "as": `lerp_${field}`,
-        "expr": `lerp([toNumber(datum.${field}), toNumber(datum.next.${field})], fyear_tween)`
-      };
-    })
+  const fieldsToInterpolate = encodings.filter(([k, v]) => k !== 'time' && v.field && v.type && v.type === 'quantitative');
+
+  const formulaTransforms: vega.FormulaTransform[] = fieldsToInterpolate.map(([_, v]) => {
+    const field = v.field;
+    return {
+      "type": "formula",
+      "as": `lerp_${field}`,
+      "expr": `lerp([toNumber(datum.${field}), toNumber(datum.next.${field})], fyear_tween)`
+    };
+  });
+
+  let stackTransform: vega.Transforms[] = [];
+  if ((vlaSpec as TopLevelUnitSpec).mark === 'bar') {
+    stackTransform = newVgSpec.data[1].transform;
+  }
 
   const newDatasets: vega.Data[] = [
     {
@@ -77,7 +86,12 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
           "fields": [timeEncoding.continuity.field],
           "as": ["next"]
         },
-        ...formulaTransforms
+        {
+          "type": "filter",
+          "expr": "isValid(datum.next)"
+        },
+        ...formulaTransforms,
+        ...stackTransform
       ]
     }
   ]
@@ -145,10 +159,20 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   newVgSpec.signals = newVgSpec.signals || [];
   newVgSpec.signals.push(...newSignals);
 
+  if (timeEncoding.rescale) {
+    newVgSpec.scales.forEach(scale => {
+      if ((scale.name === 'x' || scale.name === 'y') && (scale.domain as vega.ScaleDataRef)?.data === newVgSpec.marks[0].from.data || (scale.domain as vega.ScaleDataRef)?.data === dataset) {
+        (scale.domain as vega.ScaleDataRef).data = dataset + '_3';
+      }
+    })
+  }
+
   newVgSpec.marks[0].from.data = dataset + '_3';
+
+  const fieldNames = fieldsToInterpolate.map(([_, v]) => v.field);
   Object.keys(newVgSpec.marks[0].encode.update).forEach(key => {
     const maybeField = (newVgSpec.marks[0].encode.update[key] as any).field;
-    if (maybeField) {
+    if (maybeField && fieldNames.includes(maybeField)) {
       (newVgSpec.marks[0].encode.update[key] as any).field = 'lerp_' + maybeField;
     }
   });
