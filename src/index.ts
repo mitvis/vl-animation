@@ -2,8 +2,8 @@ import * as vega from 'vega';
 import * as vl from 'vega-lite';
 import clone from 'lodash.clonedeep';
 import { TopLevelUnitSpec } from 'vega-lite/build/src/spec/unit';
-import * as gapminder from './gapminder.json';
-// import * as barchartrace from './bar-chart-race.json';
+// import * as gapminder from './gapminder.json';
+import * as barchartrace from './bar-chart-race.json';
 
 const initVega = (vgSpec: vega.Spec) => {
   const runtime = vega.parse(vgSpec);
@@ -28,8 +28,8 @@ type VlAnimationTimeEncoding = {
 type VlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": VlAnimationTimeEncoding } };
 
 // rip type safety on input file. (still get some structural typechecking!)
-const vlaSpec: VlAnimationSpec = gapminder as VlAnimationSpec;
-// const vlaSpec: VlAnimationSpec = barchartrace as VlAnimationSpec;
+// const vlaSpec: VlAnimationSpec = gapminder as VlAnimationSpec;
+const vlaSpec: VlAnimationSpec = barchartrace as VlAnimationSpec;
 
 const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec => {
   const newVgSpec = clone(vgSpec);
@@ -147,14 +147,6 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   newVgSpec.signals = newVgSpec.signals || [];
   newVgSpec.signals.push(...newSignals);
 
-  // if (timeEncoding.rescale) {
-  //   newVgSpec.scales.forEach(scale => {
-  //     if ((scale.name === 'x' || scale.name === 'y') && (scale.domain as vega.ScaleDataRef)?.data === newVgSpec.marks[0].from.data || (scale.domain as vega.ScaleDataRef)?.data === dataset) {
-  //       (scale.domain as vega.ScaleDataRef).data = dataset + '_3';
-  //     }
-  //   })
-  // }
-
   newVgSpec.marks[0].from.data = dataset + '_3';
 
   type ScaleFieldValueRef = {scale: vega.Field, field: vega.Field};
@@ -163,14 +155,25 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
         (newVgSpec.marks[0].encode.update[k] as ScaleFieldValueRef).field) {
       const {scale, field} = newVgSpec.marks[0].encode.update[k] as ScaleFieldValueRef;
 
-      const scaleType = newVgSpec.scales.find(s => s.name === scale).type;
-      switch (scaleType) {
+      const scaleSpec = newVgSpec.scales.find(s => s.name === scale);
+      switch (scaleSpec.type) {
         case 'ordinal':
         case 'bin-ordinal':
         case 'quantile':
         case 'quantize':
         case 'threshold':
           return; // if the scale has a discrete output range, don't lerp with it
+      }
+
+      if (timeEncoding.rescale) {
+        (scaleSpec.domain as vega.ScaleDataRef).data = dataset + '_1';
+
+        if (!newVgSpec.scales.find(s => s.name === scaleSpec.name + '_next')) {
+          const scaleSpecNext = clone(scaleSpec);
+          scaleSpecNext.name = scaleSpec.name + '_next';
+          (scaleSpecNext.domain as vega.ScaleDataRef).data = dataset + '_2';
+          newVgSpec.scales.push(scaleSpecNext);
+        }
       }
 
       newVgSpec.marks[0].encode.update[k] = {
