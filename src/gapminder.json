@@ -4,6 +4,9 @@
   },
   "mark": "point",
   "encoding": {
+    "color": {
+      "field": "country"
+    },
     "x": {
       "field": "fertility",
       "type": "quantitative"
