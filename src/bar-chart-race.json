@@ -1,8 +1,8 @@
 {
   "data": {
-    "url": "TODO"
+    "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/fcc1e69167289e4e3c78b8a86ae258b14cc83a2d/category-brands.csv"
   },
-  "mark": "point",
+  "mark": "bar",
   "encoding": {
     "color": {
       "field": "category"
@@ -13,8 +13,8 @@
     },
     "y": {
       "field": "name",
-      "type": "quantitative",
-      "sort": {"field": "value"}
+      "type": "nominal",
+      "sort": {"field": "value", "order": "descending"}
     },
     "time": {
       "field": "date",

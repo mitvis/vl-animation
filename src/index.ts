@@ -1,6 +1,7 @@
 import * as vega from 'vega';
 import * as vl from 'vega-lite';
-import * as gapminder from './gapminder.json';
+// import * as gapminder from './gapminder.json';
+import * as barchartrace from './bar-chart-race.json';
 
 const initVega = (vgSpec: vega.Spec) => {
   const runtime = vega.parse(vgSpec);
@@ -24,11 +25,12 @@ type VlAnimationTimeEncoding = {
 type VlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": VlAnimationTimeEncoding } };
 
 // rip type safety on input file. (still get some structural typechecking!)
-const vlaSpec: VlAnimationSpec = gapminder as VlAnimationSpec;
+// const vlaSpec: VlAnimationSpec = gapminder as VlAnimationSpec;
+const vlaSpec: VlAnimationSpec = barchartrace as VlAnimationSpec;
 
 const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec => {
   const newVgSpec = Object.assign({}, vgSpec);
-  const dataset = newVgSpec.data[0];
+  const dataset = newVgSpec.marks[0].from.data;
   const encodings = Object.entries(vlaSpec.encoding);
   const timeEncoding = vlaSpec.encoding.time;
 
@@ -39,38 +41,38 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       return {
         "type": "formula",
         "as": `lerp_${field}`,
-        "expr": `lerp([datum.${field}, datum.next.${field}], fyear_tween)`
+        "expr": `lerp([toNumber(datum.${field}), toNumber(datum.next.${field})], fyear_tween)`
       };
     })
 
   const newDatasets: vega.Data[] = [
     {
-      "name": dataset.name + "_1",
-      "source": dataset.name,
+      "name": dataset + "_1",
+      "source": dataset,
       "transform": [
         {
           "type": "filter",
-          "expr": `(datum["${timeEncoding.field}"]) == fyear`
+          "expr": `toString(isNumber(datum["${timeEncoding.field}"]) ? datum["${timeEncoding.field}"] : utcyear(datum["${timeEncoding.field}"])) == toString(fyear)`
         }
       ]
     },
     {
-      "name": dataset.name + "_2",
-      "source": dataset.name,
+      "name": dataset + "_2",
+      "source": dataset,
       "transform": [
         {
           "type": "filter",
-          "expr": `(datum["${timeEncoding.field}"]) == fyear2`
+          "expr": `toString(isNumber(datum["${timeEncoding.field}"]) ? datum["${timeEncoding.field}"] : utcyear(datum["${timeEncoding.field}"])) == toString(fyear2)`
         }
       ]
     },
     {
-      "name": dataset.name + "_3",
-      "source": dataset.name + "_1",
+      "name": dataset + "_3",
+      "source": dataset + "_1",
       "transform": [
         {
           "type": "lookup",
-          "from": dataset.name + "_2",
+          "from": dataset + "_2",
           "key": timeEncoding.continuity.field,
           "fields": [timeEncoding.continuity.field],
           "as": ["next"]
@@ -83,15 +85,23 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   const newSignals: vega.Signal[] = [
     {
       "name": "increment",
-      "value": 5
+      "init": "(max_extent - min_extent) / (length(domain('time')) - 1)"
+    },
+    {
+      "name": "min_extent",
+      "init": "isNumber(extent(domain('time'))[0]) ? extent(domain('time'))[0] : utcyear(extent(domain('time'))[0])"
+    },
+    {
+      "name": "max_extent",
+      "init": "isNumber(extent(domain('time'))[1]) ? extent(domain('time'))[1] : utcyear(extent(domain('time'))[1])"
     },
     {
       "name": "fyear",
-      "init": "(extent(domain('time'))[0])",
+      "init": "min_extent",
       "on": [
         {
           "events": { "type": "timer", "throttle": 1000 },
-          "update": "fyear < (extent(domain('time'))[1]) ? fyear + increment : extent(domain('time'))[0]"
+          "update": "fyear < (max_extent) ? fyear + increment : min_extent"
         }
       ]
     },
@@ -101,7 +111,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       "on": [
         {
           "events": {"signal": "fyear"},
-          "update": "min(extent(domain('time'))[1], fyear + increment)"
+          "update": "min(max_extent, fyear + increment)"
         }
       ]
     },
@@ -128,20 +138,36 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   {
     "name": "time",
     "type": "ordinal", // lol
-    "domain": { "data": dataset.name, "field": timeEncoding.field }
+    "domain": { "data": dataset, "field": timeEncoding.field }
   };
 
   newVgSpec.data.push(...newDatasets);
   newVgSpec.signals = newVgSpec.signals || [];
   newVgSpec.signals.push(...newSignals);
 
-  newVgSpec.marks[0].from.data = dataset.name + '_3';
+  newVgSpec.marks[0].from.data = dataset + '_3';
   Object.keys(newVgSpec.marks[0].encode.update).forEach(key => {
     const maybeField = (newVgSpec.marks[0].encode.update[key] as any).field;
     if (maybeField) {
       (newVgSpec.marks[0].encode.update[key] as any).field = 'lerp_' + maybeField;
     }
   });
+
+  newVgSpec.marks.push({
+    "type": "text",
+    "encode": {
+      "update": {
+        "text": {
+          "signal" : "fyear"
+        },
+        "x": {
+          "signal": "width"
+        },
+        "fontWeight": {"value": "bold"},
+        "fontSize": {"value": 16}
+      }
+    }
+  })
 
   newVgSpec.scales.push(newScale);
 
@@ -155,6 +181,6 @@ const injectedVgSpec = injectVlaInVega(vlaSpec, vgSpec);
 
 initVega(injectedVgSpec);
 
-(window as any).view.addSignalListener('fyear', (_: any, value: string) => {
-  document.getElementById('year').innerHTML = value;
-})
+// (window as any).view.addSignalListener('fyear', (_: any, value: string) => {
+//   document.getElementById('year').innerHTML = value;
+// })
