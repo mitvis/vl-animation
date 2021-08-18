@@ -28,12 +28,14 @@ type VlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": VlAnimationTime
 
 // import * as gapminder from './gapminder.json';
 // import * as barchartrace from './bar-chart-race.json';
-import * as walmart from './walmart.json';
+// import * as walmart from './walmart.json';
+import * as barley from './barley.json';
 
 // rip type safety on input file. (still get some structural typechecking!)
 // const vlaSpec: VlAnimationSpec = gapminder as VlAnimationSpec;
 // const vlaSpec: VlAnimationSpec = barchartrace as VlAnimationSpec;
-const vlaSpec: VlAnimationSpec = walmart as VlAnimationSpec;
+// const vlaSpec: VlAnimationSpec = walmart as VlAnimationSpec;
+const vlaSpec: VlAnimationSpec = barley as VlAnimationSpec;
 
 const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec => {
   const newVgSpec = clone(vgSpec);
@@ -218,8 +220,15 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
         }
       }
 
-      newVgSpec.marks[0].encode.update[k] = {
-        "signal": `isValid(datum.next) ? lerp([scale('${scale}', datum.${field}), scale('${timeEncoding.rescale ? scale + '_next' : scale}', datum.next.${field})], fyear_tween) : scale('${scale}', datum.${field})`
+      if (scale === 'color') {
+        newVgSpec.marks[0].encode.update[k] = {
+          "signal": `isValid(datum.next) ? scale('${scale}', lerp([datum.${field}, datum.next.${field}], fyear_tween)) : scale('${scale}', datum.${field})`
+        }
+      }
+      else {
+        newVgSpec.marks[0].encode.update[k] = {
+          "signal": `isValid(datum.next) ? lerp([scale('${scale}', datum.${field}), scale('${timeEncoding.rescale ? scale + '_next' : scale}', datum.next.${field})], fyear_tween) : scale('${scale}', datum.${field})`
+        }
       }
     }
   })
