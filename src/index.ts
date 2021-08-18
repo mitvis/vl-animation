@@ -116,6 +116,9 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     });
   }
 
+  const msPerTick = 500;
+  const msPerFrame = 1000/60;
+
   const newSignals: vega.Signal[] = [
     {
       "name": "increment",
@@ -134,7 +137,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       "init": "min_extent",
       "on": [
         {
-          "events": { "type": "timer", "throttle": 1000 },
+          "events": { "type": "timer", "throttle": msPerTick },
           "update": "fyear < (max_extent) ? fyear + increment : min_extent"
         }
       ]
@@ -156,9 +159,9 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
         {
           "events": {
             "type": "timer",
-            "throttle": 100
+            "throttle": msPerFrame
           },
-          "update": "fyear_tween + 1/10"
+          "update": `fyear_tween + ${msPerFrame / msPerTick}`
         },
         {
           "events": {"signal": "fyear"},
