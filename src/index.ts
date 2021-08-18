@@ -55,9 +55,14 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     stackTransform = [...newVgSpec.data[1].transform];
   }
 
+  const dataset_persist = dataset + "_persist";
+  const dataset_curr = dataset + "_curr";
+  const dataset_next = dataset + "_next";
+  const dataset_continuity = dataset + "_continuity";
+
   const newDatasets: vega.Data[] = [
     {
-      "name": dataset + "_0",
+      "name": dataset_persist,
       "source": dataset,
       "transform": [
         {
@@ -68,7 +73,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       ]
     },
     {
-      "name": dataset + "_1",
+      "name": dataset_curr,
       "source": dataset,
       "transform": [
         {
@@ -79,7 +84,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       ]
     },
     {
-      "name": dataset + "_2",
+      "name": dataset_next,
       "source": dataset,
       "transform": [
         {
@@ -93,12 +98,12 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
 
   if (timeEncoding.continuity) {
     newDatasets.push({
-      "name": dataset + "_3",
-      "source": dataset + "_1",
+      "name": dataset_continuity,
+      "source": dataset_curr,
       "transform": [
         {
           "type": "lookup",
-          "from": dataset + "_2",
+          "from": dataset_next,
           "key": timeEncoding.continuity.field,
           "fields": [timeEncoding.continuity.field],
           "as": ["next"]
@@ -175,16 +180,16 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   newVgSpec.signals.push(...newSignals);
 
   if (timeEncoding.continuity) {
-    newVgSpec.marks[0].from.data = dataset + '_3';
+    newVgSpec.marks[0].from.data = dataset_continuity;
   }
   else {
-    newVgSpec.marks[0].from.data = dataset + '_1';
+    newVgSpec.marks[0].from.data = dataset_curr;
   }
 
   if (timeEncoding.persist === 'cumulative') {
     const newMark = clone(newVgSpec.marks[0]);
     newMark.name = newMark.name + '_persist';
-    newMark.from.data = dataset + '_0';
+    newMark.from.data = dataset_persist;
     newMark.encode.update.opacity = {"value": 0.3}
     // newMark.encode.update.size = {"value": 1}
     // newMark.encode.update.fill = {"value": "#0000ff"}
@@ -208,12 +213,12 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       }
 
       if (timeEncoding.rescale) {
-        (scaleSpec.domain as vega.ScaleDataRef).data = dataset + '_1';
+        (scaleSpec.domain as vega.ScaleDataRef).data = dataset_curr;
 
         if (!newVgSpec.scales.find(s => s.name === scaleSpec.name + '_next')) {
           const scaleSpecNext = clone(scaleSpec);
           scaleSpecNext.name = scaleSpec.name + '_next';
-          (scaleSpecNext.domain as vega.ScaleDataRef).data = dataset + '_2';
+          (scaleSpecNext.domain as vega.ScaleDataRef).data = dataset_next;
           newVgSpec.scales.push(scaleSpecNext);
         }
       }
