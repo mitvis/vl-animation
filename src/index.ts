@@ -10,7 +10,7 @@ const initVega = (vgSpec: vega.Spec) => {
     .initialize(document.getElementById('view')) // Set parent DOM element
     .renderer('svg') // Set render type (defaults to 'canvas')
     .hover() // Enable hover event processing
-    .run(); // Update and render the view
+    .runAsync(); // Update and render the view
 }
 
 type VlAnimationTimeEncoding = {
@@ -21,7 +21,7 @@ type VlAnimationTimeEncoding = {
   },
   "continuity"?: { "field": string },
   "rescale"?: boolean,
-  "persist"?: "cumulative"
+  "persist"?: "cumulative" | "line"
 };
 
 type VlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": VlAnimationTimeEncoding } };
@@ -41,7 +41,7 @@ const exampleSpecs = {
 }
 
 // rip type safety on input file. (still get some structural typechecking!)
-const vlaSpec: VlAnimationSpec = exampleSpecs.gapminder as VlAnimationSpec;
+const vlaSpec: VlAnimationSpec = exampleSpecs.covidtrends as VlAnimationSpec;
 
 const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec => {
   const newVgSpec = clone(vgSpec);
@@ -195,6 +195,24 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     // newMark.encode.update.size = {"value": 1}
     // newMark.encode.update.fill = {"value": "#0000ff"}
     newVgSpec.marks.push(newMark)
+  }
+  if (timeEncoding.persist === 'line') {
+    const mark = newVgSpec.marks[0];
+    const newMark = {
+      "name": mark.name + '_persist',
+      "type": "line",
+      "from": {"data": dataset_persist},
+      "encode": {
+        "update": {
+          "x": mark.encode.update.x,
+          "y": mark.encode.update.y,
+          "stroke": (mark.encode.update.fill as any)?.value === 'transparent' ? mark.encode.update.stroke : mark.encode.update.fill,
+          "strokeWidth": {"value": 2},
+          "opacity": {"value": 0.3}
+        }
+      }
+    }
+    newVgSpec.marks.push(newMark as vega.LineMark)
   }
 
   type ScaleFieldValueRef = {scale: vega.Field, field: vega.Field};

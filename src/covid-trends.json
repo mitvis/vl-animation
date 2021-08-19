@@ -19,7 +19,8 @@
       },
       "continuity": {
         "field": "country"
-      }
+      },
+      "persist": "line"
     }
   }
 }
