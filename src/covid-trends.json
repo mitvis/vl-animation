@@ -1,11 +1,15 @@
 {
-  "data": {"url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/1d79e6088029ca0364f496e567e7f71d4bd1fa74/tidy_covid19_global_data.csv"},
+  "data": {"url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/52c7a25afbc6b827445198c6c9403dccd7dd1429/tidy_covid19_global_data.csv"},
+  "transform": [
+    {"calculate": "utcFormat(toDate(datum.date), '%Y-%m-%d')", "as": "c_date"}
+  ],
   "mark": "point",
   "encoding": {
     "x": {"field": "cases", "type": "quantitative"},
     "y": {"field": "cases", "type": "quantitative"},
+    "color": {"field": "country"},
     "time": {
-      "field": "year",
+      "field": "c_date",
       "scale": {
         "type": "linear",
         "range": [
