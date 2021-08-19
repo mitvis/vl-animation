@@ -13,11 +13,12 @@ const initVega = (vgSpec: vega.Spec) => {
     .runAsync(); // Update and render the view
 }
 
+type BandRangeStep = {"step": number};
 type VlAnimationTimeEncoding = {
   "field": string,
   "scale": {
-    "type": "linear",
-    "range": [number, number]
+    "type": "linear" | "band",
+    "range": [number, number] | BandRangeStep
   },
   "continuity"?: { "field": string },
   "rescale"?: boolean,
@@ -120,7 +121,8 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     });
   }
 
-  const msPerTick = 500;
+  const msPerTick = timeEncoding.scale.type === 'band' ?
+    (timeEncoding.scale.range as BandRangeStep).step : 500;
   const msPerFrame = 1000/60;
 
   const newSignals: vega.Signal[] = [

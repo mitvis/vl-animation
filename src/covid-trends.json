@@ -11,11 +11,8 @@
     "time": {
       "field": "c_date",
       "scale": {
-        "type": "linear",
-        "range": [
-          0,
-          50000
-        ]
+        "type": "band",
+        "range": {"step": 10}
       },
       "continuity": {
         "field": "country"
