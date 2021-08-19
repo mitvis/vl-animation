@@ -18,6 +18,11 @@ const initVega = (vgSpec: vega.Spec, id = 'view') => {
 }
 
 type BandRangeStep = {"step": number};
+type VlaPastEncoding = {
+  "mark"?: "point" | "line",
+  "encoding"?: Encoding<any>,
+  "filter"?: Predicate
+};
 type VlAnimationTimeEncoding = {
   "field": string,
   "scale": {
@@ -26,7 +31,7 @@ type VlAnimationTimeEncoding = {
   },
   "continuity"?: { "field": string },
   "rescale"?: boolean,
-  "persist"?: "cumulative" | "line"
+  "past"?: boolean | VlaPastEncoding
 };
 
 type VlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": VlAnimationTimeEncoding } };
@@ -36,6 +41,8 @@ import * as barchartrace from './bar-chart-race.json';
 import * as walmart from './walmart.json';
 import * as barley from './barley.json';
 import * as covidtrends from './covid-trends.json';
+import { Encoding } from 'vega-lite/build/src/encoding';
+import { Predicate } from 'vega-lite/build/src/predicate';
 
 const exampleSpecs = {
   gapminder,
@@ -61,14 +68,14 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     stackTransform = [...newVgSpec.data[1].transform];
   }
 
-  const dataset_persist = dataset + "_persist";
+  const dataset_past = dataset + "_past";
   const dataset_curr = dataset + "_curr";
   const dataset_next = dataset + "_next";
   const dataset_continuity = dataset + "_continuity";
 
   const newDatasets: vega.Data[] = [
     {
-      "name": dataset_persist,
+      "name": dataset_past,
       "source": dataset,
       "transform": [
         {
@@ -190,67 +197,31 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     newVgSpec.marks[0].from.data = dataset_curr;
   }
 
-  if (timeEncoding.persist === 'cumulative') {
-    const newMark = clone(newVgSpec.marks[0]);
-    newMark.name = newMark.name + '_persist';
-    newMark.from.data = dataset_persist;
-    newMark.encode.update.opacity = {"value": 0.3}
-    // newMark.encode.update.size = {"value": 1}
-    // newMark.encode.update.fill = {"value": "#0000ff"}
-    newVgSpec.marks.push(newMark)
-  }
-  if (timeEncoding.persist === 'line') {
-    const mark = newVgSpec.marks[0];
-    // const newMark = {
-    //   "name": mark.name + '_persist',
-    //   "type": "line",
-    //   "from": {"data": dataset_persist},
-    //   "encode": {
-    //     "update": {
-    //       "x": mark.encode.update.x,
-    //       "y": mark.encode.update.y,
-    //       "stroke": (mark.encode.update.fill as any)?.value === 'transparent' ? mark.encode.update.stroke : mark.encode.update.fill,
-    //       "strokeWidth": {"value": 1},
-    //       "opacity": {"value": 0.3}
-    //     }
-    //   }
-    // }
-    const newMark = {
-      "name": "pathgroup",
-      "type": "group",
-      "from": {
-        "facet": {
-          "name": "faceted_path_main",
-          "data": dataset_persist,
-          "groupby": [(mark.encode.update.stroke as any).field]
-        }
-      },
-      "encode": {
-        "update": {
-          "width": {"field": {"group": "width"}},
-          "height": {"field": {"group": "height"}}
-        }
-      },
-      "marks": [
-        {
-          "name": "marks",
-          "type": "line",
-          "style": ["line"],
-          "sort": {"field": `datum["${timeEncoding.field}"]`},
-          "from": {"data": "faceted_path_main"},
-          "encode": {
-            "update": {
-              "stroke": mark.encode.update.stroke,
-              "x": mark.encode.update.x,
-              "y": mark.encode.update.y,
-              "strokeWidth": {"value": 1},
-              "opacity": {"value": 0.3}
-            }
-          }
-        }
-      ]
+  if (timeEncoding.past) {
+    let newMark = clone(newVgSpec.marks[0]);
+    if (timeEncoding.past !== true) {
+      const pastEncoding = timeEncoding.past as VlaPastEncoding;
+      const vlEncodingSpec: TopLevelUnitSpec = {
+        data: vlaSpec.data,
+        mark: pastEncoding.mark || (vlaSpec as TopLevelUnitSpec).mark,
+        encoding: {...(vlaSpec as TopLevelUnitSpec).encoding, ...(pastEncoding.encoding || {})}
+      }
+      if (vlEncodingSpec.mark === 'line') {
+        vlEncodingSpec.encoding.order = {field: timeEncoding.field}
+      }
+      console.log(vlEncodingSpec);
+      newMark = vl.compile(vlEncodingSpec).spec.marks[0];
+      console.log(newMark)
     }
-    newVgSpec.marks.push(newMark as vega.LineMark)
+    newMark.name = newMark.name + '_past';
+    if ((newMark.from as any).facet) {
+      // newMark is a faceted line mark
+      (newMark.from as any).facet.data = dataset_past;
+    }
+    else {
+      newMark.from.data = dataset_past;
+    }
+    newVgSpec.marks.push(newMark)
   }
 
   type ScaleFieldValueRef = {scale: vega.Field, field: vega.Field};

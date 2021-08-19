@@ -34,7 +34,9 @@
       "continuity": {
         "field": "country"
       },
-      "persist": "line"
+      "past": {
+        "mark": "line"
+      }
     }
   }
 }

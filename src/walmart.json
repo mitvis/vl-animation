@@ -30,6 +30,7 @@
       "field": "latitude",
       "type": "quantitative"
     },
+    "color": {"value": "#f00"},
     "time": {
       "field": "year",
       "scale": {
@@ -39,7 +40,11 @@
           50000
         ]
       },
-      "persist": "cumulative"
+      "past": {
+        "encoding": {
+          "color": {"value": "#05f"}
+        }
+      }
     }
   }
 }
