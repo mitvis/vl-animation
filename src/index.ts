@@ -31,6 +31,7 @@ type VlAnimationTimeEncoding = {
   },
   "continuity"?: { "field": string },
   "rescale"?: boolean,
+  "interpolateLoop"?: boolean,
   "past"?: boolean | VlaPastEncoding
 };
 
@@ -146,7 +147,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     },
     {
       "name": "anim_val_next",
-      "update": "t_index < length(domain('time')) - 1 ? domain('time')[t_index + 1] : max_extent"
+      "update": `t_index < length(domain('time')) - 1 ? domain('time')[t_index + 1] : ${timeEncoding.interpolateLoop ? 'min_extent' : 'max_extent'}`
     },
     {
       "name": "anim_tween",
@@ -311,7 +312,7 @@ const renderSpec = (vlaSpec: VlAnimationSpec, id: string): void => {
 ); */
 
 // TODO: casts are bad!
-renderSpec(exampleSpecs.covidtrends as VlAnimationSpec, "covidtrends");
+renderSpec(exampleSpecs.barley as VlAnimationSpec, "barley");
 
 // (window as any).view.addSignalListener('anim_val_curr', (_: any, value: string) => {
 //   document.getElementById('year').innerHTML = value;

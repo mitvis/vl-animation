@@ -31,7 +31,8 @@
           50000
         ]
       },
-      "continuity": {"field": "key"}
+      "continuity": {"field": "key"},
+      "interpolateLoop": true
     }
   },
   "view": {"stroke": null},
