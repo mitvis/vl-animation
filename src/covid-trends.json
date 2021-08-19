@@ -1,15 +1,32 @@
 {
-  "data": {"url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/52c7a25afbc6b827445198c6c9403dccd7dd1429/tidy_covid19_global_data.csv"},
+  "width": 1000,
+  "height": 1000,
+  "data": {"url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/3acfc06e88d2f26ca797be116a813dcc0225bc70/tidy_covid19_global_data.csv"},
   "transform": [
-    {"calculate": "utcFormat(toDate(datum.date), '%Y-%m-%d')", "as": "c_date"}
+    {
+      "window": [{
+        "op": "mean",
+        "field": "new_daily",
+        "as": "new_weekly_avg"
+      }],
+      "groupby": [
+        "country"
+      ],
+      "sort": [{"field": "date", "order": "ascending"}],
+      "ignorePeers": false,
+      "frame": [-7, 0]
+    },
+    {
+      "filter": "datum.cases > 0 && datum.new_daily > 0"
+    }
   ],
   "mark": "point",
   "encoding": {
-    "x": {"field": "cases", "type": "quantitative"},
-    "y": {"field": "cases", "type": "quantitative"},
+    "x": {"field": "cases", "type": "quantitative",  "scale": {"type": "log"}, "axis": {"grid": false}},
+    "y": {"field": "new_weekly_avg", "type": "quantitative", "scale": {"type": "log"}, "axis": {"grid": false}},
     "color": {"field": "country"},
     "time": {
-      "field": "c_date",
+      "field": "date",
       "scale": {
         "type": "band",
         "range": {"step": 10}

@@ -201,19 +201,54 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   }
   if (timeEncoding.persist === 'line') {
     const mark = newVgSpec.marks[0];
+    // const newMark = {
+    //   "name": mark.name + '_persist',
+    //   "type": "line",
+    //   "from": {"data": dataset_persist},
+    //   "encode": {
+    //     "update": {
+    //       "x": mark.encode.update.x,
+    //       "y": mark.encode.update.y,
+    //       "stroke": (mark.encode.update.fill as any)?.value === 'transparent' ? mark.encode.update.stroke : mark.encode.update.fill,
+    //       "strokeWidth": {"value": 1},
+    //       "opacity": {"value": 0.3}
+    //     }
+    //   }
+    // }
     const newMark = {
-      "name": mark.name + '_persist',
-      "type": "line",
-      "from": {"data": dataset_persist},
+      "name": "pathgroup",
+      "type": "group",
+      "from": {
+        "facet": {
+          "name": "faceted_path_main",
+          "data": dataset_persist,
+          "groupby": [(mark.encode.update.stroke as any).field]
+        }
+      },
       "encode": {
         "update": {
-          "x": mark.encode.update.x,
-          "y": mark.encode.update.y,
-          "stroke": (mark.encode.update.fill as any)?.value === 'transparent' ? mark.encode.update.stroke : mark.encode.update.fill,
-          "strokeWidth": {"value": 2},
-          "opacity": {"value": 0.3}
+          "width": {"field": {"group": "width"}},
+          "height": {"field": {"group": "height"}}
         }
-      }
+      },
+      "marks": [
+        {
+          "name": "marks",
+          "type": "line",
+          "style": ["line"],
+          "sort": {"field": `datum["${timeEncoding.field}"]`},
+          "from": {"data": "faceted_path_main"},
+          "encode": {
+            "update": {
+              "stroke": mark.encode.update.stroke,
+              "x": mark.encode.update.x,
+              "y": mark.encode.update.y,
+              "strokeWidth": {"value": 1},
+              "opacity": {"value": 0.3}
+            }
+          }
+        }
+      ]
     }
     newVgSpec.marks.push(newMark as vega.LineMark)
   }
