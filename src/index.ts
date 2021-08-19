@@ -3,11 +3,15 @@ import * as vl from 'vega-lite';
 import clone from 'lodash.clonedeep';
 import { TopLevelUnitSpec } from 'vega-lite/build/src/spec/unit';
 
-const initVega = (vgSpec: vega.Spec) => {
+const initVega = (vgSpec: vega.Spec, id = 'view') => {
+  const newDiv = document.createElement('div');
+  newDiv.setAttribute('id', id);
+  document.body.insertBefore(newDiv, document.getElementById('year'));
+
   const runtime = vega.parse(vgSpec);
   (window as any).view = new vega.View(runtime)
     .logLevel(vega.Warn) // Set view logging level
-    .initialize(document.getElementById('view')) // Set parent DOM element
+    .initialize(newDiv) // Set parent DOM element
     .renderer('svg') // Set render type (defaults to 'canvas')
     .hover() // Enable hover event processing
     .runAsync(); // Update and render the view
@@ -40,9 +44,6 @@ const exampleSpecs = {
   barley,
   covidtrends
 }
-
-// rip type safety on input file. (still get some structural typechecking!)
-const vlaSpec: VlAnimationSpec = exampleSpecs.covidtrends as VlAnimationSpec;
 
 const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec => {
   const newVgSpec = clone(vgSpec);
@@ -283,10 +284,24 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   return newVgSpec;
 }
 
-const vgSpec = vl.compile(vlaSpec).spec;
-const injectedVgSpec = injectVlaInVega(vlaSpec, vgSpec);
+// const vgSpec = vl.compile(vlaSpec).spec;
+// const injectedVgSpec = injectVlaInVega(vlaSpec, vgSpec);
 
-initVega(injectedVgSpec);
+// initVega(injectedVgSpec);
+
+const renderSpec = (vlaSpec: VlAnimationSpec, id: string): void => {
+  const vgSpec = vl.compile(vlaSpec).spec;
+  const injectedVgSpec = injectVlaInVega(vlaSpec, vgSpec);
+  initVega(injectedVgSpec, id);
+}
+
+// This is too much!
+/* Object.entries(exampleSpecs).forEach(
+  ([specId, spec]) => renderSpec(spec as VlAnimationSpec, specId)
+); */
+
+// TODO: casts are bad!
+renderSpec(exampleSpecs.covidtrends as VlAnimationSpec, "covidtrends");
 
 // (window as any).view.addSignalListener('anim_val_curr', (_: any, value: string) => {
 //   document.getElementById('year').innerHTML = value;
