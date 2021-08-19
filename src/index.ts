@@ -21,7 +21,7 @@ type BandRangeStep = {"step": number};
 type VlaPastEncoding = {
   "mark"?: "point" | "line",
   "encoding"?: Encoding<any>,
-  "filter"?: Predicate
+  "filter"?: string // predicate expr
 };
 type VlAnimationTimeEncoding = {
   "field": string,
@@ -42,7 +42,6 @@ import * as walmart from './walmart.json';
 import * as barley from './barley.json';
 import * as covidtrends from './covid-trends.json';
 import { Encoding } from 'vega-lite/build/src/encoding';
-import { Predicate } from 'vega-lite/build/src/predicate';
 
 const exampleSpecs = {
   gapminder,
@@ -74,17 +73,6 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   const dataset_continuity = dataset + "_continuity";
 
   const newDatasets: vega.Data[] = [
-    {
-      "name": dataset_past,
-      "source": dataset,
-      "transform": [
-        {
-          "type": "filter",
-          "expr": `datum['${timeEncoding.field}'] < anim_val_curr`
-        },
-        ...stackTransform
-      ]
-    },
     {
       "name": dataset_curr,
       "source": dataset,
@@ -198,6 +186,18 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   }
 
   if (timeEncoding.past) {
+    const datasetPastSpec: vega.Data = {
+      "name": dataset_past,
+      "source": dataset,
+      "transform": [
+        {
+          "type": "filter",
+          "expr": `datum['${timeEncoding.field}'] < anim_val_curr`
+        },
+        ...stackTransform
+      ]
+    };
+
     let newMark = clone(newVgSpec.marks[0]);
     if (timeEncoding.past !== true) {
       const pastEncoding = timeEncoding.past as VlaPastEncoding;
@@ -207,11 +207,14 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
         encoding: {...(vlaSpec as TopLevelUnitSpec).encoding, ...(pastEncoding.encoding || {})}
       }
       if (vlEncodingSpec.mark === 'line') {
-        vlEncodingSpec.encoding.order = {field: timeEncoding.field}
+        vlEncodingSpec.encoding.order = {field: timeEncoding.field};
+        (datasetPastSpec.transform[0] as vega.FilterTransform).expr = `datum['${timeEncoding.field}'] <= anim_val_curr`; // make the line connect to the current point
       }
-      console.log(vlEncodingSpec);
       newMark = vl.compile(vlEncodingSpec).spec.marks[0];
-      console.log(newMark)
+
+      if (pastEncoding.filter) {
+        (datasetPastSpec.transform[0] as vega.FilterTransform).expr = pastEncoding.filter;
+      }
     }
     newMark.name = newMark.name + '_past';
     if ((newMark.from as any).facet) {
@@ -222,6 +225,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       newMark.from.data = dataset_past;
     }
     newVgSpec.marks.push(newMark)
+    newVgSpec.data.push(datasetPastSpec);
   }
 
   type ScaleFieldValueRef = {scale: vega.Field, field: vega.Field};
