@@ -41,7 +41,7 @@ const exampleSpecs = {
 }
 
 // rip type safety on input file. (still get some structural typechecking!)
-const vlaSpec: VlAnimationSpec = exampleSpecs.covidtrends as VlAnimationSpec;
+const vlaSpec: VlAnimationSpec = exampleSpecs.barley as VlAnimationSpec;
 
 const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec => {
   const newVgSpec = clone(vgSpec);
@@ -52,10 +52,6 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   datasetSpec.transform.push({
     "type": "identifier",
     "as": "_id_"
-  }, {
-    "type": "formula",
-    "as": "clean_year",
-    "expr": `isNumber(datum['${timeEncoding.field}']) ? datum['${timeEncoding.field}'] : utcyear(datum['${timeEncoding.field}'])`
   });
 
   let stackTransform: vega.Transforms[] = [];
@@ -75,7 +71,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       "transform": [
         {
           "type": "filter",
-          "expr": "datum.clean_year < fyear"
+          "expr": `datum['${timeEncoding.field}'] < fyear`
         },
         ...stackTransform
       ]
@@ -86,7 +82,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       "transform": [
         {
           "type": "filter",
-          "expr": "datum.clean_year == fyear"
+          "expr": `datum['${timeEncoding.field}'] == fyear`
         },
         ...stackTransform
       ]
@@ -97,7 +93,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       "transform": [
         {
           "type": "filter",
-          "expr": "datum.clean_year == fyear2"
+          "expr": `datum['${timeEncoding.field}'] == fyear2`
         },
         ...stackTransform
       ]
@@ -129,8 +125,14 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
 
   const newSignals: vega.Signal[] = [
     {
-      "name": "increment",
-      "init": "max(1, round((max_extent - min_extent) / (length(domain('time')) - 1)))"
+      "name": "t_index",
+      "init": "0",
+      "on": [
+        {
+          "events": { "type": "timer", "throttle": msPerTick },
+          "update": "t_index < length(domain('time')) - 1 ? t_index + 1 : 0"
+        }
+      ]
     },
     {
       "name": "min_extent",
@@ -142,23 +144,11 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     },
     {
       "name": "fyear",
-      "init": "min_extent",
-      "on": [
-        {
-          "events": { "type": "timer", "throttle": msPerTick },
-          "update": "fyear < (max_extent) ? fyear + increment : min_extent"
-        }
-      ]
+      "update": "domain('time')[t_index]"
     },
     {
       "name": "fyear2",
-      "init": "fyear + increment",
-      "on": [
-        {
-          "events": {"signal": "fyear"},
-          "update": "min(max_extent, fyear + increment)"
-        }
-      ]
+      "update": "t_index < length(domain('time')) - 1 ? domain('time')[t_index + 1] : max_extent"
     },
     {
       "name": "fyear_tween",
@@ -183,7 +173,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   {
     "name": "time",
     "type": "ordinal",
-    "domain": { "data": dataset, "field": "clean_year" }
+    "domain": { "data": dataset, "field": timeEncoding.field, "sort": true }
   };
 
   newVgSpec.data.push(...newDatasets);

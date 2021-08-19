@@ -14,7 +14,9 @@
       "fields": ["latitude", "longitude"]
     }
   },
-  {"filter": "isValid(datum.latitude) && isValid(datum.longitude)"}],
+  {"filter": "isValid(datum.latitude) && isValid(datum.longitude)"},
+  {"calculate": "utcyear(datum.OPENDATE)", "as": "year"}
+],
   "projection": {
     "type": "albersUsa"
   },
@@ -29,7 +31,7 @@
       "type": "quantitative"
     },
     "time": {
-      "field": "OPENDATE",
+      "field": "year",
       "scale": {
         "type": "linear",
         "range": [
