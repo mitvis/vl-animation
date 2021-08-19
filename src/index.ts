@@ -41,7 +41,7 @@ const exampleSpecs = {
 }
 
 // rip type safety on input file. (still get some structural typechecking!)
-const vlaSpec: VlAnimationSpec = exampleSpecs.barley as VlAnimationSpec;
+const vlaSpec: VlAnimationSpec = exampleSpecs.gapminder as VlAnimationSpec;
 
 const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec => {
   const newVgSpec = clone(vgSpec);
@@ -71,7 +71,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       "transform": [
         {
           "type": "filter",
-          "expr": `datum['${timeEncoding.field}'] < fyear`
+          "expr": `datum['${timeEncoding.field}'] < anim_val_curr`
         },
         ...stackTransform
       ]
@@ -82,7 +82,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       "transform": [
         {
           "type": "filter",
-          "expr": `datum['${timeEncoding.field}'] == fyear`
+          "expr": `datum['${timeEncoding.field}'] == anim_val_curr`
         },
         ...stackTransform
       ]
@@ -93,7 +93,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       "transform": [
         {
           "type": "filter",
-          "expr": `datum['${timeEncoding.field}'] == fyear2`
+          "expr": `datum['${timeEncoding.field}'] == anim_val_next`
         },
         ...stackTransform
       ]
@@ -143,15 +143,15 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       "init": "extent(domain('time'))[1]"
     },
     {
-      "name": "fyear",
+      "name": "anim_val_curr",
       "update": "domain('time')[t_index]"
     },
     {
-      "name": "fyear2",
+      "name": "anim_val_next",
       "update": "t_index < length(domain('time')) - 1 ? domain('time')[t_index + 1] : max_extent"
     },
     {
-      "name": "fyear_tween",
+      "name": "anim_tween",
       "init": "0",
       "on": [
         {
@@ -159,10 +159,10 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
             "type": "timer",
             "throttle": msPerFrame
           },
-          "update": `fyear_tween + ${msPerFrame / msPerTick}`
+          "update": `anim_tween + ${msPerFrame / msPerTick}`
         },
         {
-          "events": {"signal": "fyear"},
+          "events": {"signal": "anim_val_curr"},
           "update": "0"
         }
       ]
@@ -227,13 +227,13 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       if (scale === 'color') {
         // color scales map numbers to strings, so lerp before scale
         newVgSpec.marks[0].encode.update[k] = {
-          "signal": `isValid(datum.next) ? scale('${scale}', lerp([datum.${field}, datum.next.${field}], fyear_tween)) : scale('${scale}', datum.${field})`
+          "signal": `isValid(datum.next) ? scale('${scale}', lerp([datum.${field}, datum.next.${field}], anim_tween)) : scale('${scale}', datum.${field})`
         }
       }
       else {
         // e.g. position scales map anything to numbers, so scale before lerp
         newVgSpec.marks[0].encode.update[k] = {
-          "signal": `isValid(datum.next) ? lerp([scale('${scale}', datum.${field}), scale('${timeEncoding.rescale ? scale + '_next' : scale}', datum.next.${field})], fyear_tween) : scale('${scale}', datum.${field})`
+          "signal": `isValid(datum.next) ? lerp([scale('${scale}', datum.${field}), scale('${timeEncoding.rescale ? scale + '_next' : scale}', datum.next.${field})], anim_tween) : scale('${scale}', datum.${field})`
         }
       }
     }
@@ -244,7 +244,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     "encode": {
       "update": {
         "text": {
-          "signal" : "fyear"
+          "signal" : "anim_val_curr"
         },
         "x": {
           "signal": "width"
@@ -268,6 +268,6 @@ const injectedVgSpec = injectVlaInVega(vlaSpec, vgSpec);
 
 initVega(injectedVgSpec);
 
-// (window as any).view.addSignalListener('fyear', (_: any, value: string) => {
+// (window as any).view.addSignalListener('anim_val_curr', (_: any, value: string) => {
 //   document.getElementById('year').innerHTML = value;
 // })
