@@ -2,6 +2,7 @@ import * as vega from 'vega';
 import * as vl from 'vega-lite';
 import clone from 'lodash.clonedeep';
 import { TopLevelUnitSpec } from 'vega-lite/build/src/spec/unit';
+import { Encoding } from 'vega-lite/build/src/encoding';
 
 const initVega = (vgSpec: vega.Spec, id = 'view') => {
   const newDiv = document.createElement('div');
@@ -42,14 +43,15 @@ import * as barchartrace from './bar-chart-race.json';
 import * as walmart from './walmart.json';
 import * as barley from './barley.json';
 import * as covidtrends from './covid-trends.json';
-import { Encoding } from 'vega-lite/build/src/encoding';
+import * as connectedScatterplot from './connected-scatterplot.json';
 
 const exampleSpecs = {
   gapminder,
   barchartrace,
   walmart,
   barley,
-  covidtrends
+  covidtrends,
+  connectedScatterplot
 }
 
 const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec => {
@@ -58,6 +60,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   const timeEncoding = vlaSpec.encoding.time;
 
   const datasetSpec = newVgSpec.data.find(d => d.name === dataset);
+  datasetSpec.transform = datasetSpec.transform || [];
   datasetSpec.transform.push({
     "type": "identifier",
     "as": "_id_"
@@ -312,7 +315,7 @@ const renderSpec = (vlaSpec: VlAnimationSpec, id: string): void => {
 ); */
 
 // TODO: casts are bad!
-renderSpec(exampleSpecs.barley as VlAnimationSpec, "barley");
+renderSpec(exampleSpecs.connectedScatterplot as VlAnimationSpec, "connectedScatterplot");
 
 // (window as any).view.addSignalListener('anim_val_curr', (_: any, value: string) => {
 //   document.getElementById('year').innerHTML = value;
