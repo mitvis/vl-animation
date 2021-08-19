@@ -1,0 +1,21 @@
+{
+  "data": {"url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/1d79e6088029ca0364f496e567e7f71d4bd1fa74/tidy_covid19_global_data.csv"},
+  "mark": "point",
+  "encoding": {
+    "x": {"field": "cases", "type": "quantitative"},
+    "y": {"field": "cases", "type": "quantitative"},
+    "time": {
+      "field": "year",
+      "scale": {
+        "type": "linear",
+        "range": [
+          0,
+          50000
+        ]
+      },
+      "continuity": {
+        "field": "country"
+      }
+    }
+  }
+}
