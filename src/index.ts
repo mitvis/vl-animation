@@ -116,13 +116,6 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       "expr": "isValid(datum.next)"
     }
   ];
-  if (timeEncoding.continuity) {
-    newDatasets.push({
-      "name": dataset_continuity,
-      "source": dataset_curr,
-      "transform": continuityTransforms
-    });
-  }
 
   const msPerTick = timeEncoding.scale.type === 'band' ?
     (timeEncoding.scale.range as BandRangeStep).step : 500;
@@ -190,7 +183,6 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
           "type": "filter",
           "expr": `datum['${timeEncoding.field}'] < anim_val_curr`
         },
-        ...continuityTransforms,
         ...stackTransform
       ]
     };
@@ -206,13 +198,12 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       if (vlEncodingSpec.mark === 'line') {
         vlEncodingSpec.encoding.order = {field: timeEncoding.field};
         (datasetPastSpec.transform[0] as vega.FilterTransform).expr = `datum['${timeEncoding.field}'] <= anim_val_curr`; // make the line connect to the current point
-        datasetPastSpec.transform.push({
+        continuityTransforms.push({
           "type": "formula",
-          "expr": `datum['${timeEncoding.field}'] == anim_val_curr`,
-          "as": "isCurr"
+          "as": "tween",
+          "expr": `sequence(0, 1, ${msPerFrame / msPerTick})`
         })
       }
-      console.log(vlEncodingSpec);
       newMark = vl.compile(vlEncodingSpec).spec.marks[0];
 
       if (pastEncoding.filter) {
@@ -229,7 +220,24 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     }
     newVgSpec.marks.push(newMark)
     newDatasets.push(datasetPastSpec);
+
+    if (timeEncoding.continuity) {
+      if (newMark.type === 'line' || newMark.type === 'group') {
+        const pastContinuityMark = clone(newMark);
+        newMark.name = newMark.name + '_continuity';
+        if ((newMark.from as any).facet) {
+          // newMark is a faceted line mark
+          (newMark.from as any).facet.data = dataset_continuity;
+        }
+        else {
+          newMark.from.data = dataset_continuity;
+        }
+        newVgSpec.marks.push(pastContinuityMark)
+      }
+    }
   }
+
+  const lineContinuityTweenFields = ["tween"];
 
   type ScaleFieldValueRef = {scale: vega.Field, field: vega.Field};
   Object.entries(newVgSpec.marks[0].encode.update).forEach(([k, v]) => {
@@ -275,18 +283,30 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
         }
       }
 
-      const pastMark = newVgSpec.marks.find(mark => mark.name.endsWith('_past'));
-      const pastMarkSignal = {
-        "signal": `isValid(datum.next) && datum.isCurr ? lerp([scale('${scale}', datum.${field}), scale('${scale}', datum.next.${field})], anim_tween) : scale('${scale}', datum.${field})`
+      const pastContinuityLineMark = newVgSpec.marks.find(mark => mark.name.endsWith('_continuity'));
+      const pastContinuityLineMarkSignal = {
+        "signal": `isValid(datum.tween_${field}) && datum.tween <= anim_tween ? scale('${scale}', datum.tween_${field}) : (isValid(datum.next) ? lerp([scale('${scale}', datum.${field}), scale('${scale}', datum.next.${field})], anim_tween) : scale('${scale}', datum.${field}))`
       };
-      if (pastMark && pastMark.type === 'line') {
-        pastMark.encode.update[k] = pastMarkSignal
+      if (pastContinuityLineMark && pastContinuityLineMark.type === 'line') {
+        pastContinuityLineMark.encode.update[k] = pastContinuityLineMarkSignal
       }
-      else if (pastMark && pastMark.type === 'group' && Array.isArray(pastMark.marks)) {
-        pastMark.marks[0].encode.update[k] = pastMarkSignal
+      else if (pastContinuityLineMark && pastContinuityLineMark.type === 'group' && Array.isArray(pastContinuityLineMark.marks)) {
+        pastContinuityLineMark.marks[0].encode.update[k] = pastContinuityLineMarkSignal
+      }
+      if (pastContinuityLineMark) {
+        continuityTransforms.push({
+          "type": "formula",
+          "as": `tween_${field}`,
+          "expr": `sequence(datum.${field}, datum.next.${field}, (datum.next.${field} - datum.${field}) * ${msPerFrame / msPerTick})`
+        });
+        lineContinuityTweenFields.push('tween_' + field);
       }
     }
   })
+
+  if (lineContinuityTweenFields.length > 1) {
+    continuityTransforms.push({"type": "flatten", "fields": lineContinuityTweenFields});
+  }
 
   newVgSpec.marks.push({
     "type": "text",
@@ -303,6 +323,14 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       }
     }
   })
+
+  if (timeEncoding.continuity) {
+    newDatasets.push({
+      "name": dataset_continuity,
+      "source": dataset_curr,
+      "transform": continuityTransforms
+    });
+  }
 
   newVgSpec.data.push(...newDatasets);
   newVgSpec.signals = newVgSpec.signals ?? [];
@@ -340,7 +368,7 @@ const renderSpec = (vlaSpec: VlAnimationSpec, id: string): void => {
 ); */
 
 // TODO: casts are bad!
-renderSpec(exampleSpecs.birds as VlAnimationSpec, "birds");
+renderSpec(exampleSpecs.gapminder as VlAnimationSpec, "gapminder");
 
 // (window as any).view.addSignalListener('anim_val_curr', (_: any, value: string) => {
 //   document.getElementById('year').innerHTML = value;
