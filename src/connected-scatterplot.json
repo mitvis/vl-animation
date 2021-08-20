@@ -1,4 +1,6 @@
 {
+  "width": 1000,
+  "height": 1000,
   "data": {"url": "https://raw.githubusercontent.com/vega/vega-datasets/master/data/driving.json"},
   "transform": [{
     "calculate": "':)'", "as": "key"

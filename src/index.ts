@@ -184,6 +184,9 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
           "type": "formula",
           "as": "tween",
           "expr": `sequence(0, 1, ${msPerFrame / msPerTick})`
+        }, {
+          "type": "flatten",
+          "fields": ["tween"]
         })
       }
       newMark = vl.compile(vlEncodingSpec).spec.marks[0];
@@ -218,8 +221,6 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       }
     }
   }
-
-  const lineContinuityTweenFields = ["tween"];
 
   type ScaleFieldValueRef = {scale: vega.Field, field: vega.Field};
   Object.entries(newVgSpec.marks[0].encode.update).forEach(([k, v]) => {
@@ -279,16 +280,11 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
         continuityTransforms.push({
           "type": "formula",
           "as": `tween_${field}`,
-          "expr": `sequence(datum.${field}, datum.next.${field}, (datum.next.${field} - datum.${field}) * ${msPerFrame / msPerTick})`
+          "expr": `lerp([datum.${field}, datum.next.${field}], datum.tween)`
         });
-        lineContinuityTweenFields.push('tween_' + field);
       }
     }
   })
-
-  if (lineContinuityTweenFields.length > 1) {
-    continuityTransforms.push({"type": "flatten", "fields": lineContinuityTweenFields});
-  }
 
   newVgSpec.marks.push({
     "type": "text",
@@ -368,7 +364,7 @@ const exampleSpecs = {
 }
 
 // TODO: casts are bad!
-renderSpec(exampleSpecs.birds as VlAnimationSpec, "birds");
+renderSpec(exampleSpecs.connectedScatterplot as VlAnimationSpec, "connectedScatterplot");
 
 // (window as any).view.addSignalListener('anim_val_curr', (_: any, value: string) => {
 //   document.getElementById('year').innerHTML = value;
