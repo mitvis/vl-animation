@@ -29,7 +29,7 @@
       "field": "date",
       "scale": {
         "type": "band",
-        "range": {"step": 10}
+        "range": {"step": 500}
       },
       "continuity": {
         "field": "country"
