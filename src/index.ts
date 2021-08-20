@@ -212,10 +212,11 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
           "as": "isCurr"
         })
       }
+      console.log(vlEncodingSpec);
       newMark = vl.compile(vlEncodingSpec).spec.marks[0];
 
       if (pastEncoding.filter) {
-        (datasetPastSpec.transform[0] as vega.FilterTransform).expr = pastEncoding.filter;
+        (datasetPastSpec.transform[0] as vega.FilterTransform).expr += ` && (${pastEncoding.filter})`;
       }
     }
     newMark.name = newMark.name + '_past';

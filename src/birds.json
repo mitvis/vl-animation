@@ -4,6 +4,9 @@
   "data": {
     "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/2ee3a3d5043cac6f13bf319dba37e4331f1fb5f5/bird_data.csv"
   },
+  "transform": [
+    {"calculate": "toNumber(datum.day)", "as": "n_day"}
+  ],
   "projection": {
     "type": "mercator"
   },
@@ -21,7 +24,7 @@
       "field": "species"
     },
     "time": {
-      "field": "day",
+      "field": "n_day",
       "scale": {
         "type": "band",
         "range": {"step": 100}
@@ -29,7 +32,12 @@
       "continuity": {
         "field": "species"
       },
-      "past": true
+      "past": {
+        "encoding": {
+          "opacity": {"value": 0.1}
+        },
+        "filter": "anim_val_curr - datum.day < 10"
+      }
     }
   }
 }
