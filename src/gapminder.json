@@ -26,9 +26,6 @@
       },
       "continuity": {
         "field": "country"
-      },
-      "past": {
-        "mark": "line"
       }
     }
   }

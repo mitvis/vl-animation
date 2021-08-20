@@ -38,24 +38,6 @@ type VlAnimationTimeEncoding = {
 
 type VlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": VlAnimationTimeEncoding } };
 
-import * as gapminder from './gapminder.json';
-import * as barchartrace from './bar-chart-race.json';
-import * as walmart from './walmart.json';
-import * as barley from './barley.json';
-import * as covidtrends from './covid-trends.json';
-import * as connectedScatterplot from './connected-scatterplot.json';
-import * as birds from './birds.json';
-
-const exampleSpecs = {
-  gapminder,
-  barchartrace,
-  walmart,
-  barley,
-  covidtrends,
-  connectedScatterplot,
-  birds,
-}
-
 const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec => {
   const newVgSpec = clone(vgSpec);
   const dataset = newVgSpec.marks[0].from.data;
@@ -367,8 +349,26 @@ const renderSpec = (vlaSpec: VlAnimationSpec, id: string): void => {
   ([specId, spec]) => renderSpec(spec as VlAnimationSpec, specId)
 ); */
 
+import * as gapminder from './gapminder.json';
+import * as barchartrace from './bar-chart-race.json';
+import * as walmart from './walmart.json';
+import * as barley from './barley.json';
+import * as covidtrends from './covid-trends.json';
+import * as connectedScatterplot from './connected-scatterplot.json';
+import * as birds from './birds.json';
+
+const exampleSpecs = {
+  gapminder,
+  barchartrace,
+  walmart,
+  barley,
+  covidtrends,
+  connectedScatterplot,
+  birds,
+}
+
 // TODO: casts are bad!
-renderSpec(exampleSpecs.gapminder as VlAnimationSpec, "gapminder");
+renderSpec(exampleSpecs.birds as VlAnimationSpec, "birds");
 
 // (window as any).view.addSignalListener('anim_val_curr', (_: any, value: string) => {
 //   document.getElementById('year').innerHTML = value;
