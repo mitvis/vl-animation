@@ -1,0 +1,35 @@
+{
+  "width": 1000,
+  "height": 600,
+  "data": {
+    "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/2ee3a3d5043cac6f13bf319dba37e4331f1fb5f5/bird_data.csv"
+  },
+  "projection": {
+    "type": "mercator"
+  },
+  "mark": "circle",
+  "encoding": {
+    "longitude": {
+      "field": "lon",
+      "type": "quantitative"
+    },
+    "latitude": {
+      "field": "lat",
+      "type": "quantitative"
+    },
+    "color": {
+      "field": "species"
+    },
+    "time": {
+      "field": "day",
+      "scale": {
+        "type": "band",
+        "range": {"step": 100}
+      },
+      "continuity": {
+        "field": "species"
+      },
+      "past": true
+    }
+  }
+}

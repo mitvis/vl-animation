@@ -44,6 +44,7 @@ import * as walmart from './walmart.json';
 import * as barley from './barley.json';
 import * as covidtrends from './covid-trends.json';
 import * as connectedScatterplot from './connected-scatterplot.json';
+import * as birds from './birds.json';
 
 const exampleSpecs = {
   gapminder,
@@ -51,7 +52,8 @@ const exampleSpecs = {
   walmart,
   barley,
   covidtrends,
-  connectedScatterplot
+  connectedScatterplot,
+  birds,
 }
 
 const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec => {
@@ -60,7 +62,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   const timeEncoding = vlaSpec.encoding.time;
 
   const datasetSpec = newVgSpec.data.find(d => d.name === dataset);
-  datasetSpec.transform = datasetSpec.transform || [];
+  datasetSpec.transform = datasetSpec.transform ?? [];
   datasetSpec.transform.push({
     "type": "identifier",
     "as": "_id_"
@@ -105,8 +107,8 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     {
       "type": "lookup",
       "from": dataset_next,
-      "key": timeEncoding.continuity.field,
-      "fields": [timeEncoding.continuity.field],
+      "key": timeEncoding.continuity?.field,
+      "fields": [timeEncoding.continuity?.field],
       "as": ["next"]
     },
     {
@@ -198,8 +200,8 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       const pastEncoding = timeEncoding.past as VlaPastEncoding;
       const vlEncodingSpec: TopLevelUnitSpec = {
         data: vlaSpec.data,
-        mark: pastEncoding.mark || (vlaSpec as TopLevelUnitSpec).mark,
-        encoding: {...(vlaSpec as TopLevelUnitSpec).encoding, ...(pastEncoding.encoding || {})}
+        mark: pastEncoding.mark ?? (vlaSpec as TopLevelUnitSpec).mark,
+        encoding: {...(vlaSpec as TopLevelUnitSpec).encoding, ...(pastEncoding.encoding ?? {})}
       }
       if (vlEncodingSpec.mark === 'line') {
         vlEncodingSpec.encoding.order = {field: timeEncoding.field};
@@ -302,7 +304,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   })
 
   newVgSpec.data.push(...newDatasets);
-  newVgSpec.signals = newVgSpec.signals || [];
+  newVgSpec.signals = newVgSpec.signals ?? [];
   newVgSpec.signals.push(...newSignals);
 
   if (timeEncoding.continuity) {
@@ -312,7 +314,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     newVgSpec.marks[0].from.data = dataset_curr;
   }
 
-  newVgSpec.scales = newVgSpec.scales || [];
+  newVgSpec.scales = newVgSpec.scales ?? [];
   newVgSpec.scales.push(newScale);
 
   console.log(JSON.stringify(newVgSpec, null, 2));
@@ -337,7 +339,7 @@ const renderSpec = (vlaSpec: VlAnimationSpec, id: string): void => {
 ); */
 
 // TODO: casts are bad!
-renderSpec(exampleSpecs.covidtrends as VlAnimationSpec, "covidtrends");
+renderSpec(exampleSpecs.birds as VlAnimationSpec, "birds");
 
 // (window as any).view.addSignalListener('anim_val_curr', (_: any, value: string) => {
 //   document.getElementById('year').innerHTML = value;
