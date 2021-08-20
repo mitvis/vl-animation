@@ -228,47 +228,45 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     if (Array.isArray(encodingDef)) {
       encodingDef = encodingDef[encodingDef.length - 1];
     }
-    if ((encodingDef as ScaleFieldValueRef).scale &&
-        (encodingDef as ScaleFieldValueRef).field) {
+    if ((encodingDef as ScaleFieldValueRef).field) {
       const {scale, field} = encodingDef as ScaleFieldValueRef;
 
-      const scaleSpec = newVgSpec.scales.find(s => s.name === scale);
-      switch (scaleSpec.type) {
-        case 'ordinal':
-        case 'bin-ordinal':
-        case 'quantile':
-        case 'quantize':
-        case 'threshold':
-          return; // if the scale has a discrete output range, don't lerp with it
-      }
+      if (scale) {
+        const scaleSpec = newVgSpec.scales.find(s => s.name === scale);
+        switch (scaleSpec.type) {
+          case 'ordinal':
+          case 'bin-ordinal':
+          case 'quantile':
+          case 'quantize':
+          case 'threshold':
+            return; // if the scale has a discrete output range, don't lerp with it
+        }
 
-      if (timeEncoding.rescale) {
-        (scaleSpec.domain as vega.ScaleDataRef).data = dataset_curr;
-
-        if (!newVgSpec.scales.find(s => s.name === scaleSpec.name + '_next')) {
-          const scaleSpecNext = clone(scaleSpec);
-          scaleSpecNext.name = scaleSpec.name + '_next';
-          (scaleSpecNext.domain as vega.ScaleDataRef).data = dataset_next;
-          newVgSpec.scales.push(scaleSpecNext);
+        if (timeEncoding.rescale) {
+          (scaleSpec.domain as vega.ScaleDataRef).data = dataset_curr;
+          if (!newVgSpec.scales.find(s => s.name === scaleSpec.name + '_next')) {
+            const scaleSpecNext = clone(scaleSpec);
+            scaleSpecNext.name = scaleSpec.name + '_next';
+            (scaleSpecNext.domain as vega.ScaleDataRef).data = dataset_next;
+            newVgSpec.scales.push(scaleSpecNext);
+          }
         }
       }
 
-      if (scale === 'color') {
-        // color scales map numbers to strings, so lerp before scale
-        newVgSpec.marks[0].encode.update[k] = {
-          "signal": `isValid(datum.next) ? scale('${scale}', lerp([datum.${field}, datum.next.${field}], anim_tween)) : scale('${scale}', datum.${field})`
-        }
-      }
-      else {
-        // e.g. position scales map anything to numbers, so scale before lerp
-        newVgSpec.marks[0].encode.update[k] = {
-          "signal": `isValid(datum.next) ? lerp([scale('${scale}', datum.${field}), scale('${timeEncoding.rescale ? scale + '_next' : scale}', datum.next.${field})], anim_tween) : scale('${scale}', datum.${field})`
-        }
+      const lerp_term = scale === 'color' ? // color scales map numbers to strings, so lerp before scale
+        `isValid(datum.next) ? scale('${scale}', lerp([datum.${field}, datum.next.${field}], anim_tween)) : scale('${scale}', datum.${field})` :
+        scale ? // e.g. position scales map anything to numbers, so scale before lerp
+          `isValid(datum.next) ? lerp([scale('${scale}', datum.${field}), scale('${timeEncoding.rescale ? scale + '_next' : scale}', datum.next.${field})], anim_tween) : scale('${scale}', datum.${field})` :
+          // e.g. map projections have field but no scale. you can directly lerp the field
+          `isValid(datum.next) ? lerp([datum.${field}, datum.next.${field}], anim_tween) : datum.${field}`
+
+      newVgSpec.marks[0].encode.update[k] = {
+        "signal": lerp_term
       }
 
       const pastContinuityLineMark = newVgSpec.marks.find(mark => mark.name.endsWith('_continuity'));
       const pastContinuityLineMarkSignal = {
-        "signal": `isValid(datum.tween_${field}) && datum.tween <= anim_tween ? scale('${scale}', datum.tween_${field}) : (isValid(datum.next) ? lerp([scale('${scale}', datum.${field}), scale('${scale}', datum.next.${field})], anim_tween) : scale('${scale}', datum.${field}))`
+        "signal": `isValid(datum.tween_${field}) && datum.tween <= anim_tween ? ${scale ? `scale('${scale}', datum.tween_${field})` : `datum.tween_${field}`} : (${lerp_term})`
       };
       if (pastContinuityLineMark && pastContinuityLineMark.type === 'line') {
         pastContinuityLineMark.encode.update[k] = pastContinuityLineMarkSignal
@@ -280,7 +278,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
         continuityTransforms.push({
           "type": "formula",
           "as": `tween_${field}`,
-          "expr": `lerp([datum.${field}, datum.next.${field}], datum.tween)`
+          "expr": `lerp([toNumber(datum.${field}), toNumber(datum.next.${field})], datum.tween)`
         });
       }
     }
@@ -364,7 +362,7 @@ const exampleSpecs = {
 }
 
 // TODO: casts are bad!
-renderSpec(exampleSpecs.connectedScatterplot as VlAnimationSpec, "connectedScatterplot");
+renderSpec(exampleSpecs.birds as VlAnimationSpec, "birds");
 
 // (window as any).view.addSignalListener('anim_val_curr', (_: any, value: string) => {
 //   document.getElementById('year').innerHTML = value;
