@@ -101,23 +101,24 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     }
   ]
 
+  const continuityTransforms: vega.Transforms[] = [
+    {
+      "type": "lookup",
+      "from": dataset_next,
+      "key": timeEncoding.continuity.field,
+      "fields": [timeEncoding.continuity.field],
+      "as": ["next"]
+    },
+    {
+      "type": "filter",
+      "expr": "isValid(datum.next)"
+    }
+  ];
   if (timeEncoding.continuity) {
     newDatasets.push({
       "name": dataset_continuity,
       "source": dataset_curr,
-      "transform": [
-        {
-          "type": "lookup",
-          "from": dataset_next,
-          "key": timeEncoding.continuity.field,
-          "fields": [timeEncoding.continuity.field],
-          "as": ["next"]
-        },
-        {
-          "type": "filter",
-          "expr": "isValid(datum.next)"
-        }
-      ]
+      "transform": continuityTransforms
     });
   }
 
@@ -178,17 +179,6 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     "domain": { "data": dataset, "field": timeEncoding.field, "sort": true }
   };
 
-  newVgSpec.data.push(...newDatasets);
-  newVgSpec.signals = newVgSpec.signals || [];
-  newVgSpec.signals.push(...newSignals);
-
-  if (timeEncoding.continuity) {
-    newVgSpec.marks[0].from.data = dataset_continuity;
-  }
-  else {
-    newVgSpec.marks[0].from.data = dataset_curr;
-  }
-
   if (timeEncoding.past) {
     const datasetPastSpec: vega.Data = {
       "name": dataset_past,
@@ -198,6 +188,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
           "type": "filter",
           "expr": `datum['${timeEncoding.field}'] < anim_val_curr`
         },
+        ...continuityTransforms,
         ...stackTransform
       ]
     };
@@ -229,14 +220,18 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       newMark.from.data = dataset_past;
     }
     newVgSpec.marks.push(newMark)
-    newVgSpec.data.push(datasetPastSpec);
+    newDatasets.push(datasetPastSpec);
   }
 
   type ScaleFieldValueRef = {scale: vega.Field, field: vega.Field};
   Object.entries(newVgSpec.marks[0].encode.update).forEach(([k, v]) => {
-    if ((newVgSpec.marks[0].encode.update[k] as ScaleFieldValueRef).scale &&
-        (newVgSpec.marks[0].encode.update[k] as ScaleFieldValueRef).field) {
-      const {scale, field} = newVgSpec.marks[0].encode.update[k] as ScaleFieldValueRef;
+    let encodingDef = newVgSpec.marks[0].encode.update[k];
+    if (Array.isArray(encodingDef)) {
+      encodingDef = encodingDef[encodingDef.length - 1];
+    }
+    if ((encodingDef as ScaleFieldValueRef).scale &&
+        (encodingDef as ScaleFieldValueRef).field) {
+      const {scale, field} = encodingDef as ScaleFieldValueRef;
 
       const scaleSpec = newVgSpec.scales.find(s => s.name === scale);
       switch (scaleSpec.type) {
@@ -271,6 +266,14 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
           "signal": `isValid(datum.next) ? lerp([scale('${scale}', datum.${field}), scale('${timeEncoding.rescale ? scale + '_next' : scale}', datum.next.${field})], anim_tween) : scale('${scale}', datum.${field})`
         }
       }
+
+      const pastMarkLine = newVgSpec.marks.find(mark => mark.name.endsWith('_past') && mark.type === 'line');
+      if (pastMarkLine) {
+        // TODO handle facet
+        pastMarkLine.encode.update[k] = {
+          "signal": `isValid(datum.next) && indexof(data('${dataset_past}'), datum) == length(data('${dataset_past}')) - 1 ? lerp([scale('${scale}', datum.${field}), scale('${scale}', datum.next.${field})], anim_tween) : scale('${scale}', datum.${field})`
+        }
+      }
     }
   })
 
@@ -289,6 +292,17 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       }
     }
   })
+
+  newVgSpec.data.push(...newDatasets);
+  newVgSpec.signals = newVgSpec.signals || [];
+  newVgSpec.signals.push(...newSignals);
+
+  if (timeEncoding.continuity) {
+    newVgSpec.marks[0].from.data = dataset_continuity;
+  }
+  else {
+    newVgSpec.marks[0].from.data = dataset_curr;
+  }
 
   newVgSpec.scales = newVgSpec.scales || [];
   newVgSpec.scales.push(newScale);

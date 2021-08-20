@@ -1,6 +1,9 @@
 {
   "data": {"url": "https://raw.githubusercontent.com/vega/vega-datasets/master/data/driving.json"},
-  "mark": {"type": "line", "point": true},
+  "transform": [{
+    "calculate": "':)'", "as": "key"
+  }],
+  "mark": "circle",
   "encoding": {
     "x": {
       "field": "miles", "type": "quantitative",
@@ -16,7 +19,10 @@
       "scale": {
         "type": "linear"
       },
-      "past": true
+      "continuity": {"field": "key"},
+      "past": {
+        "mark": "line"
+      }
     }
   }
 }
