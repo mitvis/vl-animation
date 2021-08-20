@@ -25,11 +25,8 @@
     "time": {
       "field": "year",
       "scale": {
-        "type": "linear",
-        "range": [
-          0,
-          50000
-        ]
+        "type": "band",
+        "range": {"step": 1000}
       },
       "continuity": {"field": "key"},
       "interpolateLoop": true
