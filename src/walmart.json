@@ -30,7 +30,7 @@
       "field": "latitude",
       "type": "quantitative"
     },
-    "color": {"value": "#f00"},
+    "color": {"value": "#FFCC33"},
     "time": {
       "field": "year",
       "scale": {
@@ -42,7 +42,7 @@
       },
       "past": {
         "encoding": {
-          "color": {"value": "#05f"}
+          "color": {"value": "#1a75cf"}
         }
       }
     }

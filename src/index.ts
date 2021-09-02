@@ -3,57 +3,126 @@ import * as vl from 'vega-lite';
 import clone from 'lodash.clonedeep';
 import { TopLevelUnitSpec } from 'vega-lite/build/src/spec/unit';
 import { Encoding } from 'vega-lite/build/src/encoding';
+import { AnyMark } from 'vega-lite/build/src/mark';
 
-const initVega = (vgSpec: vega.Spec, id = 'view') => {
-  const newDiv = document.createElement('div');
-  newDiv.setAttribute('id', id);
-  document.body.insertBefore(newDiv, document.getElementById('year'));
+// Types specific to Vega-Lite Animation
 
-  const runtime = vega.parse(vgSpec);
-  (window as any).view = new vega.View(runtime)
-    .logLevel(vega.Warn) // Set view logging level
-    .initialize(newDiv) // Set parent DOM element
-    .renderer('svg') // Set render type (defaults to 'canvas')
-    .hover() // Enable hover event processing
-    .runAsync(); // Update and render the view
-}
-
-type BandRangeStep = {"step": number};
 type VlaPastEncoding = {
-  "mark"?: "point" | "line",
+  "mark"?: AnyMark,
   "encoding"?: Encoding<any>,
-  "filter"?: string // predicate expr
+  "filter"?: vega.Expr // predicate expr
 };
+
 type VlAnimationTimeEncoding = {
   "field": string,
   "scale": {
-    "type": "linear" | "band",
-    "range": [number, number] | BandRangeStep
-  },
+    "type": "band",
+    "range": {"step": number} // TODO: generalize 'step' to vega.RangeBand
+  } | {
+    "type": "linear",
+    "range": [number, number]
+  }
   "continuity"?: { "field": string },
   "rescale"?: boolean,
   "interpolateLoop"?: boolean,
   "past"?: boolean | VlaPastEncoding
 };
 
-type VlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": VlAnimationTimeEncoding } };
+type VlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": VlAnimationTimeEncoding } };
 
-const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec => {
-  const newVgSpec = clone(vgSpec);
-  const dataset = newVgSpec.marks[0].from.data;
+type ElaboratedVlaPastEncoding = {
+  "mark": AnyMark,
+  "encoding": Encoding<any>,
+  "filter": vega.Expr // predicate expr
+};
+
+type ElaboratedVlAnimationTimeEncoding = {
+  "field": string,
+  "scale": {
+    "type": "band",
+    "range": {"step": number} // TODO: generalize 'step' to vega.RangeBand
+  } | {
+    "type": "linear",
+    "range": [number, number]
+  }
+  "continuity"?: { "field": string },
+  "rescale": boolean,
+  "interpolateLoop": boolean,
+  "past": false | ElaboratedVlaPastEncoding
+};
+
+type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": ElaboratedVlAnimationTimeEncoding } };
+
+/**
+ * fills in implicit values in the vla spec
+ * @param vlaSpec 
+ * @returns 
+ */
+const elaborateVla = (vlaSpec: VlAnimationSpec): ElaboratedVlAnimationSpec => {
+  // const newVlaSpec = clone(vlaSpec);
   const timeEncoding = vlaSpec.encoding.time;
+  // return newVlaSpec;
+
+  let past: ElaboratedVlaPastEncoding;
+  if (timeEncoding.past === true) {
+    past = {
+      "mark": vlaSpec.mark,
+      "encoding": vlaSpec.encoding,
+      "filter": "true"
+    }
+  }
+  else if (timeEncoding.past) {
+    past = {
+      "mark": vlaSpec.mark,
+      "filter": "true",
+      ...timeEncoding.past,
+      "encoding": {...vlaSpec.encoding, ...timeEncoding.past.encoding}
+    }
+  }
+
+  return {
+    ...vlaSpec,
+    "encoding": {
+      ...vlaSpec.encoding,
+      "time": {
+        ...timeEncoding,
+        "rescale": timeEncoding.rescale ?? false,
+        "interpolateLoop": timeEncoding.interpolateLoop ?? false,
+        past
+      }
+    }
+  }
+}
+
+/**
+ * Lowers Vega-Lite animation spec to Vega
+ * @param vlaSpec 
+ * @returns Vega spec
+ */
+const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
+  const newVgSpec = vl.compile(vlaSpec).spec;
+  const dataset = newVgSpec.marks[0].from.data; // TODO assumes mark[0] is the main mark
+  const timeEncoding = vlaSpec.encoding.time;
+
+  newVgSpec.marks[0].zindex = 999;
+
+  console.log(newVgSpec);
+
+  /* 
+  * stack transform controls the layout of bar charts. if it exists, we need to copy
+  * the transform into derived animation datasets so that layout still works :(
+  * 
+  * this works on the bar chart race example and might not generalize, sue me
+  */
+  let stackTransform: vega.Transforms[] = [];
+  if (vlaSpec.mark === 'bar') {
+    stackTransform = [...newVgSpec.data[1].transform];
+  }
+
+  // dataset stuff
 
   const datasetSpec = newVgSpec.data.find(d => d.name === dataset);
   datasetSpec.transform = datasetSpec.transform ?? [];
-  datasetSpec.transform.push({
-    "type": "identifier",
-    "as": "_id_"
-  });
-
-  let stackTransform: vega.Transforms[] = [];
-  if ((vlaSpec as TopLevelUnitSpec).mark === 'bar') {
-    stackTransform = [...newVgSpec.data[1].transform];
-  }
 
   const dataset_past = dataset + "_past";
   const dataset_curr = dataset + "_curr";
@@ -85,6 +154,18 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     }
   ]
 
+  const datasetPastSpec: vega.Data = {
+    "name": dataset_past,
+    "source": dataset,
+    "transform": [
+      {
+        "type": "filter",
+        "expr": `datum['${timeEncoding.field}'] < anim_val_curr`
+      },
+      ...stackTransform
+    ]
+  };
+
   const continuityTransforms: vega.Transforms[] = [
     {
       "type": "lookup",
@@ -99,39 +180,42 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     }
   ];
 
+  // signal stuff
+
   const msPerTick = timeEncoding.scale.type === 'band' ?
-    (timeEncoding.scale.range as BandRangeStep).step : 500;
+    timeEncoding.scale.range.step : 500;
   const msPerFrame = 1000/60;
 
   const newSignals: vega.Signal[] = [
     {
-      "name": "t_index",
+      "name": "t_index", // index of current keyframe in the time field's domain
       "init": "0",
       "on": [
         {
           "events": { "type": "timer", "throttle": msPerTick },
-          "update": "t_index < length(domain('time')) - 1 ? t_index + 1 : 0"
+          "update": "t_index < length(domain('time')) - 1 ? t_index + 1 : 0" // goes from 0 to len(domain) - 1 and wraps
         }
       ]
     },
     {
-      "name": "min_extent",
+      "name": "min_extent", // min value of time domain
       "init": "extent(domain('time'))[0]"
     },
     {
-      "name": "max_extent",
+      "name": "max_extent", // max value of time domain
       "init": "extent(domain('time'))[1]"
     },
     {
-      "name": "anim_val_curr",
+      "name": "anim_val_curr", // current keyframe's value in time domain
       "update": "domain('time')[t_index]"
     },
     {
-      "name": "anim_val_next",
+      "name": "anim_val_next", // next keyframe's value in time domain
+      // if interpolateLoop is true, we want to tween between last and first keyframes. therefore, next of last is first
       "update": `t_index < length(domain('time')) - 1 ? domain('time')[t_index + 1] : ${timeEncoding.interpolateLoop ? 'min_extent' : 'max_extent'}`
     },
     {
-      "name": "anim_tween",
+      "name": "anim_tween", // tween signal between keyframes
       "init": "0",
       "on": [
         {
@@ -149,6 +233,8 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     }
   ];
 
+  // scale
+
   const newScale: vega.Scale =
   {
     "name": "time",
@@ -157,29 +243,57 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   };
 
   if (timeEncoding.past) {
-    const datasetPastSpec: vega.Data = {
-      "name": dataset_past,
-      "source": dataset,
-      "transform": [
-        {
-          "type": "filter",
-          "expr": `datum['${timeEncoding.field}'] < anim_val_curr`
-        },
-        ...stackTransform
-      ]
-    };
+    /* 
+    * we create a new mark based on the past encoding. this mark shows the past data
+    * we generate the vega for this mark by creating a vega-lite spec and compiling it down
+    */
+    const pastEncoding = timeEncoding.past as VlaPastEncoding;
+    const vlPastEncodingSpec: TopLevelUnitSpec = {
+      data: vlaSpec.data,
+      mark: pastEncoding.mark,
+      encoding: pastEncoding.encoding,
+    }
+    if (vlPastEncodingSpec.mark === 'line') {
+      vlPastEncodingSpec.encoding.order = {field: timeEncoding.field};
+    }
+    const pastMark = vl.compile(vlPastEncodingSpec).spec.marks[0];
 
-    let newMark = clone(newVgSpec.marks[0]);
-    if (timeEncoding.past !== true) {
-      const pastEncoding = timeEncoding.past as VlaPastEncoding;
-      const vlEncodingSpec: TopLevelUnitSpec = {
-        data: vlaSpec.data,
-        mark: pastEncoding.mark ?? (vlaSpec as TopLevelUnitSpec).mark,
-        encoding: {...(vlaSpec as TopLevelUnitSpec).encoding, ...(pastEncoding.encoding ?? {})}
-      }
-      if (vlEncodingSpec.mark === 'line') {
-        vlEncodingSpec.encoding.order = {field: timeEncoding.field};
-        (datasetPastSpec.transform[0] as vega.FilterTransform).expr = `datum['${timeEncoding.field}'] <= anim_val_curr`; // make the line connect to the current point
+    if (vlPastEncodingSpec.mark === 'line') {
+      // make the line connect to the current point
+      (datasetPastSpec.transform[0] as vega.FilterTransform).expr = `datum['${timeEncoding.field}'] <= anim_val_curr`;
+    }
+
+    if (pastEncoding.filter) {
+      (datasetPastSpec.transform[0] as vega.FilterTransform).expr += ` && (${pastEncoding.filter})`;
+    }
+
+    pastMark.name = pastMark.name + '_past';
+    if ((pastMark.from as any).facet) {
+      // newMark is a faceted line mark
+      (pastMark.from as any).facet.data = dataset_past;
+    }
+    else {
+      pastMark.from.data = dataset_past;
+    }
+    newVgSpec.marks.push(pastMark)
+    newDatasets.push(datasetPastSpec);
+
+    // 
+    if (timeEncoding.continuity) {
+      if (pastMark.type === 'line' || pastMark.type === 'group') {
+        // create a third mark to tween the line to follow the current point
+        const pastContinuityMark = clone(pastMark);
+        pastMark.name = pastMark.name + '_continuity';
+        if ((pastMark.from as any).facet) {
+          // newMark is a faceted line mark
+          (pastMark.from as any).facet.data = dataset_continuity;
+        }
+        else {
+          pastMark.from.data = dataset_continuity;
+        }
+        newVgSpec.marks.push(pastContinuityMark)
+
+        // transforms to generate tween data for the continuity mark
         continuityTransforms.push({
           "type": "formula",
           "as": "tween",
@@ -189,43 +303,16 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
           "fields": ["tween"]
         })
       }
-      newMark = vl.compile(vlEncodingSpec).spec.marks[0];
-
-      if (pastEncoding.filter) {
-        (datasetPastSpec.transform[0] as vega.FilterTransform).expr += ` && (${pastEncoding.filter})`;
-      }
-    }
-    newMark.name = newMark.name + '_past';
-    if ((newMark.from as any).facet) {
-      // newMark is a faceted line mark
-      (newMark.from as any).facet.data = dataset_past;
-    }
-    else {
-      newMark.from.data = dataset_past;
-    }
-    newVgSpec.marks.push(newMark)
-    newDatasets.push(datasetPastSpec);
-
-    if (timeEncoding.continuity) {
-      if (newMark.type === 'line' || newMark.type === 'group') {
-        const pastContinuityMark = clone(newMark);
-        newMark.name = newMark.name + '_continuity';
-        if ((newMark.from as any).facet) {
-          // newMark is a faceted line mark
-          (newMark.from as any).facet.data = dataset_continuity;
-        }
-        else {
-          newMark.from.data = dataset_continuity;
-        }
-        newVgSpec.marks.push(pastContinuityMark)
-      }
     }
   }
 
-  type ScaleFieldValueRef = {scale: vega.Field, field: vega.Field};
+  type ScaleFieldValueRef = {scale: vega.Field, field: vega.Field}; // ScaledValueRef
+
+  // this part is for adding tween / lerp signals to mark encoding
   Object.entries(newVgSpec.marks[0].encode.update).forEach(([k, v]) => {
     let encodingDef = newVgSpec.marks[0].encode.update[k];
     if (Array.isArray(encodingDef)) {
+      // i don't remember why but i think if there's a conditional encoding it will be an array
       encodingDef = encodingDef[encodingDef.length - 1];
     }
     if ((encodingDef as ScaleFieldValueRef).field) {
@@ -243,8 +330,10 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
         }
 
         if (timeEncoding.rescale) {
+          // rescale: the scale updates based on the animation frame
           (scaleSpec.domain as vega.ScaleDataRef).data = dataset_curr;
           if (!newVgSpec.scales.find(s => s.name === scaleSpec.name + '_next')) {
+            // if it doesn't already exist, create a "next" scale for the current scale
             const scaleSpecNext = clone(scaleSpec);
             scaleSpecNext.name = scaleSpec.name + '_next';
             (scaleSpecNext.domain as vega.ScaleDataRef).data = dataset_next;
@@ -265,16 +354,21 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
       }
 
       const pastContinuityLineMark = newVgSpec.marks.find(mark => mark.name.endsWith('_continuity'));
-      const pastContinuityLineMarkSignal = {
-        "signal": `isValid(datum.tween_${field}) && datum.tween <= anim_tween ? ${scale ? `scale('${scale}', datum.tween_${field})` : `datum.tween_${field}`} : (${lerp_term})`
-      };
-      if (pastContinuityLineMark && pastContinuityLineMark.type === 'line') {
-        pastContinuityLineMark.encode.update[k] = pastContinuityLineMarkSignal
-      }
-      else if (pastContinuityLineMark && pastContinuityLineMark.type === 'group' && Array.isArray(pastContinuityLineMark.marks)) {
-        pastContinuityLineMark.marks[0].encode.update[k] = pastContinuityLineMarkSignal
-      }
+      // if there is a past mark that is a line and continuity is enabled
       if (pastContinuityLineMark) {
+        // this signal tweens the end of the line to the current point
+        const pastContinuityLineMarkSignal = {
+          "signal": `isValid(datum.tween_${field}) && datum.tween <= anim_tween ? ${scale ? `scale('${scale}', datum.tween_${field})` : `datum.tween_${field}`} : (${lerp_term})`
+        };
+
+        // set the update signal on the past mark
+        if (pastContinuityLineMark.type === 'line') {
+          pastContinuityLineMark.encode.update[k] = pastContinuityLineMarkSignal
+        }
+        else if (pastContinuityLineMark.type === 'group' && Array.isArray(pastContinuityLineMark.marks)) {
+          pastContinuityLineMark.marks[0].encode.update[k] = pastContinuityLineMarkSignal
+        }
+
         continuityTransforms.push({
           "type": "formula",
           "as": `tween_${field}`,
@@ -284,6 +378,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
     }
   })
 
+  // show the keyframe's current value in time domain
   newVgSpec.marks.push({
     "type": "text",
     "encode": {
@@ -301,6 +396,7 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   })
 
   if (timeEncoding.continuity) {
+    // do not move this higher up in the file
     newDatasets.push({
       "name": dataset_continuity,
       "source": dataset_curr,
@@ -327,14 +423,36 @@ const injectVlaInVega = (vlaSpec: VlAnimationSpec, vgSpec: vega.Spec): vega.Spec
   return newVgSpec;
 }
 
-// const vgSpec = vl.compile(vlaSpec).spec;
-// const injectedVgSpec = injectVlaInVega(vlaSpec, vgSpec);
+////////////////////////////////////////////////////
 
-// initVega(injectedVgSpec);
+/**
+ * Renders vega spec into DOM
+ * @param vgSpec Vega spec
+ * @param id id for container div
+ */
+ const initVega = (vgSpec: vega.Spec, id = 'view') => {
+  const newDiv = document.createElement('div');
+  newDiv.setAttribute('id', id);
+  document.body.insertBefore(newDiv, document.getElementById('year'));
 
+  const runtime = vega.parse(vgSpec);
+  (window as any).view = new vega.View(runtime)
+    .logLevel(vega.Warn) // Set view logging level
+    .initialize(newDiv) // Set parent DOM element
+    .renderer('svg') // Set render type (defaults to 'canvas')
+    .hover() // Enable hover event processing
+    .runAsync(); // Update and render the view
+}
+
+/**
+ * 
+ * @param vlaSpec Vega-Lite animation spec
+ * @param id id for a container to append to DOM and attach vega embed
+ */
 const renderSpec = (vlaSpec: VlAnimationSpec, id: string): void => {
-  const vgSpec = vl.compile(vlaSpec).spec;
-  const injectedVgSpec = injectVlaInVega(vlaSpec, vgSpec);
+  const elaboratedVlaSpec = elaborateVla(vlaSpec);
+  console.log(elaboratedVlaSpec)
+  const injectedVgSpec = compileVla(elaboratedVlaSpec);
   initVega(injectedVgSpec, id);
 }
 
@@ -361,8 +479,8 @@ const exampleSpecs = {
   birds,
 }
 
-// TODO: casts are bad!
-renderSpec(exampleSpecs.birds as VlAnimationSpec, "birds");
+// casts are bad!
+renderSpec(exampleSpecs.connectedScatterplot as VlAnimationSpec, "connectedScatterplot");
 
 // (window as any).view.addSignalListener('anim_val_curr', (_: any, value: string) => {
 //   document.getElementById('year').innerHTML = value;

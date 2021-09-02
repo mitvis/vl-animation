@@ -19,7 +19,8 @@
     "time": {
       "field": "year",
       "scale": {
-        "type": "linear"
+        "type": "band",
+        "range": {"step": 200}
       },
       "continuity": {"field": "key"},
       "past": {
