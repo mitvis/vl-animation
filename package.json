@@ -11,5 +11,8 @@
   },
   "scripts": {
     "start": "parcel src/index.html & tsc --watch --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^4.4.2"
   }
 }

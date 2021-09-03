@@ -48,7 +48,7 @@ type ElaboratedVlAnimationTimeEncoding = {
   "continuity"?: { "field": string },
   "rescale": boolean,
   "interpolateLoop": boolean,
-  "past": false | ElaboratedVlaPastEncoding
+  "past": ElaboratedVlaPastEncoding
 };
 
 type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": ElaboratedVlAnimationTimeEncoding } };
@@ -104,10 +104,6 @@ const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
   const dataset = newVgSpec.marks[0].from.data; // TODO assumes mark[0] is the main mark
   const timeEncoding = vlaSpec.encoding.time;
 
-  newVgSpec.marks[0].zindex = 999;
-
-  console.log(newVgSpec);
-
   /* 
   * stack transform controls the layout of bar charts. if it exists, we need to copy
   * the transform into derived animation datasets so that layout still works :(
@@ -119,8 +115,9 @@ const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
     stackTransform = [...newVgSpec.data[1].transform];
   }
 
-  // dataset stuff
-
+  /*
+  * dataset stuff
+  */
   const datasetSpec = newVgSpec.data.find(d => d.name === dataset);
   datasetSpec.transform = datasetSpec.transform ?? [];
 
@@ -154,18 +151,6 @@ const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
     }
   ]
 
-  const datasetPastSpec: vega.Data = {
-    "name": dataset_past,
-    "source": dataset,
-    "transform": [
-      {
-        "type": "filter",
-        "expr": `datum['${timeEncoding.field}'] < anim_val_curr`
-      },
-      ...stackTransform
-    ]
-  };
-
   const continuityTransforms: vega.Transforms[] = [
     {
       "type": "lookup",
@@ -180,8 +165,22 @@ const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
     }
   ];
 
-  // signal stuff
+  const datasetPastSpec: vega.Data = {
+    "name": dataset_past,
+    "source": dataset,
+    "transform": [
+      {
+        "type": "filter",
+        "expr": `datum['${timeEncoding.field}'] < anim_val_curr`
+      },
+      ...stackTransform
+    ]
+  };
 
+
+  /*
+  * signal stuff
+  */
   const msPerTick = timeEncoding.scale.type === 'band' ?
     timeEncoding.scale.range.step : 500;
   const msPerFrame = 1000/60;
@@ -233,8 +232,9 @@ const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
     }
   ];
 
-  // scale
-
+  /*
+  * scale stuff
+  */
   const newScale: vega.Scale =
   {
     "name": "time",
@@ -242,7 +242,12 @@ const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
     "domain": { "data": dataset, "field": timeEncoding.field, "sort": true }
   };
 
+
+  /*
+  * past
+  */
   if (timeEncoding.past) {
+    newVgSpec.marks[0].zindex = 999;
     /* 
     * we create a new mark based on the past encoding. this mark shows the past data
     * we generate the vega for this mark by creating a vega-lite spec and compiling it down
@@ -278,7 +283,7 @@ const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
     newVgSpec.marks.push(pastMark)
     newDatasets.push(datasetPastSpec);
 
-    // 
+    // past and continuity
     if (timeEncoding.continuity) {
       if (pastMark.type === 'line' || pastMark.type === 'group') {
         // create a third mark to tween the line to follow the current point
@@ -308,11 +313,14 @@ const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
 
   type ScaleFieldValueRef = {scale: vega.Field, field: vega.Field}; // ScaledValueRef
 
-  // this part is for adding tween / lerp signals to mark encoding
+
+  /*
+  * adding tween / lerp signals to mark encodings
+  */
   Object.entries(newVgSpec.marks[0].encode.update).forEach(([k, v]) => {
     let encodingDef = newVgSpec.marks[0].encode.update[k];
     if (Array.isArray(encodingDef)) {
-      // i don't remember why but i think if there's a conditional encoding it will be an array
+      // for production rule encodings, the encoding is an array. the last entry is the default def
       encodingDef = encodingDef[encodingDef.length - 1];
     }
     if ((encodingDef as ScaleFieldValueRef).field) {
@@ -378,6 +386,15 @@ const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
     }
   })
 
+  if (timeEncoding.continuity) {
+    // do not move this higher up in the file
+    newDatasets.push({
+      "name": dataset_continuity,
+      "source": dataset_curr,
+      "transform": continuityTransforms
+    });
+  }
+
   // show the keyframe's current value in time domain
   newVgSpec.marks.push({
     "type": "text",
@@ -394,15 +411,6 @@ const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
       }
     }
   })
-
-  if (timeEncoding.continuity) {
-    // do not move this higher up in the file
-    newDatasets.push({
-      "name": dataset_continuity,
-      "source": dataset_curr,
-      "transform": continuityTransforms
-    });
-  }
 
   newVgSpec.data.push(...newDatasets);
   newVgSpec.signals = newVgSpec.signals ?? [];
@@ -451,7 +459,6 @@ const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
  */
 const renderSpec = (vlaSpec: VlAnimationSpec, id: string): void => {
   const elaboratedVlaSpec = elaborateVla(vlaSpec);
-  console.log(elaboratedVlaSpec)
   const injectedVgSpec = compileVla(elaboratedVlaSpec);
   initVega(injectedVgSpec, id);
 }
