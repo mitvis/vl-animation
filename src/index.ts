@@ -449,7 +449,7 @@ const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
     .initialize(newDiv) // Set parent DOM element
     .renderer('svg') // Set render type (defaults to 'canvas')
     .hover() // Enable hover event processing
-    .runAsync(); // Update and render the view
+    .run(); // Update and render the view
 }
 
 /**
@@ -491,6 +491,6 @@ const exampleSpecs = {
 // casts are bad!
 renderSpec(exampleSpecs.dunkins as VlAnimationSpec, "connectedScatterplot");
 
-// (window as any).view.addSignalListener('anim_val_curr', (_: any, value: string) => {
-//   document.getElementById('year').innerHTML = value;
-// })
+(window as any).view.addSignalListener('anim_val_curr', (_: any, value: string) => {
+  document.getElementById('year').innerHTML = (new Date(parseInt(value)*1000)).toISOString();
+})

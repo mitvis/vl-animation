@@ -2,7 +2,7 @@
   "width": 500,
   "height": 300,
   "data": {
-    "url": "https://raw.githubusercontent.com/mitvis/vl-animation/main/src/data/dunkin_friday_hours.csv"
+    "url": "https://gist.githubusercontent.com/dwootton/a3c02e0f170d0b84638e014c63d1f908/raw/6a9504ac7ba878f18799e2e3777ca766e4953ddc/dunkins_no_24_hr.csv"
   },  
   "projection": {
     "type": "albersUsa"
@@ -17,19 +17,27 @@
       "field": "latitude",
       "type": "quantitative"
     },
-    "color": {"value": "#FFCC33"},
+    "color": {
+      "color": {"value": "#ee0000"}
+    },
     "time": {
-      "field": "openTimestamp",
+      "field": "open_datetime",
       "scale": {
         "type": "linear",
         "range": [
-          1632456000.0,
-          1632568000.0
+          0.0,
+          24.0
         ]
       },
       "past": {
         "encoding": {
-          "color": {"value": "#1a75cf"}
+          "color": {
+            "condition": {
+              "test": "anim_val_curr <= datum.closed_datetime && anim_val_curr >= datum.open_datetime",
+              "value": "#00ee00"
+            },
+            "value": "#cccccc"
+          }
         }
       }
     }
