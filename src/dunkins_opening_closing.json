@@ -18,7 +18,7 @@
       "type": "quantitative"
     },
     "color": {
-      "color": {"value": "#ee0000"}
+      "value": "#FFFAA0"
     },
     "time": {
       "field": "open_datetime",
@@ -34,9 +34,9 @@
           "color": {
             "condition": {
               "test": "anim_val_curr <= datum.closed_datetime && anim_val_curr >= datum.open_datetime",
-              "value": "#00ee00"
+              "value": "#A7C7E7"
             },
-            "value": "#cccccc"
+            "value": "black"
           }
         }
       }
