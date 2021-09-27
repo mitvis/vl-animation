@@ -471,6 +471,7 @@ const renderSpec = (vlaSpec: VlAnimationSpec, id: string): void => {
 import * as gapminder from './gapminder.json';
 import * as barchartrace from './bar-chart-race.json';
 import * as walmart from './walmart.json';
+import * as dunkins from './dunkins_opening_closing.json'
 import * as barley from './barley.json';
 import * as covidtrends from './covid-trends.json';
 import * as connectedScatterplot from './connected-scatterplot.json';
@@ -484,10 +485,11 @@ const exampleSpecs = {
   covidtrends,
   connectedScatterplot,
   birds,
+  dunkins
 }
 
 // casts are bad!
-renderSpec(exampleSpecs.connectedScatterplot as VlAnimationSpec, "connectedScatterplot");
+renderSpec(exampleSpecs.dunkins as VlAnimationSpec, "connectedScatterplot");
 
 // (window as any).view.addSignalListener('anim_val_curr', (_: any, value: string) => {
 //   document.getElementById('year').innerHTML = value;

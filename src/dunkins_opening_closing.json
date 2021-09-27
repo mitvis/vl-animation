@@ -1,0 +1,37 @@
+{
+  "width": 500,
+  "height": 300,
+  "data": {
+    "url": "https://raw.githubusercontent.com/mitvis/vl-animation/main/src/data/dunkin_friday_hours.csv"
+  },  
+  "projection": {
+    "type": "albersUsa"
+  },
+  "mark": "circle",
+  "encoding": {
+    "longitude": {
+      "field": "longitude",
+      "type": "quantitative"
+    },
+    "latitude": {
+      "field": "latitude",
+      "type": "quantitative"
+    },
+    "color": {"value": "#FFCC33"},
+    "time": {
+      "field": "openTimestamp",
+      "scale": {
+        "type": "linear",
+        "range": [
+          1632456000.0,
+          1632568000.0
+        ]
+      },
+      "past": {
+        "encoding": {
+          "color": {"value": "#1a75cf"}
+        }
+      }
+    }
+  }
+}
