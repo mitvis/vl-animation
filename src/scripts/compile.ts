@@ -7,18 +7,6 @@ import { AnyMark } from 'vega-lite/build/src/mark';
 
 // Types specific to Vega-Lite Animation
 
-type VlaPastEncoding = {
-  "mark"?: AnyMark,
-  "encoding"?: Encoding<any>,
-  "filter"?: vega.Expr // predicate expr
-};
-
-type ElaboratedVlaPastEncoding = {
-  "mark": AnyMark,
-  "encoding": Encoding<any>,
-  "filter": vega.Expr // predicate expr
-};
-
 type ElaboratedVlAnimationTimeEncoding = {
   "field": string,
   "scale": {
@@ -31,8 +19,17 @@ type ElaboratedVlAnimationTimeEncoding = {
   "continuity"?: { "field": string },
   "rescale": boolean,
   "interpolateLoop": boolean,
-  "past": ElaboratedVlaPastEncoding
 };
+
+type EnterVlType = {
+  "encoding": Encoding<any>,
+  "duration": number // predicate expr
+}
+
+type ExitVlType = {
+  "encoding": Encoding<any>,
+  "duration": number // predicate expr
+}
 
 type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": ElaboratedVlAnimationTimeEncoding } };
 
@@ -68,6 +65,11 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
     const dataset_next = dataset + "_next";
     const dataset_continuity = dataset + "_continuity";
   
+    // Question: why are we adding new data sets? Is this expected for layers as well?
+    // Question: why is 'past' not here?
+    // Question: for vega, are the transform expressions evaluated at every update of signal value?
+
+    // this dataset work may be handled by vega itself
     const newDatasets: vega.Data[] = [
       {
         "name": dataset_curr,
@@ -93,6 +95,7 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
       }
     ]
   
+    // Question: what does the lookup do? What's "as":["next"]?
     const continuityTransforms: vega.Transforms[] = [
       {
         "type": "lookup",
@@ -107,6 +110,7 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
       }
     ];
   
+    // Question: why is this not in our data?
     const datasetPastSpec: vega.Data = {
       "name": dataset_past,
       "source": dataset,
@@ -128,6 +132,7 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
     const msPerFrame = 1000/60;
   
     const newSignals: vega.Signal[] = [
+      // Question: is this signal how we "move through" the time? Our event is just every msPerTick and then we run update?
       {
         "name": "t_index", // index of current keyframe in the time field's domain
         "init": "0",
@@ -138,6 +143,7 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
           }
         ]
       },
+      // Question: how do I know what functions (ie "domian" or "extent") exist?
       {
         "name": "min_extent", // min value of time domain
         "init": "extent(domain('time'))[0]"
@@ -177,6 +183,8 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
     /*
     * scale stuff
     */
+   // Question: does this need to become something that is calculated? 
+   // Question: if so, where do I find the "scale" in the google doc?
     const newScale: vega.Scale =
     {
       "name": "time",
@@ -189,11 +197,15 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
     * past
     */
     if (timeEncoding.past) {
+      // Question: is this how you make a mark present? Is there a doc that goes into what the zIndex of various chart elements is?
       newVgSpec.marks[0].zindex = 999;
+
+
       /* 
       * we create a new mark based on the past encoding. this mark shows the past data
       * we generate the vega for this mark by creating a vega-lite spec and compiling it down
       */
+     // Question: Can we go through what this change would look like? Is it just we calculate past via time window. 
       const pastEncoding = timeEncoding.past as VlaPastEncoding;
       const vlPastEncodingSpec: TopLevelUnitSpec = {
         data: vlaSpec.data,
@@ -203,17 +215,20 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
       if (vlPastEncodingSpec.mark === 'line') {
         vlPastEncodingSpec.encoding.order = {field: timeEncoding.field};
       }
+      
       const pastMark = vl.compile(vlPastEncodingSpec).spec.marks[0];
   
       if (vlPastEncodingSpec.mark === 'line') {
         // make the line connect to the current point
         (datasetPastSpec.transform[0] as vega.FilterTransform).expr = `datum['${timeEncoding.field}'] <= anim_val_curr`;
       }
-  
+
+      // Question
       if (pastEncoding.filter) {
         (datasetPastSpec.transform[0] as vega.FilterTransform).expr += ` && (${pastEncoding.filter})`;
       }
   
+      // Question why is the .name property important?
       pastMark.name = pastMark.name + '_past';
       if ((pastMark.from as any).facet) {
         // newMark is a faceted line mark
@@ -225,6 +240,7 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
       newVgSpec.marks.push(pastMark)
       newDatasets.push(datasetPastSpec);
   
+      // Question: what is contintity?
       // past and continuity
       if (timeEncoding.continuity) {
         if (pastMark.type === 'line' || pastMark.type === 'group') {

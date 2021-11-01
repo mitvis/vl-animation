@@ -13,7 +13,7 @@ const dunkinsOutput = {
     "width": 500,
     "height": 300,
     "style": "cell",
-    "data": [
+    "data": [ // all of the data transformations, handled internally in vega 
         {
             "name": "source_0",
             "url": "https://gist.githubusercontent.com/dwootton/a3c02e0f170d0b84638e014c63d1f908/raw/6a9504ac7ba878f18799e2e3777ca766e4953ddc/dunkins_no_24_hr.csv",
@@ -246,13 +246,11 @@ const dunkinsOutput = {
         }
     ]
 }
+
 test('Dunkins Correctly elaborates', () => {
     const elaborated = elaborateVla(dunkinsSpec);
     const compiled = compileVla(elaborated)
     console.log(compiled);
     expect(compiled).toMatchObject(dunkinsOutput);
-  });
+});
 
-/*
-
-*/
