@@ -1,0 +1,45 @@
+{
+  "width": 500,
+  "height": 300,
+  "data": {
+    "url": "https://gist.githubusercontent.com/dwootton/a3c02e0f170d0b84638e014c63d1f908/raw/6a9504ac7ba878f18799e2e3777ca766e4953ddc/dunkins_no_24_hr.csv"
+  },  
+  "projection": {
+    "type": "albersUsa"
+  },
+  "mark": "circle",
+  "encoding": {
+    "longitude": {
+      "field": "longitude",
+      "type": "quantitative"
+    },
+    "latitude": {
+      "field": "latitude",
+      "type": "quantitative"
+    },
+    "color": {
+      "value": "#FFFAA0"
+    },
+    "time": {
+      "field": "open_datetime",
+      "scale": {
+        "type": "linear",
+        "range": [
+          0.0,
+          24.0
+        ]
+      },
+      "past": {
+        "encoding": {
+          "color": {
+            "condition": {
+              "test": "anim_val_curr <= datum.closed_datetime && anim_val_curr >= datum.open_datetime",
+              "value": "#A7C7E7"
+            },
+            "value": "black"
+          }
+        }
+      }
+    }
+  }
+}
