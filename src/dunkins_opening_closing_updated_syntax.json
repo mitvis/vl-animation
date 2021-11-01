@@ -7,6 +7,9 @@
   "projection": {
     "type": "albersUsa"
   },
+  "transform": [{
+    "filter": "datum.open_datetime <= anim_val_curr && anim_val_curr < datum.closed_datetime"
+  }],  
   "mark": "circle",
   "encoding": {
     "longitude": {
@@ -28,18 +31,17 @@
           0.0,
           24.0
         ]
-      },
-      "past": {
-        "encoding": {
-          "color": {
-            "condition": {
-              "test": "anim_val_curr <= datum.closed_datetime && anim_val_curr >= datum.open_datetime",
-              "value": "#A7C7E7"
-            },
-            "value": "black"
-          }
-        }
       }
+    }
+  },
+  "enter" : {
+    "encoding":{
+      "opacity":0
+    }
+  },
+  "exit" : {
+    "encoding":{
+      "opacity":0
     }
   }
 }

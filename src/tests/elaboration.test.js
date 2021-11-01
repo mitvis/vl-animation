@@ -1,7 +1,8 @@
 import elaborateVla from '../scripts/elaboration';
 import compileVla from '../scripts/compile';
 
-import dunkinsSpec from '../dunkins_opening_closing.json';
+import dunkinsSpec from '../dunkins_opening_closing_updated_syntax.json';
+
 test('adds 1 + 2 to equal 3', () => {
   expect(1+2).toBe(3);
 });

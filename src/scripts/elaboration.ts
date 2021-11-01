@@ -62,22 +62,14 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
     const timeEncoding = vlaSpec.encoding.time;
   
     let past: ElaboratedVlaPastEncoding;
-    if (timeEncoding.past === true) { // refactor this
-      past = {
-        "mark": vlaSpec.mark,
-        "encoding": vlaSpec.encoding,
-        "filter": "true"
-      }
-    }
+
+    
+    // if no transforms are provided, implicitly set it to only show data that is at the current time
+    if (!vlaSpec.transform || vlaSpec.transform?.length === 0) { // refactor this
+        newVgSpec.transform = [{"filter":`datum.${timeEncoding.field} == anim_val_curr`}]
+        // note: this may need to be moved to only apply to the curr data set, not to all data sets (causes cycle)
+    } 
   
-    else if (timeEncoding.past) {
-      past = {
-        "mark": vlaSpec.mark,
-        "filter": "true",
-        ...timeEncoding.past,
-        "encoding": {...vlaSpec.encoding, ...timeEncoding.past.encoding}
-      }
-    }
   
     return {
       ...vlaSpec,

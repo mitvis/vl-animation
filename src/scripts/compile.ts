@@ -31,7 +31,9 @@ type ExitVlType = {
   "duration": number // predicate expr
 }
 
-type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": ElaboratedVlAnimationTimeEncoding } };
+type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": ElaboratedVlAnimationTimeEncoding },
+"enter": EnterVlType,
+"exit": ExitVlType };
 
 /**
  * Lowers Vega-Lite animation spec to Vega
@@ -42,6 +44,41 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
     const newVgSpec = vl.compile(vlaSpec).spec;
     const dataset = newVgSpec.marks[0].from.data; // TODO assumes mark[0] is the main mark
     const timeEncoding = vlaSpec.encoding.time;
+
+    const enterEncoding = vlaSpec.enter;
+    // if enter is provided, then we'll need to specify the enter for each mark
+    const exitEncoding = vlaSpec.exit;
+
+
+    //addSelectionToMark(,'enter')
+    // for each mark and each property, add the encodings properties to enter
+    if(enterEncoding){
+      for(let markCounter = 0; markCounter < newVgSpec.marks.length; markCounter++){
+        for(const [propertyName,propertyValue] of Object.entries(enterEncoding.encoding)){
+          if(!newVgSpec.marks[markCounter]['encode']['enter']){
+            newVgSpec.marks[markCounter]['encode']['enter'] = {};
+          } 
+
+          newVgSpec.marks[markCounter]['encode']['enter'][propertyName] = {"value":propertyValue}
+        }
+      }
+    }
+
+    // for each mark and each property, add the encodings properties to enter
+    if(enterEncoding){
+      for(let markCounter = 0; markCounter < newVgSpec.marks.length; markCounter++){
+        for(const [propertyName,propertyValue] of Object.entries(exitEncoding.encoding)){
+          if(!newVgSpec.marks[markCounter]['encode']['exit']){
+            newVgSpec.marks[markCounter]['encode']['exit'] = {};
+          } 
+          newVgSpec.marks[markCounter]['encode']['exit'][propertyName] = {"value":propertyValue}
+        }
+      }
+    }
+    
+
+    // match
+
   
     /* 
     * stack transform controls the layout of bar charts. if it exists, we need to copy
@@ -53,23 +90,17 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
     if (vlaSpec.mark === 'bar') {
       stackTransform = [...newVgSpec.data[1].transform];
     }
+
+    
   
-    /*
-    * dataset stuff
-    */
+    //old dataset start
     const datasetSpec = newVgSpec.data.find(d => d.name === dataset);
     datasetSpec.transform = datasetSpec.transform ?? [];
   
-    const dataset_past = dataset + "_past";
     const dataset_curr = dataset + "_curr";
     const dataset_next = dataset + "_next";
     const dataset_continuity = dataset + "_continuity";
   
-    // Question: why are we adding new data sets? Is this expected for layers as well?
-    // Question: why is 'past' not here?
-    // Question: for vega, are the transform expressions evaluated at every update of signal value?
-
-    // this dataset work may be handled by vega itself
     const newDatasets: vega.Data[] = [
       {
         "name": dataset_curr,
@@ -110,19 +141,6 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
       }
     ];
   
-    // Question: why is this not in our data?
-    const datasetPastSpec: vega.Data = {
-      "name": dataset_past,
-      "source": dataset,
-      "transform": [
-        {
-          "type": "filter",
-          "expr": `datum['${timeEncoding.field}'] < anim_val_curr`
-        },
-        ...stackTransform
-      ]
-    };
-  
   
     /*
     * signal stuff
@@ -162,6 +180,11 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
         "update": `t_index < length(domain('time')) - 1 ? domain('time')[t_index + 1] : ${timeEncoding.interpolateLoop ? 'min_extent' : 'max_extent'}`
       },
       {
+        "name": "anim_val_previous", // next keyframe's value in time domain
+        // if interpolateLoop is true, we want to tween between last and first keyframes. therefore, next of last is first
+        "update": `t_index < length(domain('time')) - 1 ? domain('time')[t_index + 1] : ${timeEncoding.interpolateLoop ? 'min_extent' : 'max_extent'}`
+      },
+      {
         "name": "anim_tween", // tween signal between keyframes
         "init": "0",
         "on": [
@@ -192,19 +215,20 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
       "domain": { "data": dataset, "field": timeEncoding.field, "sort": true }
     };
   
+
   
     /*
     * past
-    */
+    
     if (timeEncoding.past) {
       // Question: is this how you make a mark present? Is there a doc that goes into what the zIndex of various chart elements is?
       newVgSpec.marks[0].zindex = 999;
 
 
-      /* 
-      * we create a new mark based on the past encoding. this mark shows the past data
-      * we generate the vega for this mark by creating a vega-lite spec and compiling it down
-      */
+      
+    // we create a new mark based on the past encoding. this mark shows the past data
+    // we generate the vega for this mark by creating a vega-lite spec and compiling it down
+      
      // Question: Can we go through what this change would look like? Is it just we calculate past via time window. 
       const pastEncoding = timeEncoding.past as VlaPastEncoding;
       const vlPastEncodingSpec: TopLevelUnitSpec = {
@@ -268,6 +292,20 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
         }
       }
     }
+    
+    {
+          "type": "geojson",
+          "fields": ["longitude", "latitude"],
+          "signal": "geojson_0"
+        },
+        {
+          "type": "geopoint",
+          "projection": "projection",
+          "fields": ["longitude", "latitude"],
+          "as": ["x", "y"]
+        }
+    
+    */
   
     type ScaleFieldValueRef = {scale: vega.Field, field: vega.Field}; // ScaledValueRef
   
@@ -383,6 +421,7 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
   
     newVgSpec.scales = newVgSpec.scales ?? [];
     newVgSpec.scales.push(newScale);
+
   
     console.log(JSON.stringify(newVgSpec, null, 2));
   
