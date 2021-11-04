@@ -45,10 +45,6 @@ type SelectionTypes = 'enter' | 'exit';
     const dataset = newVgSpec.marks[0].from.data; // TODO assumes mark[0] is the main mark
     const timeEncoding = vlaSpec.encoding.time;
 
-    const enterEncoding = vlaSpec.enter;
-    // if enter is provided, then we'll need to specify the enter for each mark
-    const exitEncoding = vlaSpec.exit;
-
     const selections : SelectionTypes[] = ['enter','exit']
 
 
@@ -75,12 +71,15 @@ type SelectionTypes = 'enter' | 'exit';
     * the transform into derived animation datasets so that layout still works :(
     * 
     * this works on the bar chart race example and might not generalize, sue me
-    */
+    
     let stackTransform: vega.Transforms[] = [];
 
+    // COMMENTING OUT AS IT BREAKS TOP LEVEL SPEC TYPINGS 
+    // TODO: refactor hack to account for top level spec
     if (vlaSpec.marks === 'bar') {
       stackTransform = [...newVgSpec.data[1].transform];
     }
+    */
 
     
   
