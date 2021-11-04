@@ -33,6 +33,8 @@ type ElaboratedVlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": Elabo
 "enter": EnterVlType,
 "exit": ExitVlType };
 
+type SelectionTypes = 'enter' | 'exit';
+
 /**
  * Lowers Vega-Lite animation spec to Vega
  * @param vlaSpec 
@@ -47,35 +49,25 @@ type ElaboratedVlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": Elabo
     // if enter is provided, then we'll need to specify the enter for each mark
     const exitEncoding = vlaSpec.exit;
 
+    const selections : SelectionTypes[] = ['enter','exit']
 
-    //addSelectionToMark(,'enter')
-    // for each mark and each property, add the encodings properties to enter
-    if(enterEncoding){
+
+    // for each mark and each property, add the exit and update properties to enter 
+    // NOTE: BROKEN
+    for(const selection of selections){
+      const encoding = vlaSpec[selection];
+      if(!encoding) continue;
+
       for(let markCounter = 0; markCounter < newVgSpec.marks.length; markCounter++){
-        for(const [propertyName,propertyValue] of Object.entries(enterEncoding.encoding)){
-          if(!newVgSpec.marks[markCounter]['encode']['enter']){
-            newVgSpec.marks[markCounter]['encode']['enter'] = {};
+        for(const [propertyName,propertyValue] of Object.entries(encoding.encoding)){
+          if(!newVgSpec.marks[markCounter]['encode'][selection]){
+            newVgSpec.marks[markCounter]['encode'][selection] = {};
           } 
 
-          newVgSpec.marks[markCounter]['encode']['enter'][propertyName] = {"value":propertyValue}
+          newVgSpec.marks[markCounter]['encode'][selection][propertyName] = {"value":propertyValue}
         }
       }
     }
-
-    // for each mark and each property, add the encodings properties to exit
-    if(exitEncoding){
-      for(let markCounter = 0; markCounter < newVgSpec.marks.length; markCounter++){
-        for(const [propertyName,propertyValue] of Object.entries(exitEncoding.encoding)){
-          if(!newVgSpec.marks[markCounter]['encode']['exit']){
-            newVgSpec.marks[markCounter]['encode']['exit'] = {};
-          } 
-          newVgSpec.marks[markCounter]['encode']['exit'][propertyName] = {"value":propertyValue}
-        }
-      }
-    }
-    
-
-    // match
 
   
     /* 
@@ -86,7 +78,7 @@ type ElaboratedVlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": Elabo
     */
     let stackTransform: vega.Transforms[] = [];
 
-    if (vlaSpec.mark === 'bar') {
+    if (vlaSpec.marks === 'bar') {
       stackTransform = [...newVgSpec.data[1].transform];
     }
 
