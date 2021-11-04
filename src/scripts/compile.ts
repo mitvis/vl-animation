@@ -1,9 +1,7 @@
 import * as vega from 'vega';
 import * as vl from 'vega-lite';
 import clone from 'lodash.clonedeep';
-import { TopLevelUnitSpec } from 'vega-lite/build/src/spec/unit';
 import { Encoding } from 'vega-lite/build/src/encoding';
-import { AnyMark } from 'vega-lite/build/src/mark';
 
 // Types specific to Vega-Lite Animation
 
@@ -31,7 +29,7 @@ type ExitVlType = {
   "duration": number // predicate expr
 }
 
-type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": ElaboratedVlAnimationTimeEncoding },
+type ElaboratedVlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": ElaboratedVlAnimationTimeEncoding },
 "enter": EnterVlType,
 "exit": ExitVlType };
 
@@ -64,8 +62,8 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
       }
     }
 
-    // for each mark and each property, add the encodings properties to enter
-    if(enterEncoding){
+    // for each mark and each property, add the encodings properties to exit
+    if(exitEncoding){
       for(let markCounter = 0; markCounter < newVgSpec.marks.length; markCounter++){
         for(const [propertyName,propertyValue] of Object.entries(exitEncoding.encoding)){
           if(!newVgSpec.marks[markCounter]['encode']['exit']){
@@ -87,6 +85,7 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
     * this works on the bar chart race example and might not generalize, sue me
     */
     let stackTransform: vega.Transforms[] = [];
+
     if (vlaSpec.mark === 'bar') {
       stackTransform = [...newVgSpec.data[1].transform];
     }
