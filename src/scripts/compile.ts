@@ -2,7 +2,7 @@ import * as vega from 'vega';
 import * as vl from 'vega-lite';
 import clone from 'lodash.clonedeep';
 import { Encoding } from 'vega-lite/build/src/encoding';
-
+import {TopLevelUnitSpec} from 'vega-lite/build/src/spec/unit';
 // Types specific to Vega-Lite Animation
 
 type ElaboratedVlAnimationTimeEncoding = {
@@ -29,7 +29,7 @@ type ExitVlType = {
   "duration": number // predicate expr
 }
 
-type ElaboratedVlAnimationSpec = vl.TopLevelSpec & { "encoding": { "time": ElaboratedVlAnimationTimeEncoding },
+type ElaboratedVlAnimationSpec = TopLevelUnitSpec & vl.TopLevelSpec & { "encoding": { "time": ElaboratedVlAnimationTimeEncoding },
 "enter": EnterVlType,
 "exit": ExitVlType };
 
@@ -40,7 +40,7 @@ type SelectionTypes = 'enter' | 'exit';
  * @param vlaSpec 
  * @returns Vega spec
  */
- const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
+ const oldCompileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
     const newVgSpec = vl.compile(vlaSpec).spec;
     const dataset = newVgSpec.marks[0].from.data; // TODO assumes mark[0] is the main mark
     const timeEncoding = vlaSpec.encoding.time;
@@ -71,15 +71,14 @@ type SelectionTypes = 'enter' | 'exit';
     * the transform into derived animation datasets so that layout still works :(
     * 
     * this works on the bar chart race example and might not generalize, sue me
-    
+    */
     let stackTransform: vega.Transforms[] = [];
 
-    // COMMENTING OUT AS IT BREAKS TOP LEVEL SPEC TYPINGS 
-    // TODO: refactor hack to account for top level spec
-    if (vlaSpec.marks === 'bar') {
+
+    if (vlaSpec.mark === 'bar') {
       stackTransform = [...newVgSpec.data[1].transform];
     }
-    */
+    
 
     
   
@@ -418,4 +417,4 @@ type SelectionTypes = 'enter' | 'exit';
     return newVgSpec;
   }
 
-export default compileVla;
+export default oldCompileVla;

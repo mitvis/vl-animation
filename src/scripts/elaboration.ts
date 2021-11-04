@@ -22,17 +22,11 @@ type VlAnimationTimeEncoding = {
   }
   "continuity"?: { "field": string },
   "rescale"?: boolean,
-  "interpolateLoop"?: boolean,
-  "past"?: boolean | VlaPastEncoding
+  "interpolateLoop"?: boolean
 };
 
 type VlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": VlAnimationTimeEncoding } };
 
-type ElaboratedVlaPastEncoding = {
-  "mark": AnyMark,
-  "encoding": Encoding<any>,
-  "filter": vega.Expr // predicate expr
-};
 
 type ElaboratedVlAnimationTimeEncoding = {
   "field": string,
@@ -46,7 +40,6 @@ type ElaboratedVlAnimationTimeEncoding = {
   "continuity"?: { "field": string },
   "rescale": boolean,
   "interpolateLoop": boolean,
-  "past": ElaboratedVlaPastEncoding
 };
 
 type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": ElaboratedVlAnimationTimeEncoding } };
@@ -61,15 +54,12 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
   
     const timeEncoding = vlaSpec.encoding.time;
   
-    let past: ElaboratedVlaPastEncoding;
-
-    
     // if no transforms are provided, implicitly set it to only show data that is at the current time
     if (!vlaSpec.transform || vlaSpec.transform?.length === 0) { // refactor this
-        newVgSpec.transform = [{"filter":`datum.${timeEncoding.field} == anim_val_curr`}]
-        // note: this may need to be moved to only apply to the curr data set, not to all data sets (causes cycle)
+      vlaSpec.transform = [{"filter":`datum.${timeEncoding.field} == anim_val_curr`}]
+      // note: this may need to be moved to only apply to the curr data set, not to all data sets (causes cycle)
     } 
-  
+
   
     return {
       ...vlaSpec,
@@ -78,8 +68,7 @@ type ElaboratedVlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": Elab
         "time": {
           ...timeEncoding,
           "rescale": timeEncoding.rescale ?? false,
-          "interpolateLoop": timeEncoding.interpolateLoop ?? false,
-          past
+          "interpolateLoop": timeEncoding.interpolateLoop ?? false
         }
       }
     }
