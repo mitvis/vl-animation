@@ -28,9 +28,13 @@ type TimePredicate = {
   time: FieldPredicate | FieldPredicate[]
 }
 
+type VlaFilterTransform = FilterTransform & {
+  "filter": LogicalComposition<Predicate | TimePredicate>
+};
+
 // actual unit spec, is either top level or is top level
 type VlAnimationUnitSpec = TopLevelUnitSpec & {
-  "transform"?: (Transform | (FilterTransform & {"filter": LogicalComposition<Predicate | TimePredicate>}))[],
+  "transform"?: (Transform | VlaFilterTransform)[],
   "encoding": { "time": VlAnimationTimeEncoding },
   "enter"?: Encoding<any>,
   "exit"?: Encoding<any>,
@@ -57,7 +61,7 @@ type ElaboratedVlAnimationTimeEncoding = {
 };
 
 type ElaboratedVlAnimationUnitSpec = TopLevelUnitSpec & {
-  "transform": (Transform | (FilterTransform & {"filter": LogicalComposition<Predicate | TimePredicate>}))[],
+  "transform": (Transform | VlaFilterTransform)[],
   "encoding": { "time": ElaboratedVlAnimationTimeEncoding },
   "enter"?: Encoding<any>, // TODO ask josh about this
   "exit"?: Encoding<any>,
