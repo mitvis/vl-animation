@@ -3,13 +3,15 @@
   "height": 300,
   "data": {
     "url": "https://gist.githubusercontent.com/dwootton/a3c02e0f170d0b84638e014c63d1f908/raw/6a9504ac7ba878f18799e2e3777ca766e4953ddc/dunkins_no_24_hr.csv"
-  },  
+  },
   "projection": {
     "type": "albersUsa"
   },
   "transform": [{
-    "filter": "datum.open_datetime <= anim_val_curr && anim_val_curr < datum.closed_datetime"
-  }],  
+    "filter": {
+      "time": [{"gte": "datum.open_time"}, {"lt": "datum.close_time"}]
+    }
+  }],
   "mark": "circle",
   "encoding": {
     "longitude": {
@@ -27,21 +29,17 @@
       "field": "open_datetime",
       "scale": {
         "type": "linear",
+        "domain": [0, 23],
         "range": [
-          0.0,
-          24.0
+          0, 10000
         ]
       }
     }
   },
   "enter" : {
-    "encoding":{
-      "opacity":0
-    }
+    "opacity":0
   },
   "exit" : {
-    "encoding":{
-      "opacity":0
-    }
+    "opacity":0
   }
 }

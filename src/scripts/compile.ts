@@ -3,41 +3,13 @@ import * as vl from 'vega-lite';
 import clone from 'lodash.clonedeep';
 import { Encoding } from 'vega-lite/build/src/encoding';
 import {TopLevelUnitSpec} from 'vega-lite/build/src/spec/unit';
+import { ElaboratedVlAnimationSpec } from '..';
 // Types specific to Vega-Lite Animation
 
-type ElaboratedVlAnimationTimeEncoding = {
-  "field": string,
-  "scale": {
-    "type": "band",
-    "range": {"step": number} // TODO: generalize 'step' to vega.RangeBand
-  } | {
-    "type": "linear",
-    "range": [number, number]
-  }
-  "continuity"?: { "field": string },
-  "rescale": boolean,
-  "interpolateLoop": boolean,
-};
-
-type EnterVlType = {
-  "encoding": Encoding<any>,
-  "duration": number // predicate expr
-}
-
-type ExitVlType = {
-  "encoding": Encoding<any>,
-  "duration": number // predicate expr
-}
-
-type ElaboratedVlAnimationSpec = TopLevelUnitSpec & vl.TopLevelSpec & { "encoding": { "time": ElaboratedVlAnimationTimeEncoding },
-"enter": EnterVlType,
-"exit": ExitVlType };
-
-type SelectionTypes = 'enter' | 'exit';
 
 /**
  * Lowers Vega-Lite animation spec to Vega
- * @param vlaSpec 
+ * @param vlaSpec
  * @returns Vega spec
  */
  const oldCompileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
@@ -48,7 +20,7 @@ type SelectionTypes = 'enter' | 'exit';
     const selections : SelectionTypes[] = ['enter','exit']
 
 
-    // for each mark and each property, add the exit and update properties to enter 
+    // for each mark and each property, add the exit and update properties to enter
     // NOTE: BROKEN
     for(const selection of selections){
       const encoding = vlaSpec[selection];
@@ -58,18 +30,18 @@ type SelectionTypes = 'enter' | 'exit';
         for(const [propertyName,propertyValue] of Object.entries(encoding.encoding)){
           if(!newVgSpec.marks[markCounter]['encode'][selection]){
             newVgSpec.marks[markCounter]['encode'][selection] = {};
-          } 
+          }
 
           newVgSpec.marks[markCounter]['encode'][selection][propertyName] = {"value":propertyValue}
         }
       }
     }
 
-  
-    /* 
+
+    /*
     * stack transform controls the layout of bar charts. if it exists, we need to copy
     * the transform into derived animation datasets so that layout still works :(
-    * 
+    *
     * this works on the bar chart race example and might not generalize, sue me
     */
     let stackTransform: vega.Transforms[] = [];
@@ -78,18 +50,18 @@ type SelectionTypes = 'enter' | 'exit';
     if (vlaSpec.mark === 'bar') {
       stackTransform = [...newVgSpec.data[1].transform];
     }
-    
 
-    
-  
+
+
+
     //old dataset start
     const datasetSpec = newVgSpec.data.find(d => d.name === dataset);
     datasetSpec.transform = datasetSpec.transform ?? [];
-  
+
     const dataset_curr = dataset + "_curr";
     const dataset_next = dataset + "_next";
     const dataset_continuity = dataset + "_continuity";
-  
+
     const newDatasets: vega.Data[] = [
       {
         "name": dataset_curr,
@@ -114,7 +86,7 @@ type SelectionTypes = 'enter' | 'exit';
         ]
       }
     ]
-  
+
     // Question: what does the lookup do? What's "as":["next"]?
     const continuityTransforms: vega.Transforms[] = [
       {
@@ -129,15 +101,15 @@ type SelectionTypes = 'enter' | 'exit';
         "expr": "isValid(datum.next)"
       }
     ];
-  
-  
+
+
     /*
     * signal stuff
     */
     const msPerTick = timeEncoding.scale.type === 'band' ?
       timeEncoding.scale.range.step : 500;
     const msPerFrame = 1000/60;
-  
+
     const newSignals: vega.Signal[] = [
       // Question: is this signal how we "move through" the time? Our event is just every msPerTick and then we run update?
       {
@@ -191,11 +163,11 @@ type SelectionTypes = 'enter' | 'exit';
         ]
       }
     ];
-  
+
     /*
     * scale stuff
     */
-   // Question: does this need to become something that is calculated? 
+   // Question: does this need to become something that is calculated?
    // Question: if so, where do I find the "scale" in the google doc?
     const newScale: vega.Scale =
     {
@@ -203,22 +175,22 @@ type SelectionTypes = 'enter' | 'exit';
       "type": "ordinal",
       "domain": { "data": dataset, "field": timeEncoding.field, "sort": true }
     };
-  
 
-  
+
+
     /*
     * past
-    
+
     if (timeEncoding.past) {
       // Question: is this how you make a mark present? Is there a doc that goes into what the zIndex of various chart elements is?
       newVgSpec.marks[0].zindex = 999;
 
 
-      
+
     // we create a new mark based on the past encoding. this mark shows the past data
     // we generate the vega for this mark by creating a vega-lite spec and compiling it down
-      
-     // Question: Can we go through what this change would look like? Is it just we calculate past via time window. 
+
+     // Question: Can we go through what this change would look like? Is it just we calculate past via time window.
       const pastEncoding = timeEncoding.past as VlaPastEncoding;
       const vlPastEncodingSpec: TopLevelUnitSpec = {
         data: vlaSpec.data,
@@ -228,9 +200,9 @@ type SelectionTypes = 'enter' | 'exit';
       if (vlPastEncodingSpec.mark === 'line') {
         vlPastEncodingSpec.encoding.order = {field: timeEncoding.field};
       }
-      
+
       const pastMark = vl.compile(vlPastEncodingSpec).spec.marks[0];
-  
+
       if (vlPastEncodingSpec.mark === 'line') {
         // make the line connect to the current point
         (datasetPastSpec.transform[0] as vega.FilterTransform).expr = `datum['${timeEncoding.field}'] <= anim_val_curr`;
@@ -240,7 +212,7 @@ type SelectionTypes = 'enter' | 'exit';
       if (pastEncoding.filter) {
         (datasetPastSpec.transform[0] as vega.FilterTransform).expr += ` && (${pastEncoding.filter})`;
       }
-  
+
       // Question why is the .name property important?
       pastMark.name = pastMark.name + '_past';
       if ((pastMark.from as any).facet) {
@@ -252,7 +224,7 @@ type SelectionTypes = 'enter' | 'exit';
       }
       newVgSpec.marks.push(pastMark)
       newDatasets.push(datasetPastSpec);
-  
+
       // Question: what is contintity?
       // past and continuity
       if (timeEncoding.continuity) {
@@ -268,7 +240,7 @@ type SelectionTypes = 'enter' | 'exit';
             pastMark.from.data = dataset_continuity;
           }
           newVgSpec.marks.push(pastContinuityMark)
-  
+
           // transforms to generate tween data for the continuity mark
           continuityTransforms.push({
             "type": "formula",
@@ -281,7 +253,7 @@ type SelectionTypes = 'enter' | 'exit';
         }
       }
     }
-    
+
     {
           "type": "geojson",
           "fields": ["longitude", "latitude"],
@@ -293,12 +265,12 @@ type SelectionTypes = 'enter' | 'exit';
           "fields": ["longitude", "latitude"],
           "as": ["x", "y"]
         }
-    
+
     */
-  
+
     type ScaleFieldValueRef = {scale: vega.Field, field: vega.Field}; // ScaledValueRef
-  
-  
+
+
     /*
     * adding tween / lerp signals to mark encodings
     */
@@ -310,7 +282,7 @@ type SelectionTypes = 'enter' | 'exit';
       }
       if ((encodingDef as ScaleFieldValueRef).field) {
         const {scale, field} = encodingDef as ScaleFieldValueRef;
-  
+
         if (scale) {
           const scaleSpec = newVgSpec.scales.find(s => s.name === scale);
           switch (scaleSpec.type) {
@@ -321,7 +293,7 @@ type SelectionTypes = 'enter' | 'exit';
             case 'threshold':
               return; // if the scale has a discrete output range, don't lerp with it
           }
-  
+
           if (timeEncoding.rescale) {
             // rescale: the scale updates based on the animation frame
             (scaleSpec.domain as vega.ScaleDataRef).data = dataset_curr;
@@ -334,18 +306,18 @@ type SelectionTypes = 'enter' | 'exit';
             }
           }
         }
-  
+
         const lerp_term = scale === 'color' ? // color scales map numbers to strings, so lerp before scale
           `isValid(datum.next) ? scale('${scale}', lerp([datum.${field}, datum.next.${field}], anim_tween)) : scale('${scale}', datum.${field})` :
           scale ? // e.g. position scales map anything to numbers, so scale before lerp
             `isValid(datum.next) ? lerp([scale('${scale}', datum.${field}), scale('${timeEncoding.rescale ? scale + '_next' : scale}', datum.next.${field})], anim_tween) : scale('${scale}', datum.${field})` :
             // e.g. map projections have field but no scale. you can directly lerp the field
             `isValid(datum.next) ? lerp([datum.${field}, datum.next.${field}], anim_tween) : datum.${field}`
-  
+
         newVgSpec.marks[0].encode.update[k] = {
           "signal": lerp_term
         }
-  
+
         const pastContinuityLineMark = newVgSpec.marks.find(mark => mark.name.endsWith('_continuity'));
         // if there is a past mark that is a line and continuity is enabled
         if (pastContinuityLineMark) {
@@ -353,7 +325,7 @@ type SelectionTypes = 'enter' | 'exit';
           const pastContinuityLineMarkSignal = {
             "signal": `isValid(datum.tween_${field}) && datum.tween <= anim_tween ? ${scale ? `scale('${scale}', datum.tween_${field})` : `datum.tween_${field}`} : (${lerp_term})`
           };
-  
+
           // set the update signal on the past mark
           if (pastContinuityLineMark.type === 'line') {
             pastContinuityLineMark.encode.update[k] = pastContinuityLineMarkSignal
@@ -361,7 +333,7 @@ type SelectionTypes = 'enter' | 'exit';
           else if (pastContinuityLineMark.type === 'group' && Array.isArray(pastContinuityLineMark.marks)) {
             pastContinuityLineMark.marks[0].encode.update[k] = pastContinuityLineMarkSignal
           }
-  
+
           continuityTransforms.push({
             "type": "formula",
             "as": `tween_${field}`,
@@ -370,7 +342,7 @@ type SelectionTypes = 'enter' | 'exit';
         }
       }
     })
-  
+
     if (timeEncoding.continuity) {
       // do not move this higher up in the file
       newDatasets.push({
@@ -379,7 +351,7 @@ type SelectionTypes = 'enter' | 'exit';
         "transform": continuityTransforms
       });
     }
-  
+
     // show the keyframe's current value in time domain
     newVgSpec.marks.push({
       "type": "text",
@@ -396,24 +368,24 @@ type SelectionTypes = 'enter' | 'exit';
         }
       }
     })
-  
+
     newVgSpec.data.push(...newDatasets);
     newVgSpec.signals = newVgSpec.signals ?? [];
     newVgSpec.signals.push(...newSignals);
-  
+
     if (timeEncoding.continuity) {
       newVgSpec.marks[0].from.data = dataset_continuity;
     }
     else {
       newVgSpec.marks[0].from.data = dataset_curr;
     }
-  
+
     newVgSpec.scales = newVgSpec.scales ?? [];
     newVgSpec.scales.push(newScale);
 
-  
+
     console.log(JSON.stringify(newVgSpec, null, 2));
-  
+
     return newVgSpec;
   }
 
