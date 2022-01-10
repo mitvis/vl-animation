@@ -1,18 +1,14 @@
 import * as vega from 'vega';
 import { TopLevelUnitSpec } from 'vega-lite/build/src/spec/unit';
 import { Encoding } from 'vega-lite/build/src/encoding';
-import { AnyMark } from 'vega-lite/build/src/mark';
+import { FieldPredicate } from 'vega-lite/build/src/predicate';
+import { Transform } from 'vega';
+import { LayerSpec, TopLevel} from 'vega-lite/build/src/spec';
 
 import compileVla from './scripts/compile';
 import elaborateVla from './scripts/elaboration';
 
 // Types specific to Vega-Lite Animation
-type VlaPastEncoding = {
-  "mark"?: AnyMark,
-  "encoding"?: Encoding<any>,
-  "filter"?: vega.Expr // predicate expr
-};
-
 type VlAnimationTimeEncoding = {
   "field": string,
   "scale": {
@@ -24,11 +20,58 @@ type VlAnimationTimeEncoding = {
   }
   "continuity"?: { "field": string },
   "rescale"?: boolean,
-  "interpolateLoop"?: boolean,
-  "past"?: boolean | VlaPastEncoding
+  "interpolateLoop"?: boolean
 };
 
-type VlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": VlAnimationTimeEncoding } };
+// time-specific filter predicate
+type TimePredicate = {
+  time: FieldPredicate | FieldPredicate[]
+}
+
+type VlaFilterTransform = FilterTransform & {
+  "filter": LogicalComposition<Predicate | TimePredicate>
+};
+
+// actual unit spec, is either top level or is top level
+type VlAnimationUnitSpec = TopLevelUnitSpec & {
+  "transform"?: (Transform | VlaFilterTransform)[],
+  "encoding": { "time": VlAnimationTimeEncoding },
+  "enter"?: Encoding<any>,
+  "exit"?: Encoding<any>,
+};
+
+// This is the type of an initial input json spec, can be either unit or have layers (written by the user)
+// type VlAnimationSpec = vl.TopLevelSpec | VlAnimationUnitSpec | (TopLevel<LayerSpec> & {
+export type VlAnimationSpec = VlAnimationUnitSpec | (TopLevel<LayerSpec> & {
+  layer: (LayerSpec | VlAnimationUnitSpec)[]
+})
+
+type ElaboratedVlAnimationTimeEncoding = {
+  "field": string,
+  "scale": {
+    "type": "band",
+    "range": {"step": number} // TODO: generalize 'step' to vega.RangeBand
+  } | {
+    "type": "linear",
+    "range": [number, number]
+  }
+  "continuity"?: { "field": string },
+  "rescale": boolean,
+  "interpolateLoop": boolean,
+};
+
+type ElaboratedVlAnimationUnitSpec = TopLevelUnitSpec & {
+  "transform": (Transform | VlaFilterTransform)[],
+  "encoding": { "time": ElaboratedVlAnimationTimeEncoding },
+  "enter"?: Encoding<any>, // TODO ask josh about this
+  "exit"?: Encoding<any>,
+};
+
+// the elaborated type we create from the input and pass to the compiler
+export type ElaboratedVlAnimationSpec = ElaboratedVlAnimationUnitSpec | (TopLevel<LayerSpec> & {
+  layer: (LayerSpec | ElaboratedVlAnimationUnitSpec)[]
+});
+
 
 /**
  * Renders vega spec into DOM
@@ -50,7 +93,7 @@ type VlAnimationSpec = TopLevelUnitSpec & { "encoding": { "time": VlAnimationTim
 }
 
 /**
- * 
+ *
  * @param vlaSpec Vega-Lite animation spec
  * @param id id for a container to append to DOM and attach vega embed
  */
@@ -69,7 +112,7 @@ const renderSpec = (vlaSpec: VlAnimationSpec, id: string): void => {
 import * as gapminder from './gapminder.json';
 import * as barchartrace from './bar-chart-race.json';
 import * as walmart from './walmart.json';
-import * as dunkins from './dunkins_opening_closing.json'
+import * as dunkins from './dunkins_opening_closing_updated_syntax.json'
 import * as barley from './barley.json';
 import * as covidtrends from './covid-trends.json';
 import * as connectedScatterplot from './connected-scatterplot.json';
