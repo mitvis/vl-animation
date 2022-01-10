@@ -1,15 +1,15 @@
-import * as vega from 'vega';
+//import * as vega from 'vega';
 import { TopLevelUnitSpec } from 'vega-lite/build/src/spec/unit';
-import { Encoding } from 'vega-lite/build/src/encoding';
-import { AnyMark } from 'vega-lite/build/src/mark';
+//import { Encoding } from 'vega-lite/build/src/encoding';
+//import { AnyMark } from 'vega-lite/build/src/mark';
 
 // Types specific to Vega-Lite Animation
 
-type VlaPastEncoding = {
+/*type VlaPastEncoding = {
   "mark"?: AnyMark,
   "encoding"?: Encoding<any>,
   "filter"?: vega.Expr // predicate expr
-};
+};*/
 
 type VlAnimationTimeEncoding = {
   "field": string,

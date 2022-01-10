@@ -49,7 +49,7 @@ type SelectionTypes = 'enter' | 'exit';
 
 
     // for each mark and each property, add the exit and update properties to enter 
-    // NOTE: BROKEN
+    // NOTE: BROKEN as it uses enter exit
     for(const selection of selections){
       const encoding = vlaSpec[selection];
       if(!encoding) continue;
