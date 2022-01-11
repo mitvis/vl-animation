@@ -1,13 +1,192 @@
 import elaborateVla from '../scripts/elaboration';
 import compileVla from '../scripts/compile';
-
+import gapminderSpec from "../gapminder.json";
+import birdsSpec from "../birds.json";
 import dunkinsSpec from '../dunkins_opening_closing_updated_syntax.json';
+import { VlAnimationSpec, ElaboratedVlAnimationSpec } from '..';
 
 test('adds 1 + 2 to equal 3', () => {
   expect(1+2).toBe(3);
 });
 
-const dunkinsOutput = {
+// TODO: remove 
+const initialBirdsSpec: VlAnimationSpec = {
+    "width": 1000,
+    "height": 600,
+    "data": {
+        "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/6cb2070b6ffdd2d4bc1a91fdd635737048414881/bird_data.csv"
+    },
+    "transform": [{ "calculate": "toNumber(datum.day)", "as": "n_day" }],
+    "projection": {
+        "type": "mercator"
+    },
+    "mark": "circle",
+    "encoding": {
+        "longitude": {
+            "field": "lon",
+            "type": "quantitative"
+        },
+        "latitude": {
+            "field": "lat",
+            "type": "quantitative"
+        },
+        "color": {
+            "field": "species"
+        },
+        "time": {
+            "field": "n_day",
+            "scale": {
+                "type": "band",
+                "range": { "step": 100 }
+            },
+            "continuity": {
+                "field": "species"
+            }
+        }
+    },
+    "layer": [{
+            "transform": [{
+                "filter": {
+                    "time": [{ "equal": "datum.day" }]
+                }
+            }],
+            "encoding": {
+                "opacity": { "value": 1 }
+            }
+        },
+        {
+            "transform": [{
+                "filter": {
+                    "time": [{
+                            "gt": "datum.day-10"
+                        },
+                        {
+                            "lt": "datum.day"
+                        }
+                    ]
+                }
+            }],
+            "encoding": {
+                "opacity": { "value": 0.5 }
+            }
+        }
+    ]
+}
+
+const elaboratedBirdsSpec: ElaboratedVlAnimationSpec = {
+    "width": 1000,
+    "height": 600,
+    "data": {
+        "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/6cb2070b6ffdd2d4bc1a91fdd635737048414881/bird_data.csv"
+    },
+    "transform": [{ "calculate": "toNumber(datum.day)", "as": "n_day" }],
+    "projection": {
+        "type": "mercator"
+    },
+    "mark": "circle",
+    "encoding": {
+        "longitude": {
+            "field": "lon",
+            "type": "quantitative"
+        },
+        "latitude": {
+            "field": "lat",
+            "type": "quantitative"
+        },
+        "color": {
+            "field": "species"
+        },
+        "time": {
+            "field": "n_day",
+            "scale": {
+                "type": "band",
+                "range": { "step": 100 }
+            },
+            "continuity": {
+                "field": "species"
+            }
+        }
+    },
+    "layer": [{
+            "transform": [{ "calculate": "toNumber(datum.day)", "as": "n_day" },{
+                "filter": {
+                    "time": [{ "equal": "datum.day" }]
+                }
+            }],
+            "encoding": {
+                "opacity": { "value": 1 }
+            }
+        },
+        {
+            "transform": [{
+                "filter": {
+                    "time": [{
+                            "gt": "datum.day-10"
+                        },
+                        {
+                            "lt": "datum.day"
+                        }
+                    ]
+                }
+            }],
+            "encoding": {
+                "opacity": { "value": 0.5 }
+            }
+        }
+    ]
+}
+
+// Step 0: populate each layer with the time encoding (e.g. field:"year") if its in the base
+// Step 1: add transform->filter if it doesn't exist ( add it in at the end of the array)
+    // We need to ensure each layer has at least one time encoding 
+    // Note: we may need to do this in data. 
+// Step 2: add rescale:false, interpolateLoop:false to the time encoding 
+
+
+const elaboratedGapminderSpec: ElaboratedVlAnimationSpec = {
+    "data": {
+      "url": "https://raw.githubusercontent.com/vega/vega-datasets/master/data/gapminder.json"
+    },
+    "mark": "point",
+    "transform":[{ // TODO: Dylan fix 
+        "filter": {
+            "time":[{"equal":"datum.year"}]
+        }
+    }],
+    "encoding": {
+      "color": {
+        "field": "country"
+      },
+      "x": {
+        "field": "fertility",
+        "type": "quantitative"
+      },
+      "y": {
+        "field": "life_expect",
+        "type": "quantitative"
+      },
+      "time": {
+        "field": "year",
+        "scale": {
+          "type": "linear",
+          "range": [
+            0,
+            50000
+          ]
+        },
+        "continuity": {
+          "field": "country"
+        },
+        "rescale": false,
+        "interpolateLoop": false
+      }
+    }
+  }
+
+
+
+/*
+const dunkinsCompiledOutput = {
     "$schema": "https://vega.github.io/schema/vega/v5.json",
     "background": "white",
     "padding": 5,
@@ -248,10 +427,11 @@ const dunkinsOutput = {
     ]
 }
 
-test('Dunkins Correctly elaborates', () => {
+test('Dunkins Correctly elaborates + compiles', () => {
     const elaborated = elaborateVla(dunkinsSpec);
     const compiled = compileVla(elaborated)
     console.log(compiled);
     expect(compiled).toMatchObject(dunkinsOutput);
 });
 
+*/

@@ -1,9 +1,10 @@
 import * as vega from 'vega';
 import { TopLevelUnitSpec } from 'vega-lite/build/src/spec/unit';
 import { Encoding } from 'vega-lite/build/src/encoding';
-import { FieldPredicate } from 'vega-lite/build/src/predicate';
-import { Transform } from 'vega';
+import { Predicate } from 'vega-lite/build/src/predicate';
+import { Transform } from 'vega-lite/build/src/transform';
 import { LayerSpec, TopLevel} from 'vega-lite/build/src/spec';
+import { LogicalComposition } from 'vega-lite/build/src/logical';
 
 import compileVla from './scripts/compile';
 import elaborateVla from './scripts/elaboration';
@@ -25,10 +26,16 @@ type VlAnimationTimeEncoding = {
 
 // time-specific filter predicate
 type TimePredicate = {
-  time: FieldPredicate | FieldPredicate[]
+  time: TimeFieldComparisonPredicate | TimeFieldComparisonPredicate[]
 }
 
-type VlaFilterTransform = FilterTransform & {
+type TimeFieldComparisonPredicate = {"equal": string} |
+  {"lt": string} |
+  {"gt": string} |
+  {"lte": string} |
+  {"gte": string};
+
+type VlaFilterTransform = {
   "filter": LogicalComposition<Predicate | TimePredicate>
 };
 
@@ -130,7 +137,7 @@ const exampleSpecs = {
 }
 
 // casts are bad!
-renderSpec(exampleSpecs.dunkins as VlAnimationSpec, "connectedScatterplot");
+renderSpec(exampleSpecs.gapminder as VlAnimationSpec, "connectedScatterplot");
 
 (window as any).view.addSignalListener('anim_val_curr', (_: any, value: string) => {
   document.getElementById('year').innerHTML = (new Date(parseInt(value)*1000)).toISOString();

@@ -1,43 +1,62 @@
 {
-  "width": 1000,
-  "height": 600,
-  "data": {
-    "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/6cb2070b6ffdd2d4bc1a91fdd635737048414881/bird_data.csv"
-  },
-  "transform": [
-    {"calculate": "toNumber(datum.day)", "as": "n_day"}
-  ],
-  "projection": {
-    "type": "mercator"
-  },
-  "mark": "circle",
-  "encoding": {
-    "longitude": {
-      "field": "lon",
-      "type": "quantitative"
+    "width": 1000,
+    "height": 600,
+    "data": {
+        "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/6cb2070b6ffdd2d4bc1a91fdd635737048414881/bird_data.csv"
     },
-    "latitude": {
-      "field": "lat",
-      "type": "quantitative"
+    "transform": [{ "calculate": "toNumber(datum.day)", "as": "n_day" }],
+    "projection": {
+        "type": "mercator"
     },
-    "color": {
-      "field": "species"
-    },
-    "time": {
-      "field": "n_day",
-      "scale": {
-        "type": "band",
-        "range": {"step": 100}
-      },
-      "continuity": {
-        "field": "species"
-      },
-      "past": {
-        "encoding": {
-          "opacity": {"value": 0.1}
+    "mark": "circle",
+    "encoding": {
+        "longitude": {
+            "field": "lon",
+            "type": "quantitative"
         },
-        "filter": "anim_val_curr - datum.day < 10"
-      }
-    }
-  }
+        "latitude": {
+            "field": "lat",
+            "type": "quantitative"
+        },
+        "color": {
+            "field": "species"
+        },
+        "time": {
+            "field": "n_day",
+            "scale": {
+                "type": "band",
+                "range": { "step": 100 }
+            },
+            "continuity": {
+                "field": "species"
+            }
+        }
+    },
+    "layer": [{
+            "transform": [{
+                "filter": {
+                    "time": [{ "equal": "datum.day" }]
+                }
+            }],
+            "encoding": {
+                "opacity": { "value": 1 }
+            }
+        },
+        {
+            "transform": [{
+                "filter": {
+                    "time": [{
+                            "gt": "datum.day-10"
+                        },
+                        {
+                            "lt": "datum.day"
+                        }
+                    ]
+                }
+            }],
+            "encoding": {
+                "opacity": { "value": 0.5 }
+            }
+        }
+    ]
 }
