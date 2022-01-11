@@ -1,5 +1,6 @@
 import * as vega from 'vega';
 import { TopLevelUnitSpec } from 'vega-lite/build/src/spec/unit';
+import { UnitSpec } from 'vega-lite/build/src/spec/unit';
 import { Encoding } from 'vega-lite/build/src/encoding';
 import { Predicate } from 'vega-lite/build/src/predicate';
 import { Transform } from 'vega-lite/build/src/transform';
@@ -47,12 +48,25 @@ type VlAnimationUnitSpec = TopLevelUnitSpec & {
   "exit"?: Encoding<any>,
 };
 
+/////////////////////////// Initial Specs  ///////////////////////////
+type TopLevelLayeredAnimationSpec = Override<TopLevel<LayerSpec>,{
+  layer: (LayerSpec | VlAnimationLayerSpec)[]
+}>
+
+type VlAnimationLayerSpec = Override<LayerSpec,{
+  "transform"?: (Transform | VlaFilterTransform)[], // this may have been provided in top layer
+  "encoding"?: { "time": ElaboratedVlAnimationTimeEncoding }, // this may have been provided in top layer
+  "enter"?: Encoding<any>, 
+  "exit"?: Encoding<any>,
+}>;
+
+
 // This is the type of an initial input json spec, can be either unit or have layers (written by the user)
 // type VlAnimationSpec = vl.TopLevelSpec | VlAnimationUnitSpec | (TopLevel<LayerSpec> & {
-export type VlAnimationSpec = VlAnimationUnitSpec | (TopLevel<LayerSpec> & {
-  layer: (LayerSpec | VlAnimationUnitSpec)[]
-})
+export type VlAnimationSpec = VlAnimationUnitSpec | TopLevelLayeredAnimationSpec;
 
+
+/////////////////////////// Elaborated Specs  ///////////////////////////
 type ElaboratedVlAnimationTimeEncoding = {
   "field": string,
   "scale": {
@@ -67,17 +81,30 @@ type ElaboratedVlAnimationTimeEncoding = {
   "interpolateLoop": boolean,
 };
 
-type ElaboratedVlAnimationUnitSpec = TopLevelUnitSpec & {
+type ElaboratedVlAnimationUnitSpec = Override<UnitSpec,{
   "transform": (Transform | VlaFilterTransform)[],
   "encoding": { "time": ElaboratedVlAnimationTimeEncoding },
   "enter"?: Encoding<any>, // TODO ask josh about this
   "exit"?: Encoding<any>,
-};
+}>;
+
+// As suggested: https://dev.to/vborodulin/ts-how-to-override-properties-with-type-intersection-554l
+// I don't think '&' does what we want for conflicting property names: https://www.typescriptlang.org/play?noLib=true#code/PTAEAEDsHsBkEsBGAuUAXATgVwKYCg0BPABx1AENjiAbMgXlAG89RRJyBbHVAZ03kgBzANx4AvngIkypchlANmrdl1SQsHRDgyiJU0qABm2eGgUUqtUADJQsnZLy0zAN3LVQqY1lPnGK7gBWMVE8IA
+type Override<T1, T2> = Omit<T1, keyof T2> & T2;
+
+type ElaboratedVlAnimationLayerSpec = Override<LayerSpec,{
+  "transform"?: (Transform | VlaFilterTransform)[], // this may have been provided in top layer
+  "encoding"?: { "time": ElaboratedVlAnimationTimeEncoding }, // this may have been provided in top layer
+  "enter"?: Encoding<any>, 
+  "exit"?: Encoding<any>,
+}>;
+
+type ElaboratedTopLevelLayeredAnimationSpec = Override<TopLevel<LayerSpec>,{
+  layer: (LayerSpec | ElaboratedVlAnimationLayerSpec)[]
+}>
 
 // the elaborated type we create from the input and pass to the compiler
-export type ElaboratedVlAnimationSpec = ElaboratedVlAnimationUnitSpec | (TopLevel<LayerSpec> & {
-  layer: (LayerSpec | ElaboratedVlAnimationUnitSpec)[]
-});
+export type ElaboratedVlAnimationSpec = ElaboratedVlAnimationUnitSpec | ElaboratedTopLevelLayeredAnimationSpec
 
 
 /**

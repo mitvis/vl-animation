@@ -8,7 +8,39 @@ import { VlAnimationSpec, ElaboratedVlAnimationSpec } from '..';
 test('adds 1 + 2 to equal 3', () => {
   expect(1+2).toBe(3);
 });
-
+const gapminder : VlAnimationSpec = {
+    "data": {
+      "url": "https://raw.githubusercontent.com/vega/vega-datasets/master/data/gapminder.json"
+    },
+    "mark": "point",
+    "encoding": {
+      "color": {
+        "field": "country"
+      },
+      "x": {
+        "field": "fertility",
+        "type": "quantitative"
+      },
+      "y": {
+        "field": "life_expect",
+        "type": "quantitative"
+      },
+      "time": {
+        "field": "year",
+        "scale": {
+          "type": "linear",
+          "range": [
+            0,
+            50000
+          ]
+        },
+        "continuity": {
+          "field": "country"
+        }
+      }
+    }
+  }
+  
 // TODO: remove 
 const initialBirdsSpec: VlAnimationSpec = {
     "width": 1000,
@@ -148,7 +180,7 @@ const elaboratedGapminderSpec: ElaboratedVlAnimationSpec = {
       "url": "https://raw.githubusercontent.com/vega/vega-datasets/master/data/gapminder.json"
     },
     "mark": "point",
-    "transform":[{ // TODO: Dylan fix 
+    "transform":[{ // TODO: coming from & operator combining topLeveLUnitSpec in line 70 of index.ts
         "filter": {
             "time":[{"equal":"datum.year"}]
         }
