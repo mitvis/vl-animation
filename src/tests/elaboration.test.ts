@@ -971,13 +971,6 @@ test("elaboration initial", () => {
 			url: "https://raw.githubusercontent.com/vega/vega-datasets/master/data/gapminder.json",
 		},
 		mark: "point",
-		transform: [
-			{
-				filter: {
-					time: [{equal: "datum.year"}],
-				},
-			},
-		],
 		hi: "hi",
 		encoding: {
 			color: {
@@ -1000,8 +993,6 @@ test("elaboration initial", () => {
 				continuity: {
 					field: "country",
 				},
-				rescale: false,
-				interpolateLoop: false,
 			},
 		},
 	};
