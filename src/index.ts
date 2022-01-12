@@ -3,7 +3,7 @@ import { TopLevelUnitSpec } from 'vega-lite/build/src/spec/unit';
 import { Encoding } from 'vega-lite/build/src/encoding';
 import { Predicate } from 'vega-lite/build/src/predicate';
 import { Transform } from 'vega-lite/build/src/transform';
-import { LayerSpec, TopLevel} from 'vega-lite/build/src/spec';
+import { GenericUnitSpec, LayerSpec, TopLevel, UnitSpec} from 'vega-lite/build/src/spec';
 import { LogicalComposition } from 'vega-lite/build/src/logical';
 
 import compileVla from './scripts/compile';
@@ -40,16 +40,15 @@ type VlaFilterTransform = {
 };
 
 // actual unit spec, is either top level or is top level
-type VlAnimationUnitSpec = TopLevelUnitSpec & {
+type VlAnimationUnitSpec = Omit<UnitSpec, "transform"|"encoding"> & {
   "transform"?: (Transform | VlaFilterTransform)[],
-  "encoding": { "time": VlAnimationTimeEncoding },
+  "encoding": { "time"?: VlAnimationTimeEncoding },
   "enter"?: Encoding<any>,
   "exit"?: Encoding<any>,
 };
 
 // This is the type of an initial input json spec, can be either unit or have layers (written by the user)
-// type VlAnimationSpec = vl.TopLevelSpec | VlAnimationUnitSpec | (TopLevel<LayerSpec> & {
-export type VlAnimationSpec = VlAnimationUnitSpec | (TopLevel<LayerSpec> & {
+export type VlAnimationSpec = VlAnimationUnitSpec | (Omit<TopLevel<LayerSpec>, "layer"> & {
   layer: (LayerSpec | VlAnimationUnitSpec)[]
 })
 
@@ -67,7 +66,7 @@ type ElaboratedVlAnimationTimeEncoding = {
   "interpolateLoop": boolean,
 };
 
-type ElaboratedVlAnimationUnitSpec = TopLevelUnitSpec & {
+type ElaboratedVlAnimationUnitSpec = Omit<UnitSpec, "transform"|"encoding"> & {
   "transform": (Transform | VlaFilterTransform)[],
   "encoding": { "time": ElaboratedVlAnimationTimeEncoding },
   "enter"?: Encoding<any>, // TODO ask josh about this
@@ -75,7 +74,7 @@ type ElaboratedVlAnimationUnitSpec = TopLevelUnitSpec & {
 };
 
 // the elaborated type we create from the input and pass to the compiler
-export type ElaboratedVlAnimationSpec = ElaboratedVlAnimationUnitSpec | (TopLevel<LayerSpec> & {
+export type ElaboratedVlAnimationSpec = ElaboratedVlAnimationUnitSpec | (Omit<TopLevel<LayerSpec>, "layer"> & {
   layer: (LayerSpec | ElaboratedVlAnimationUnitSpec)[]
 });
 

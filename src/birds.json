@@ -1,62 +1,61 @@
 {
-    "width": 1000,
-    "height": 600,
-    "data": {
-        "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/6cb2070b6ffdd2d4bc1a91fdd635737048414881/bird_data.csv"
+  "width": 1000,
+  "height": 600,
+  "data": {
+    "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/6cb2070b6ffdd2d4bc1a91fdd635737048414881/bird_data.csv"
+  },
+  "transform": [{ "calculate": "toNumber(datum.day)", "as": "n_day" }],
+  "projection": {
+    "type": "mercator"
+  },
+  "encoding": {
+    "longitude": {
+      "field": "lon"
     },
-    "transform": [{ "calculate": "toNumber(datum.day)", "as": "n_day" }],
-    "projection": {
-        "type": "mercator"
+    "latitude": {
+      "field": "lat"
     },
+    "color": {
+      "field": "species"
+    },
+    "time": {
+      "field": "n_day",
+      "scale": {
+        "type": "band",
+        "range": { "step": 100 }
+      },
+      "continuity": {
+        "field": "species"
+      }
+    }
+  },
+  "layer": [{
     "mark": "circle",
-    "encoding": {
-        "longitude": {
-            "field": "lon",
-            "type": "quantitative"
-        },
-        "latitude": {
-            "field": "lat",
-            "type": "quantitative"
-        },
-        "color": {
-            "field": "species"
-        },
-        "time": {
-            "field": "n_day",
-            "scale": {
-                "type": "band",
-                "range": { "step": 100 }
-            },
-            "continuity": {
-                "field": "species"
-            }
-        }
+    "transform": [{
+      "filter": {
+        "time": [{ "equal": "datum.day" }]
+      }
+      }],
+      "encoding": {
+        "opacity": { "value": 1 }
+      }
     },
-    "layer": [{
-            "transform": [{
-                "filter": {
-                    "time": [{ "equal": "datum.day" }]
-                }
-            }],
-            "encoding": {
-                "opacity": { "value": 1 }
-            }
-        },
-        {
-            "transform": [{
-                "filter": {
-                    "time": [{
-                            "gt": "datum.day-10"
-                        },
-                        {
-                            "lt": "datum.day"
-                        }
-                    ]
-                }
-            }],
-            "encoding": {
-                "opacity": { "value": 0.5 }
-            }
-        }
-    ]
+    {
+      "mark": "circle",
+      "transform": [{
+        "filter": {
+          "time": [{
+            "gt": "datum.day-10"
+          },
+          {
+            "lt": "datum.day"
+          }
+        ]
+      }
+      }],
+      "encoding": {
+        "opacity": { "value": 0.5 }
+      }
+    }
+  ]
 }
