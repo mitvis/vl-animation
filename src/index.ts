@@ -10,7 +10,7 @@ import compileVla from "./scripts/compile";
 import elaborateVla from "./scripts/elaboration";
 
 // Types specific to Vega-Lite Animation
-type VlAnimationTimeEncoding = {
+export type VlAnimationTimeEncoding = {
 	field: string;
 	scale:
 		| {

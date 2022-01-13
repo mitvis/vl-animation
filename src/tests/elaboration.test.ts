@@ -22,7 +22,6 @@ const elaboratedBirdsSpec: ElaboratedVlAnimationSpec = {
 	projection: {
 		type: "mercator",
 	},
-	mark: "circle",
 	encoding: {
 		longitude: {
 			field: "lon",
@@ -966,35 +965,6 @@ test('Dunkins Correctly elaborates + compiles', () => {
 
 test("elaboration initial", () => {
 	const elaborated = elaborateVla(gapminderSpec);
-	const elabGap = {
-		data: {
-			url: "https://raw.githubusercontent.com/vega/vega-datasets/master/data/gapminder.json",
-		},
-		mark: "point",
-		hi: "hi",
-		encoding: {
-			color: {
-				field: "country",
-			},
-			x: {
-				field: "fertility",
-				type: "quantitative",
-			},
-			y: {
-				field: "life_expect",
-				type: "quantitative",
-			},
-			time: {
-				field: "year",
-				scale: {
-					type: "linear",
-					range: [0, 50000],
-				},
-				continuity: {
-					field: "country",
-				},
-			},
-		},
-	};
-	expect(elaborated).toMatchObject(elabGap);
+
+	expect(elaborated).toEqual(elabGap);
 });
