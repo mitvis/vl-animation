@@ -1,0 +1,86 @@
+{
+    "width": 1000,
+    "height": 1000,
+    "data": {
+        "url": "https://raw.githubusercontent.com/vega/vega-datasets/master/data/driving.json"
+    },
+    "transform": [{
+        "calculate": "':)'",
+        "as": "key"
+    }],
+    "encoding": {
+        "x": {
+            "field": "miles",
+            "type": "quantitative",
+            "scale": {
+                "zero": false
+            }
+        },
+        "y": {
+            "field": "gas",
+            "type": "quantitative",
+            "scale": {
+                "zero": false
+            }
+        },
+        "time": {
+            "field": "year",
+            "scale": {
+                "type": "band",
+                "range": {
+                    "step": 200
+                }
+            },
+            "continuity": {
+                "field": "key"
+            },
+            "rescale": false,
+            "interpolateLoop": false
+        }
+    },
+    "layer": [{
+            "mark": "line",
+            "transform": [{
+                "filter": {
+                    "time": [{
+                        "lte": "datum.year"
+                    }]
+                }
+            }],
+            "encoding": {
+                "opacity": {
+                    "value": 0.5
+                },
+                "time": {
+                    "field": null,
+                    "scale": null,
+                    "continuity": null,
+                    "rescale": false,
+                    "interpolateLoop": false
+                }
+            }
+        },
+        {
+            "mark": "circle",
+            "transform": [{
+                "filter": {
+                    "time": [{
+                        "equal": "datum.year"
+                    }]
+                }
+            }],
+            "encoding": {
+                "order": {
+                    "field": "year"
+                },
+                "time": {
+                    "field": null,
+                    "scale": null,
+                    "continuity": null,
+                    "rescale": false,
+                    "interpolateLoop": false
+                }
+            }
+        }
+    ]
+}
