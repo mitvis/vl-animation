@@ -1,5 +1,5 @@
 //@ts-nocheck
-import elaborateVla from "../scripts/elaboration";
+import compileVla from "../scripts/compile";
 import gapminderSpec from "../gapminder.json";
 import barChartSpec from "../bar-chart-race.json";
 import connectedScatterplotSpec from "../connected-scatterplot.json";
@@ -16,13 +16,13 @@ test("adds 1 + 2 to equal 3", () => {
 	expect(1 + 2).toBe(3);
 });
 
-test("elaboration gapminder", () => {
-	const elaborated = elaborateVla(gapminderSpec);
+test("compiled gapminder", () => {
+	const compiled = compileVla(elaboratedGapminderSpec);
 
-	expect(elaborated).toEqual(elaboratedGapminderSpec);
+	expect(compiled).toEqual({});
 });
 
-test("elaboration bar chart", () => {
+test("compiled bar chart", () => {
 	const elaborated = elaborateVla(barChartSpec);
 
 	expect(elaborated).toEqual(elaboratedBarChartRaceSpec);

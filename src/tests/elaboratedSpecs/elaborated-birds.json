@@ -1,42 +1,93 @@
 {
+    "width": 1000,
+    "height": 600,
     "data": {
-        "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/fcc1e69167289e4e3c78b8a86ae258b14cc83a2d/category-brands.csv"
+        "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/6cb2070b6ffdd2d4bc1a91fdd635737048414881/bird_data.csv"
     },
-    "mark": "bar",
     "transform": [{
-        "filter": {
-            "time": [{
-                "equal": "datum.date"
-            }]
-        }
+        "calculate": "toNumber(datum.day)",
+        "as": "n_day"
     }],
+    "projection": {
+        "type": "mercator"
+    },
     "encoding": {
-        "color": {
-            "field": "category"
-        },
-        "x": {
-            "field": "value",
+        "longitude": {
+            "field": "lon",
             "type": "quantitative"
         },
-        "y": {
-            "field": "name",
-            "type": "nominal",
-            "sort": {
-                "field": "value",
-                "order": "descending"
-            }
+        "latitude": {
+            "field": "lat",
+            "type": "quantitative"
+        },
+        "color": {
+            "field": "species"
         },
         "time": {
-            "field": "date",
+            "field": "n_day",
             "scale": {
-                "type": "linear",
-                "range": [0, 50000]
+                "type": "band",
+                "range": {
+                    "step": 100
+                }
             },
             "continuity": {
-                "field": "name"
+                "field": "species"
             },
-            "interpolateLoop": false,
-            "rescale": true
+            "rescale": false,
+            "interpolateLoop": false
         }
-    }
+    },
+    "layer": [{
+            "mark": "circle",
+            "transform": [{
+                    "calculate": "toNumber(datum.day)",
+                    "as": "n_day"
+                },
+                {
+                    "filter": {
+                        "time": [{
+                            "equal": "datum.day"
+                        }]
+                    }
+                }
+            ],
+            "encoding": {
+                "opacity": {
+                    "value": 1
+                },
+                "time": {
+                    "field": null,
+                    "scale": null,
+                    "rescale": false,
+                    "interpolateLoop": false
+                }
+            }
+        },
+        {
+            "mark": "circle",
+            "transform": [{
+                "filter": {
+                    "time": [{
+                            "gt": "datum.day-10"
+                        },
+                        {
+                            "lt": "datum.day"
+                        }
+                    ]
+                }
+            }],
+            "encoding": {
+                "opacity": {
+                    "value": 0.5
+                },
+                "time": {
+                    "field": null,
+                    "scale": null,
+                    "rescale": false,
+                    "interpolateLoop": false
+                }
+            }
+        }
+    ]
 }
