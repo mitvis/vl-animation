@@ -92,8 +92,8 @@ import { ElaboratedVlAnimationSpec } from '..';
       {
         "type": "lookup",
         "from": dataset_next,
-        "key": timeEncoding.continuity?.field,
-        "fields": [timeEncoding.continuity?.field],
+        "key": timeEncoding.interpolate?.field,
+        "fields": [timeEncoding.interpolate?.field],
         "as": ["next"]
       },
       {
@@ -343,7 +343,7 @@ import { ElaboratedVlAnimationSpec } from '..';
       }
     })
 
-    if (timeEncoding.continuity) {
+    if (timeEncoding.interpolate) {
       // do not move this higher up in the file
       newDatasets.push({
         "name": dataset_continuity,
@@ -373,7 +373,7 @@ import { ElaboratedVlAnimationSpec } from '..';
     newVgSpec.signals = newVgSpec.signals ?? [];
     newVgSpec.signals.push(...newSignals);
 
-    if (timeEncoding.continuity) {
+    if (timeEncoding.interpolate) {
       newVgSpec.marks[0].from.data = dataset_continuity;
     }
     else {
