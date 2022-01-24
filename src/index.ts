@@ -1,27 +1,26 @@
 import * as vega from 'vega';
-import { TopLevelUnitSpec } from 'vega-lite/build/src/spec/unit';
 import { Encoding } from 'vega-lite/build/src/encoding';
 import { Predicate } from 'vega-lite/build/src/predicate';
-import { Transform } from 'vega-lite/build/src/transform';
-import { GenericUnitSpec, LayerSpec, TopLevel, UnitSpec} from 'vega-lite/build/src/spec';
+import { LayerSpec, TopLevel, UnitSpec} from 'vega-lite/build/src/spec';
 import { LogicalComposition } from 'vega-lite/build/src/logical';
 
 import compileVla from './scripts/compile';
 import elaborateVla from './scripts/elaboration';
 
 // Types specific to Vega-Lite Animation
+interface VlAnimationTimeScale {
+  "type": string;
+  "range": {"step": number} | number[];
+};
+
 type VlAnimationTimeEncoding = {
   "field": string,
-  "scale": {
-    "type": "band",
-    "range": {"step": number} // TODO: generalize 'step' to vega.RangeBand
-  } | {
-    "type": "linear",
-    "range": [number, number]
-  }
-  "continuity"?: { "field": string },
-  "rescale"?: boolean,
-  "interpolateLoop"?: boolean
+  "scale": VlAnimationTimeScale,
+  "interpolate"?: {
+    "field": string,
+    "loop"?: boolean
+  },
+  "rescale"?: boolean
 };
 
 // time-specific filter predicate
@@ -40,43 +39,43 @@ type VlaFilterTransform = {
 };
 
 // actual unit spec, is either top level or is top level
-type VlAnimationUnitSpec = Omit<UnitSpec, "transform"|"encoding"> & {
-  "transform"?: (Transform | VlaFilterTransform)[],
+export type VlAnimationUnitSpec = Omit<UnitSpec<any>, "encoding"> & {
   "encoding": { "time"?: VlAnimationTimeEncoding },
   "enter"?: Encoding<any>,
   "exit"?: Encoding<any>,
 };
 
+export type VlAnimationLayerSpec = Omit<TopLevel<LayerSpec<any>>, "layer" | "encoding"> & {
+  layer: (LayerSpec<any> | VlAnimationUnitSpec)[],
+  encoding?: { "time"?: VlAnimationTimeEncoding }
+};
+
 // This is the type of an initial input json spec, can be either unit or have layers (written by the user)
-export type VlAnimationSpec = VlAnimationUnitSpec | (Omit<TopLevel<LayerSpec>, "layer"> & {
-  layer: (LayerSpec | VlAnimationUnitSpec)[]
-})
+export type VlAnimationSpec = VlAnimationUnitSpec | VlAnimationLayerSpec;
 
 type ElaboratedVlAnimationTimeEncoding = {
   "field": string,
-  "scale": {
-    "type": "band",
-    "range": {"step": number} // TODO: generalize 'step' to vega.RangeBand
-  } | {
-    "type": "linear",
-    "range": [number, number]
-  }
-  "continuity"?: { "field": string },
+  "scale": VlAnimationTimeScale,
+  "interpolate": {
+    "field": string,
+    "loop": boolean
+  },
   "rescale": boolean,
-  "interpolateLoop": boolean,
 };
 
-type ElaboratedVlAnimationUnitSpec = Omit<UnitSpec, "transform"|"encoding"> & {
-  "transform": (Transform | VlaFilterTransform)[],
-  "encoding": { "time": ElaboratedVlAnimationTimeEncoding },
+export type ElaboratedVlAnimationUnitSpec = Omit<UnitSpec<any>, "encoding"> & {
+  "encoding": { "time"?: ElaboratedVlAnimationTimeEncoding },
   "enter"?: Encoding<any>, // TODO ask josh about this
   "exit"?: Encoding<any>,
 };
 
+export type ElaboratedVlAnimationLayerSpec = Omit<TopLevel<LayerSpec<any>>, "layer" | "encoding"> & {
+  layer: (LayerSpec<any> | ElaboratedVlAnimationUnitSpec)[],
+  encoding?: { "time"?: VlAnimationTimeEncoding }
+};
+
 // the elaborated type we create from the input and pass to the compiler
-export type ElaboratedVlAnimationSpec = ElaboratedVlAnimationUnitSpec | (Omit<TopLevel<LayerSpec>, "layer"> & {
-  layer: (LayerSpec | ElaboratedVlAnimationUnitSpec)[]
-});
+export type ElaboratedVlAnimationSpec = ElaboratedVlAnimationUnitSpec | ElaboratedVlAnimationLayerSpec;
 
 
 /**
@@ -105,6 +104,7 @@ export type ElaboratedVlAnimationSpec = ElaboratedVlAnimationUnitSpec | (Omit<To
  */
 const renderSpec = (vlaSpec: VlAnimationSpec, id: string): void => {
   const elaboratedVlaSpec = elaborateVla(vlaSpec);
+  console.log(JSON.stringify(vlaSpec), JSON.stringify(elaboratedVlaSpec));
   const injectedVgSpec = compileVla(elaboratedVlaSpec);
   console.log('injected vega',injectedVgSpec)
   initVega(injectedVgSpec, id);

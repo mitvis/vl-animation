@@ -1,40 +1,84 @@
 //import * as vega from 'vega';
-import { TopLevelUnitSpec } from 'vega-lite/build/src/spec/unit';
-import { Encoding } from 'vega-lite/build/src/encoding';
-import { AnyMark } from 'vega-lite/build/src/mark';
-import { VlAnimationSpec, ElaboratedVlAnimationSpec } from '..';
+import { isSelectionParameter, PointSelectionConfig } from 'vega-lite/build/src/selection';
+import { EventStream } from 'vega-typings/types';
+import { VlAnimationSpec, ElaboratedVlAnimationSpec, VlAnimationUnitSpec, ElaboratedVlAnimationUnitSpec, VlAnimationLayerSpec } from '..';
 
 /**
 /**
- * fills in implicit values in the vla spec
- * @param vlaSpec
- * @returns
- */
- const elaborateVla = (vlaSpec: VlAnimationSpec): ElaboratedVlAnimationSpec => {
+* fills in implicit values in the vla spec
+* @param vlaSpec
+* @returns
+*/
+const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimationUnitSpec => {
 
-    const timeEncoding = vlaSpec.encoding.time;
+  const timeEncoding = vlaUnitSpec.encoding.time;
 
-    // if no transforms are provided, implicitly set it to only show data that is at the current time
-    if (!vlaSpec.transform || vlaSpec.transform?.length === 0) { // refactor this
-      vlaSpec.transform = [{"filter":`datum.${timeEncoding.field} == anim_val_curr`}]
-      // note: this may need to be moved to only apply to the curr data set, not to all data sets (causes cycle)
-    }
-
-
-    return {
-      ...vlaSpec,
-      "encoding": {
-        ...vlaSpec.encoding,
-        "time": {
-          ...timeEncoding,
-          "rescale": timeEncoding.rescale ?? false,
-          "interpolateLoop": timeEncoding.interpolateLoop ?? false
-        }
+  const elaboratedSpec = {
+    ...vlaUnitSpec,
+    "encoding": {
+      ...vlaUnitSpec.encoding,
+      "time": {
+        ...timeEncoding,
+        "interpolate": {
+          ...timeEncoding.interpolate,
+          "field": timeEncoding.interpolate?.field ?? "_vgsid_",
+          "loop": timeEncoding.interpolate?.loop ?? false
+        },
+        "rescale": timeEncoding.rescale ?? false,
       }
     }
+  };
+
+  // elaborate encoding into a default selection
+  if (!specContainsAnimationSelection(vlaUnitSpec)) {
+    elaboratedSpec.params = [
+      ...(elaboratedSpec.params ?? []),
+      {
+        "name": "current_frame",
+        "select": {
+          "type": "point",
+          "on": "timer"
+        }
+      }
+    ];
+    elaboratedSpec.transform = [
+      ...(elaboratedSpec.transform ?? []),
+      {"filter": {"param": "current_frame"}}
+    ]
   }
 
+  return elaboratedSpec;
+}
 
-  ////////////////////////////////////////////////////
+const specContainsAnimationSelection = (vlaUnitSpec: VlAnimationUnitSpec): boolean => {
+  if (vlaUnitSpec.params) {
+    vlaUnitSpec.params.find(param => {
+      if (!isSelectionParameter(param)) {
+        return false;
+      }
+      const pointSelect = param.select as PointSelectionConfig;
+      if (pointSelect.type !== 'point') {
+        return false;
+      }
+      if (pointSelect.on === 'timer' || (pointSelect.on as EventStream).type === 'timer') {
+        return true;
+      }
+      return false;
+    })
+  }
+  return false;
+}
 
-  export default elaborateVla;
+const elaborateVla = (vlaSpec: VlAnimationSpec): ElaboratedVlAnimationSpec => {
+  if ((vlaSpec as VlAnimationLayerSpec).layer) {
+    return null; // TODO
+  }
+  else {
+    return elaborateUnitVla(vlaSpec as VlAnimationUnitSpec);
+  }
+}
+
+
+////////////////////////////////////////////////////
+
+export default elaborateVla;
