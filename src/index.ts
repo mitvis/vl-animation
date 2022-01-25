@@ -1,6 +1,9 @@
 import * as vega from 'vega';
 import { Encoding } from 'vega-lite/build/src/encoding';
-import { LayerSpec, UnitSpec} from 'vega-lite/build/src/spec';
+import { LayerSpec, TopLevel, UnitSpec} from 'vega-lite/build/src/spec';
+import { PointSelectionConfig, SelectionParameter } from 'vega-lite/build/src/selection';
+import { VariableParameter } from 'vega-lite/build/src/parameter';
+import { Expr } from 'vega';
 
 import compileVla from "./scripts/compile";
 import elaborateVla from "./scripts/elaboration";
@@ -9,10 +12,22 @@ import elaborateVla from "./scripts/elaboration";
 type Override<T1, T2> = Omit<T1, keyof T2> & T2;
 
 // Types specific to Vega-Lite Animation
-interface VlAnimationTimeScale {
-  "type": string;
-  "range": {"step": number} | number[];
+export type VlAnimationTimeScale = {
+  // "type": string;
+  // "range": {"step": number} | number[];
+  "type": "linear";
+  "domain"?: any[];
+  "range": number[];
 };
+
+export type VlAnimationSelection = Override<SelectionParameter, {
+  "select": Override<PointSelectionConfig, {
+    "on": "timer" | {
+      "type": "timer",
+      "filter"?: Expr | Expr[];
+    }
+  }>
+}>;
 
 export type VlAnimationTimeEncoding = {
   "field": string,
@@ -26,20 +41,30 @@ export type VlAnimationTimeEncoding = {
 
 // actual unit spec, is either top level or is top level
 export type VlAnimationUnitSpec = Override<UnitSpec<any>, {
-  "encoding": { "time"?: VlAnimationTimeEncoding },
+  "params": (VariableParameter | SelectionParameter | VlAnimationSelection)[];
+  "encoding": Encoding<any> & { "time"?: VlAnimationTimeEncoding },
   "enter"?: Encoding<any>,
   "exit"?: Encoding<any>,
 }>;
 
 export type VlAnimationLayerSpec = Override<LayerSpec<any>, {
   layer: (VlAnimationLayerSpec | VlAnimationUnitSpec)[],
-  encoding?: { "time"?: VlAnimationTimeEncoding }
+  encoding?: Encoding<any> & { "time"?: VlAnimationTimeEncoding }
 }>;
 
 // This is the type of an initial input json spec, can be either unit or have layers (written by the user)
-export type VlAnimationSpec = VlAnimationUnitSpec | VlAnimationLayerSpec;
+export type VlAnimationSpec = VlAnimationUnitSpec | TopLevel<VlAnimationLayerSpec>;
 
 /////////////////////////// Elaborated Specs  ///////////////////////////
+export type ElaboratedVlAnimationSelection = Override<SelectionParameter, {
+  "select": Override<PointSelectionConfig, {
+    "on": {
+      "type": "timer",
+      "filter": Expr | Expr[];
+    }
+  }>
+}>;
+
 type ElaboratedVlAnimationTimeEncoding = {
   "field": string,
   "scale": VlAnimationTimeScale,
@@ -51,18 +76,19 @@ type ElaboratedVlAnimationTimeEncoding = {
 };
 
 export type ElaboratedVlAnimationUnitSpec = Override<UnitSpec<any>, {
-  "encoding": { "time"?: ElaboratedVlAnimationTimeEncoding },
+  "params": (VariableParameter | SelectionParameter | ElaboratedVlAnimationSelection)[];
+  "encoding": Encoding<any> & { "time"?: ElaboratedVlAnimationTimeEncoding },
   "enter"?: Encoding<any>,
   "exit"?: Encoding<any>,
 }>;
 
 export type ElaboratedVlAnimationLayerSpec = Override<LayerSpec<any>, {
   layer: (ElaboratedVlAnimationLayerSpec | ElaboratedVlAnimationUnitSpec)[],
-  encoding?: { "time"?: VlAnimationTimeEncoding }
+  encoding?: Encoding<any> & { "time"?: VlAnimationTimeEncoding }
 }>;
 
 // the elaborated type we create from the input and pass to the compiler
-export type ElaboratedVlAnimationSpec = ElaboratedVlAnimationUnitSpec | ElaboratedVlAnimationLayerSpec;
+export type ElaboratedVlAnimationSpec = ElaboratedVlAnimationUnitSpec | TopLevel<ElaboratedVlAnimationLayerSpec>;
 
 /**
  * Renders vega spec into DOM
@@ -93,7 +119,7 @@ const renderSpec = (vlaSpec: VlAnimationSpec, id: string): void => {
   console.log('vlaSpec', vlaSpec);
   console.log('elaboratedVlaSpec', elaboratedVlaSpec);
 	const injectedVgSpec = compileVla(elaboratedVlaSpec);
-	console.log("injected vega", injectedVgSpec);
+	console.log(JSON.stringify(injectedVgSpec, null, 2));
 	initVega(injectedVgSpec, id);
 };
 

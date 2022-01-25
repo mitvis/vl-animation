@@ -1,7 +1,8 @@
 //import * as vega from 'vega';
 import { isSelectionParameter, PointSelectionConfig } from 'vega-lite/build/src/selection';
 import { EventStream } from 'vega-typings/types';
-import { VlAnimationSpec, ElaboratedVlAnimationSpec, VlAnimationUnitSpec, ElaboratedVlAnimationUnitSpec, VlAnimationLayerSpec, VlAnimationTimeEncoding } from '..';
+import { VlAnimationSpec, ElaboratedVlAnimationSpec, VlAnimationUnitSpec, ElaboratedVlAnimationUnitSpec, VlAnimationLayerSpec, VlAnimationTimeEncoding, VlAnimationSelection, ElaboratedVlAnimationSelection } from '..';
+import { getAnimationSelectionFromParams, isParamAnimationSelection } from './compile';
 
 /**
 /**
@@ -31,20 +32,44 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimati
 
   // elaborate encoding into a default selection
   if (!specContainsAnimationSelection(vlaUnitSpec)) {
-    elaboratedSpec.params = [
-      ...(elaboratedSpec.params ?? []),
-      {
-        "name": "current_frame",
-        "select": {
-          "type": "point",
-          "on": "timer"
+    const param: ElaboratedVlAnimationSelection = {
+      "name": "current_frame",
+      "select": {
+        "type": "point",
+        "on": {
+          "type": "timer",
+          "filter": "true"
         }
       }
+    };
+    const filter = {"filter": {"param": "current_frame"}};
+    elaboratedSpec.params = [
+      ...(elaboratedSpec.params ?? []),
+      param
     ];
     elaboratedSpec.transform = [
       ...(elaboratedSpec.transform ?? []),
-      {"filter": {"param": "current_frame"}}
+      filter
     ]
+  }
+  else {
+    elaboratedSpec.params = vlaUnitSpec.params.map(param => {
+      if (isParamAnimationSelection(param)) {
+        return {
+          ...param,
+          "select": {
+            ...param.select,
+            "on": {
+              "type": "timer",
+              "filter": (param.select.on !== "timer") ? param.select.on.filter ?? "true" : "true"
+            }
+          }
+        }
+      }
+      else {
+        return param;
+      }
+    })
   }
 
   return elaboratedSpec;
@@ -52,19 +77,7 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimati
 
 const specContainsAnimationSelection = (vlaUnitSpec: VlAnimationUnitSpec): boolean => {
   if (vlaUnitSpec.params) {
-    vlaUnitSpec.params.find(param => {
-      if (!isSelectionParameter(param)) {
-        return false;
-      }
-      const pointSelect = param.select as PointSelectionConfig;
-      if (pointSelect.type !== 'point') {
-        return false;
-      }
-      if (pointSelect.on === 'timer' || (pointSelect.on as EventStream).type === 'timer') {
-        return true;
-      }
-      return false;
-    })
+    return getAnimationSelectionFromParams(vlaUnitSpec.params).length > 0;
   }
   return false;
 }
