@@ -73,7 +73,7 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
   }
 }
 
-const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string): Partial<vega.Spec> => {
+const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string, stackTransform: vega.Transforms[]): Partial<vega.Spec> => {
 
   let scales: vega.Scale[] = [
     {
@@ -87,9 +87,9 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
     }
   ];
 
+  let signals: vega.Signal[] = [];
 
-  let signals: vega.Signal[] = [
-  ]
+  let data: vega.Data[] = [];
 
   if (!timeEncoding.scale.domain) {
     // if there's no explicit domain, it's a field domain. therefore, there are discrete data values to match
@@ -152,6 +152,21 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
         ]
       }
     ];
+
+    data = [
+      ...data,
+      {
+        "name": `${dataset}_next`,
+        "source": dataset,
+        "transform": [
+          {
+            "type": "filter",
+            "expr": `datum['${timeEncoding.field}'] == anim_val_next`
+          },
+          ...stackTransform
+        ]
+      }
+    ]
   }
   else {
     // otherwise, we're dealing with a continuous domain and want to use the scale directly
@@ -160,11 +175,8 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
       {
         "name": "anim_val_curr", // current keyframe's value in time field domain
         "update": "invert('time', anim_clock)"
-      },
-      {
-        "name": "anim_val_next", // next keyframe's value in time domain
-        "update": `anim_val_curr`
-      },
+      }
+      // TODO
     ]
   }
 
@@ -228,9 +240,6 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
     }
 
     const dataset_curr = dataset + "_curr";
-    const dataset_next = dataset + "_next";
-
-    const signals: vega.Signal[] = [];
 
     const data: vega.Data[] = [
       {
@@ -243,23 +252,11 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
           },
           ...stackTransform
         ]
-      },
-      {
-        "name": dataset_next,
-        "source": dataset,
-        "transform": [
-          {
-            "type": "filter",
-            "expr": `datum['${field}'] == anim_val_next`
-          },
-          ...stackTransform
-        ]
       }
     ]
 
     return {
-      data,
-      signals
+      data
     }
   }).reduce((prev, curr) => {
     return mergeSpecs(curr as any, prev as any) as any; // lmao
@@ -353,7 +350,7 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
   vgSpec = mergeSpecs(vgSpec,
     createAnimationClock(animationSelections[0])); // TODO think about what happens if there's more than one animSelection
   vgSpec = mergeSpecs(vgSpec,
-    compileTimeScale(timeEncoding, dataset));
+    compileTimeScale(timeEncoding, dataset, stackTransform));
   vgSpec = mergeSpecs(vgSpec,
     compileAnimationSelections(animationSelections, dataset, timeEncoding.field, stackTransform));
 
