@@ -33,13 +33,17 @@
       "type": "quantitative"
     },
     "color": {
-      "value": "#FFFAA0"
+      "condition": {
+        "param": "open_dunks",
+        "value": "yellow"
+      },
+      "value": "grey"
     },
     "time": {
       "field": "open_datetime",
       "scale": {
         "type": "linear",
-        "domain": [0, 23],
+        "domain": [1632456000, 1632542400],
         "range": [
           0, 10000
         ]
