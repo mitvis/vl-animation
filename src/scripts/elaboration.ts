@@ -20,11 +20,10 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimati
       ...vlaUnitSpec.encoding,
       "time": {
         ...timeEncoding,
-        "interpolate": {
-          ...timeEncoding.interpolate,
-          "field": timeEncoding.interpolate?.field ?? "_vgsid_",
+        "interpolate": timeEncoding.interpolate ? {
+          "field": timeEncoding.interpolate.field,
           "loop": timeEncoding.interpolate?.loop ?? false
-        },
+        } : false,
         "rescale": timeEncoding.rescale ?? false,
       }
     }

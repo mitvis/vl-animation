@@ -26,6 +26,7 @@ export type VlAnimationSelection = Override<SelectionParameter, {
       "type": "timer",
       "filter"?: Expr | Expr[];
     }
+    "predicate"?: LogicalComposition<Predicate>;
   }>
 }>;
 
@@ -61,17 +62,18 @@ export type ElaboratedVlAnimationSelection = Override<SelectionParameter, {
     "on": {
       "type": "timer",
       "filter": Expr | Expr[];
-    }
+    },
+    "predicate"?: LogicalComposition<Predicate>;
   }>
 }>;
 
-type ElaboratedVlAnimationTimeEncoding = {
+export type ElaboratedVlAnimationTimeEncoding = {
   "field": string,
   "scale": VlAnimationTimeScale,
   "interpolate": {
     "field": string,
     "loop": boolean
-  },
+  } | false,
   "rescale": boolean,
 };
 
@@ -136,6 +138,8 @@ import * as barley from "./barley.json";
 import * as covidtrends from "./covid-trends.json";
 import * as connectedScatterplot from "./connected-scatterplot.json";
 import * as birds from "./birds.json";
+import { Predicate } from 'vega-lite/build/src/predicate';
+import { LogicalComposition } from 'vega-lite/build/src/logical';
 
 const exampleSpecs = {
 	gapminder,

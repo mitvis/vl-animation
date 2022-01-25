@@ -1,11 +1,12 @@
 import * as vega from 'vega';
 import * as vl from 'vega-lite';
 import clone from 'lodash.clonedeep';
-import { ElaboratedVlAnimationSelection, ElaboratedVlAnimationSpec, ElaboratedVlAnimationUnitSpec, VlAnimationSelection, VlAnimationTimeEncoding } from '..';
-import { EventStream, FilterTransform } from 'vega';
+import { ElaboratedVlAnimationSelection, ElaboratedVlAnimationSpec, ElaboratedVlAnimationTimeEncoding, ElaboratedVlAnimationUnitSpec, VlAnimationSelection, VlAnimationSpec } from '..';
+import { EventStream } from 'vega';
 import { VariableParameter } from 'vega-lite/build/src/parameter';
 import { SelectionParameter, isSelectionParameter, PointSelectionConfig } from 'vega-lite/build/src/selection';
-import { transform } from 'lodash';
+import { Transform, FilterTransform } from 'vega-lite/build/src/transform';
+import { ParameterPredicate } from 'vega-lite/build/src/predicate';
 // Types specific to Vega-Lite Animation
 
 export const isParamAnimationSelection = (param: any): param is VlAnimationSelection => {
@@ -28,14 +29,60 @@ export const getAnimationSelectionFromParams = (params: (VariableParameter | Sel
   }) as VlAnimationSelection[];
 }
 
-const compileTimeEncoding = (timeEncoding: VlAnimationTimeEncoding, dataset: string): Partial<vega.Spec> => {
+const getAnimationFilterTransforms = (transform: Transform[], animSelections: VlAnimationSelection[]): FilterTransform[] => {
+  return transform.filter(transform => {
+    return (transform as FilterTransform).filter && animSelections.some(s => ((transform as FilterTransform).filter as ParameterPredicate).param.includes(s.name));
+  }) as FilterTransform[];
+}
+
+const sanitizeVlaSpec = (vlaSpec: ElaboratedVlAnimationSpec): VlAnimationSpec => {
+  // remove the animation selections (we will compile them down manually into signals and datasets)
+  const animationSelections = getAnimationSelectionFromParams(vlaSpec.params);
+  const animationFilterTransforms = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
+  //
+  return {
+    ...vlaSpec,
+    "params": [...vlaSpec.params.filter(param => !(animationSelections.includes(param as VlAnimationSelection)))],
+    "transform": [...vlaSpec.transform.filter(t => !animationFilterTransforms.includes(t as FilterTransform))]
+  }
+}
+
+const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Partial<vega.Spec> => {
+  const throttleMs = 500;
+
+  const signals: vega.Signal[] = [
+    {
+      "name": "anim_clock", // ms elapsed in animation
+      "init": "0",
+      "on": [
+        {
+          "events": {"type": "timer", "throttle": throttleMs},
+          "update": `anim_clock > max_range_extent ? 0 : (${animSelection.select.on.filter} ? anim_clock + ${throttleMs} : anim_clock)`
+        }
+      ]
+    },
+    {
+      "name": "max_range_extent", // max value of time range
+      "init": "extent(range('time'))[1]"
+    }
+  ];
+
+  return {
+    signals
+  }
+}
+
+const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string): Partial<vega.Spec> => {
   const vgTimeScales: vega.Scale[] = [
     {
+      // an ordinal scale for getting the individual values in the discrete data domain
       "name": `${timeEncoding.field}_ordinal`,
       "type": "ordinal",
       "domain": { "data": dataset, "field": timeEncoding.field, "sort": true }
     },
     {
+      // a continuous scale for mapping values into time
+      // the fact that we need both suggests to me we probably want to make a new scale type that goes discrete -> continuous?
       "name": "time",
       "type": "linear",
       "zero": false,
@@ -99,111 +146,187 @@ const compileTimeEncoding = (timeEncoding: VlAnimationTimeEncoding, dataset: str
   };
 }
 
-const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSelection[], field: string): Partial<vega.Spec> => {
+const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSelection[], dataset: string, field: string, stackTransform: vega.Transforms[]): Partial<vega.Spec> => {
   return animationSelections.map(animSelection => {
-    const throttleMs = 500;
+    // const signals: vega.Signal[] = [
+    //   {
+    //     "name": `${animSelection.name}_toggle`,
+    //     "value": false
+    //   },
+    //   {
+    //     "name": `${animSelection.name}_tuple_fields`,
+    //     "value": [
+    //       {
+    //         "type": "E",
+    //         "field": field
+    //       }
+    //     ]
+    //   },
+    //   {
+    //     "name": `${animSelection.name}_tuple`,
+    //     "on": [
+    //       {
+    ////         "events": { "signal": "anim_clock" },
+    //         "events": { "signal": "anim_val_curr" },
+    //         "update": `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [anim_val_curr]}`,
+    //         "force": true
+    //       },
+    //       {
+    //         "events": [
+    //           {
+    //             "source": "view",
+    //             "type": "dblclick"
+    //           }
+    //         ],
+    //         "update": "null"
+    //       }
+    //     ]
+    //   }
+    // ];
 
-    const selectionSignals: vega.Signal[] = [
+    // TODO think about what happens if there's more than one animSelection
+    // also think about why this stuff has nothing to do with the selection spec
+
+    const dataset_curr = dataset + "_curr";
+    const dataset_next = dataset + "_next";
+
+    const signals: vega.Signal[] = [];
+
+    const data: vega.Data[] = [
       {
-        "name": "anim_clock", // ms elapsed in animation
-        "init": "0",
-        "on": [
+        "name": dataset_curr,
+        "source": dataset,
+        "transform": [
           {
-            "events": {"type": "timer", "throttle": throttleMs},
-            "update": `anim_clock > max_range_extent ? 0 : (${animSelection.select.on.filter} ? anim_clock + ${throttleMs} : anim_clock)`
-          }
-        ]
-      },
-      {
-        "name": "max_range_extent", // max value of time range
-        "init": "extent(range('time'))[1]"
-      },
-      {
-        "name": `${animSelection.name}_toggle`,
-        "value": false
-      },
-      {
-        "name": `${animSelection.name}_tuple_fields`,
-        "value": [
-          {
-            "type": "E",
-            "field": field
-          }
-        ]
-      },
-      {
-        "name": `${animSelection.name}_tuple`,
-        "on": [
-          {
-            "events": { "signal": "anim_clock" },
-            "update": `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [anim_val_curr]}`,
-            "force": true
+            "type": "filter",
+            "expr": `datum['${field}'] == anim_val_curr`
           },
+          ...stackTransform
+        ]
+      },
+      {
+        "name": dataset_next,
+        "source": dataset,
+        "transform": [
           {
-            "events": [
-              {
-                "source": "view",
-                "type": "dblclick"
-              }
-            ],
-            "update": "null"
-          }
+            "type": "filter",
+            "expr": `datum['${field}'] == anim_val_next`
+          },
+          ...stackTransform
         ]
       }
-    ];
+    ]
 
     return {
-      signals: selectionSignals
+      data,
+      signals
     }
   }).reduce((prev, curr) => {
     return mergeSpecs(curr as any, prev as any) as any; // lmao
   });
 }
 
+const compileInterpolation = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string): Partial<vega.Spec> => {
+  if (timeEncoding.interpolate !== false) {
+    const dataset_curr = dataset + "_curr";
+    const dataset_next = dataset + "_next";
+    const dataset_interpolate = dataset + "_interpolate";
+
+    // TODO line interpolation special case
+    const data: vega.Data[] = [
+      {
+        "name": dataset_interpolate,
+        "source": dataset_curr,
+        "transform": [
+          {
+            "type": "lookup",
+            "from": dataset_next,
+            "key": timeEncoding.interpolate.field,
+            "fields": [timeEncoding.interpolate.field],
+            "as": ["next"]
+          },
+          {
+            "type": "filter",
+            "expr": "isValid(datum.next)"
+          }
+        ]
+      }
+    ];
+
+    // TODO add all the lerp shit to the mark encodings
+
+    return {
+      data
+    };
+  }
+
+  return {};
+}
+
 const mergeSpecs = (vgSpec: vega.Spec, vgPartialSpec: Partial<vega.Spec>): vega.Spec => {
   if (vgPartialSpec.scales) {
     const newScaleNames = vgPartialSpec.scales.map(s => s.name);
-    const mergedScales =
     vgSpec = {
       ...vgSpec,
-      scales: vgSpec.scales.filter(s => !newScaleNames.includes(s.name)).concat(vgPartialSpec.scales);
+      scales: (vgSpec.scales ?? []).filter(s => !newScaleNames.includes(s.name)).concat(vgPartialSpec.scales)
     }
   }
   if (vgPartialSpec.signals) {
     const newSignalNames = vgPartialSpec.signals.map(s => s.name);
     vgSpec = {
       ...vgSpec,
-      signals: vgSpec.signals.filter(s => !newSignalNames.includes(s.name)).concat(vgPartialSpec.signals);
+      signals: (vgSpec.signals ?? []).filter(s => !newSignalNames.includes(s.name)).concat(vgPartialSpec.signals)
+    }
+  }
+  if (vgPartialSpec.data) {
+    const newDatasetNames = vgPartialSpec.data.map(s => s.name);
+    vgSpec = {
+      ...vgSpec,
+      data: (vgSpec.data ?? []).filter(s => !newDatasetNames.includes(s.name)).concat(vgPartialSpec.data)
     }
   }
   return vgSpec;
 }
 
 const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
-  let vgSpec = vl.compile(vlaSpec as vl.TopLevelSpec).spec;
+  const sanitizedVlaSpec = sanitizeVlaSpec(vlaSpec);
+
+  let vgSpec = vl.compile(sanitizedVlaSpec as vl.TopLevelSpec).spec;
   const timeEncoding = vlaSpec.encoding.time;
   const dataset = vgSpec.marks[0].from.data; // TODO assumes mark[0] is the main mark
 
   const animationSelections = getAnimationSelectionFromParams(vlaSpec.params) as ElaboratedVlAnimationSelection[];
+  const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
 
-  // this is really dumb. our scale stuff only works if there's a dataset without filtering so we can get the whole domain
-  const datasetSpec = vgSpec.data.find(d => d.name === dataset);
-  const animSelectionTransforms = datasetSpec.transform.filter(t => {
-    return animationSelections.some(s => (t as FilterTransform).expr && (t as FilterTransform).expr.includes(s.name))
-  });
-  datasetSpec.transform = datasetSpec.transform.filter(t => !animSelectionTransforms.includes(t));
-  const filteredDatasetSpec = {
-    ...datasetSpec,
-    "name": datasetSpec.name + "_filter",
-    "transform": [...datasetSpec.transform, ...animSelectionTransforms]
-  };
-  vgSpec.data.push(filteredDatasetSpec);
-  vgSpec.marks[0].from.data = filteredDatasetSpec.name;
+  /*
+  * stack transform controls the layout of bar charts. if it exists, we need to copy
+  * the transform into derived animation datasets so that layout still works :(
+  */
+  let stackTransform: vega.Transforms[] = [];
+  if (vlaSpec.mark === 'bar') {
+    stackTransform = [...vgSpec.data[1].transform];
+  }
 
-  const compiledAnimationSelections = compileAnimationSelections(animationSelections, timeEncoding.field);
-  vgSpec = mergeSpecs(vgSpec, compiledAnimationSelections);
-  const compiledTimeEncoding = compileTimeEncoding(timeEncoding, dataset);
-  vgSpec = mergeSpecs(vgSpec, compiledTimeEncoding);
+
+  vgSpec = mergeSpecs(vgSpec,
+    createAnimationClock(animationSelections[0])); // TODO think about what happens if there's more than one animSelection
+  vgSpec = mergeSpecs(vgSpec,
+    compileTimeScale(timeEncoding, dataset));
+  vgSpec = mergeSpecs(vgSpec,
+    compileAnimationSelections(animationSelections, dataset, timeEncoding.field, stackTransform));
+
+  // apply filter transform
+  if (animationFilters.length) {
+    if (timeEncoding.interpolate) {
+      vgSpec.marks[0].from.data = dataset + '_interpolate'; // TODO assumes mark[0]
+    }
+    else {
+      vgSpec.marks[0].from.data = dataset + '_curr'; // TODO assumes mark[0]
+    }
+  }
+
+  vgSpec = mergeSpecs(vgSpec,
+    compileInterpolation(timeEncoding, dataset));
 
 
   return vgSpec;
