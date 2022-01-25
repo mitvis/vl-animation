@@ -15,8 +15,8 @@
         "on": "timer",
         "predicate": {
           "and": [
-            {"field": "open_hour", "lte": "invert('time', anim_clock)"},
-            {"field": "close_hour", "gt": "invert('time', anim_clock)"}
+            {"field": "open_datetime", "lte": {"expr": "invert('time', anim_clock)"}},
+            {"field": "close_datetime", "gt": {"expr": "invert('time', anim_clock)"}}
           ]
         }
       }
