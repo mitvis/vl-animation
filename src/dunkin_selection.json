@@ -4,6 +4,16 @@
   "data": {
     "url": "https://gist.githubusercontent.com/dwootton/a3c02e0f170d0b84638e014c63d1f908/raw/6a9504ac7ba878f18799e2e3777ca766e4953ddc/dunkins_no_24_hr.csv"
   },
+  "transform": [
+    {
+      "calculate":"toNumber(datum.open_datetime)",
+      "as": "open_datetime"
+    },
+    {
+      "calculate": "toNumber(datum.closed_datetime)",
+      "as": "closed_datetime"
+    }
+  ],
   "projection": {
     "type": "albersUsa"
   },
@@ -16,7 +26,7 @@
         "predicate": {
           "and": [
             {"field": "open_datetime", "lte": {"expr": "invert('time', anim_clock)"}},
-            {"field": "close_datetime", "gt": {"expr": "invert('time', anim_clock)"}}
+            {"field": "closed_datetime", "gt": {"expr": "invert('time', anim_clock)"}}
           ]
         }
       }
@@ -43,7 +53,10 @@
       "field": "open_datetime",
       "scale": {
         "type": "linear",
-        "domain": [1632456000, 1632542400],
+        "domain": [
+          1632456000,
+          1632540600
+        ],
         "range": [
           0, 10000
         ]

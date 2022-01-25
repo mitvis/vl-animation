@@ -2,11 +2,12 @@ import * as vega from 'vega';
 import * as vl from 'vega-lite';
 import clone from 'lodash.clonedeep';
 import { ElaboratedVlAnimationSelection, ElaboratedVlAnimationSpec, ElaboratedVlAnimationTimeEncoding, ElaboratedVlAnimationUnitSpec, VlAnimationSelection, VlAnimationSpec } from '..';
-import { EventStream } from 'vega';
+import { EventStream, isArray } from 'vega';
 import { VariableParameter } from 'vega-lite/build/src/parameter';
 import { SelectionParameter, isSelectionParameter, PointSelectionConfig } from 'vega-lite/build/src/selection';
 import { Transform, FilterTransform } from 'vega-lite/build/src/transform';
 import { ParameterPredicate } from 'vega-lite/build/src/predicate';
+import { FieldDef } from 'vega-lite/build/src/channeldef';
 // Types specific to Vega-Lite Animation
 
 export const isParamAnimationSelection = (param: any): param is VlAnimationSelection => {
@@ -30,12 +31,12 @@ export const getAnimationSelectionFromParams = (params: (VariableParameter | Sel
 }
 
 const getAnimationFilterTransforms = (transform: Transform[], animSelections: VlAnimationSelection[]): FilterTransform[] => {
-  return transform.filter(transform => {
+  return (transform ?? []).filter(transform => {
     return (transform as FilterTransform).filter && animSelections.some(s => ((transform as FilterTransform).filter as ParameterPredicate).param.includes(s.name));
   }) as FilterTransform[];
 }
 
-const sanitizeVlaSpec = (vlaSpec: ElaboratedVlAnimationSpec): VlAnimationSpec => {
+const sanitizeVlaSpec = (vlaSpec: ElaboratedVlAnimationSpec): ElaboratedVlAnimationSpec => {
   // remove the animation selections (we will compile them down manually into signals and datasets)
   const animationSelections = getAnimationSelectionFromParams(vlaSpec.params);
   const animationFilterTransforms = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
@@ -43,7 +44,7 @@ const sanitizeVlaSpec = (vlaSpec: ElaboratedVlAnimationSpec): VlAnimationSpec =>
   return {
     ...vlaSpec,
     "params": [...vlaSpec.params.filter(param => !(animationSelections.includes(param as VlAnimationSelection)))],
-    "transform": [...vlaSpec.transform.filter(t => !animationFilterTransforms.includes(t as FilterTransform))]
+    "transform": [...(vlaSpec.transform ?? []).filter(t => !animationFilterTransforms.includes(t as FilterTransform))]
   }
 }
 
@@ -73,13 +74,8 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
 }
 
 const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string): Partial<vega.Spec> => {
-  const vgTimeScales: vega.Scale[] = [
-    {
-      // an ordinal scale for getting the individual values in the discrete data domain
-      "name": `${timeEncoding.field}_ordinal`,
-      "type": "ordinal",
-      "domain": { "data": dataset, "field": timeEncoding.field, "sort": true }
-    },
+
+  let scales: vega.Scale[] = [
     {
       // a continuous scale for mapping values into time
       // the fact that we need both suggests to me we probably want to make a new scale type that goes discrete -> continuous?
@@ -91,58 +87,90 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
     }
   ];
 
-  const vgTimeSignals: vega.Signal[] = [
-    {
-      "name": `${timeEncoding.field}_domain`,
-      "init": `domain('${timeEncoding.field}_ordinal')`
-    },
-    {
-      "name": "t_index", // index of current keyframe in the time field's domain
-      "init": "0",
-      "on": [
-        {
-          "events": { "signal": "anim_clock" },
-          // increment index if anim_clock passes the scale value of the next item. if incrementing, wrap to 0 if out of bounds.
-          "update": `scale('time', anim_val_next) <= anim_clock ? (t_index < length(${timeEncoding.field}_domain) - 1 ? t_index + 1 : 0) : t_index`
-        }
-      ]
-    },
-    {
-      "name": "min_extent", // min value of time field domain
-      "init": `extent(${timeEncoding.field}_domain)[0]`
-    },
-    {
-      "name": "max_extent", // max value of time field domain
-      "init": `extent(${timeEncoding.field}_domain)[1]`
-    },
-    {
-      "name": "anim_val_curr", // current keyframe's value in time field domain
-      "update": `${timeEncoding.field}_domain[t_index]`
-    },
-    {
-      "name": "anim_val_next", // next keyframe's value in time domain
-      // if interpolate.loop is true, we want to tween between last and first keyframes. therefore, next of last is first
-      "update": `t_index < length(${timeEncoding.field}_domain) - 1 ? ${timeEncoding.field}_domain[t_index + 1] : ${timeEncoding.interpolate.loop ? 'min_extent' : 'max_extent'}`
-    },
-    {
-      "name": "anim_tween", // tween signal between keyframes
-      "init": "0",
-      "on": [
-        {
-          "events": { "signal": "anim_clock" },
-          "update": `(anim_clock - scale('time', anim_val_curr)) / (scale('time', anim_val_next) - scale('time', anim_val_curr))`
-        },
-        {
-          "events": { "signal": "anim_val_curr" },
-          "update": "0"
-        }
-      ]
-    }
-  ];
+
+  let signals: vega.Signal[] = [
+  ]
+
+  if (!timeEncoding.scale.domain) {
+    // if there's no explicit domain, it's a field domain. therefore, there are discrete data values to match
+    scales = [
+      ...scales,
+      {
+        // an ordinal scale for getting the individual values in the discrete data domain
+        "name": `${timeEncoding.field}_ordinal`,
+        "type": "ordinal",
+        "domain": { "data": dataset, "field": timeEncoding.field, "sort": true }
+      },
+    ];
+
+    signals = [
+      ...signals,
+      {
+        "name": `${timeEncoding.field}_domain`,
+        "init": `domain('${timeEncoding.field}_ordinal')`
+      },
+      {
+        "name": "t_index", // index of current keyframe in the time field's domain
+        "init": "0",
+        "on": [
+          {
+            "events": { "signal": "anim_clock" },
+            // increment index if anim_clock passes the scale value of the next item. if incrementing, wrap to 0 if out of bounds.
+            "update": `scale('time', anim_val_next) <= anim_clock ? (t_index < length(${timeEncoding.field}_domain) - 1 ? t_index + 1 : 0) : t_index`
+          }
+        ]
+      },
+      {
+        "name": "min_extent", // min value of time field domain
+        "init": `extent(${timeEncoding.field}_domain)[0]`
+      },
+      {
+        "name": "max_extent", // max value of time field domain
+        "init": `extent(${timeEncoding.field}_domain)[1]`
+      },
+      {
+        "name": "anim_val_curr", // current keyframe's value in time field domain
+        "update": `${timeEncoding.field}_domain[t_index]`
+      },
+      {
+        "name": "anim_val_next", // next keyframe's value in time domain
+        // if interpolate.loop is true, we want to tween between last and first keyframes. therefore, next of last is first
+        "update": `t_index < length(${timeEncoding.field}_domain) - 1 ? ${timeEncoding.field}_domain[t_index + 1] : ${timeEncoding.interpolate.loop ? 'min_extent' : 'max_extent'}`
+      },
+      {
+        "name": "anim_tween", // tween signal between keyframes
+        "init": "0",
+        "on": [
+          {
+            "events": { "signal": "anim_clock" },
+            "update": `(anim_clock - scale('time', anim_val_curr)) / (scale('time', anim_val_next) - scale('time', anim_val_curr))`
+          },
+          {
+            "events": { "signal": "anim_val_curr" },
+            "update": "0"
+          }
+        ]
+      }
+    ];
+  }
+  else {
+    // otherwise, we're dealing with a continuous domain and want to use the scale directly
+    signals = [
+      ...signals,
+      {
+        "name": "anim_val_curr", // current keyframe's value in time field domain
+        "update": "invert('time', anim_clock)"
+      },
+      {
+        "name": "anim_val_next", // next keyframe's value in time domain
+        "update": `anim_val_curr`
+      },
+    ]
+  }
 
   return {
-    scales: vgTimeScales,
-    signals: vgTimeSignals
+    scales,
+    signals
   };
 }
 
@@ -185,7 +213,19 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
     // ];
 
     // TODO think about what happens if there's more than one animSelection
-    // also think about why this stuff has nothing to do with the selection spec
+
+    let predicateExpr = `datum['${field}'] == anim_val_curr`;
+    if (animSelection.select.predicate) {
+      const vlPredSpec = {
+        "mark": "circle",
+        "transform": [
+          {
+            "filter": animSelection.select.predicate
+          }
+        ]
+      };
+      predicateExpr = (vl.compile(vlPredSpec as any).spec as any).data[1].transform[0].expr;
+    }
 
     const dataset_curr = dataset + "_curr";
     const dataset_next = dataset + "_next";
@@ -199,7 +239,7 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
         "transform": [
           {
             "type": "filter",
-            "expr": `datum['${field}'] == anim_val_curr`
+            "expr": predicateExpr
           },
           ...stackTransform
         ]
@@ -290,8 +330,10 @@ const mergeSpecs = (vgSpec: vega.Spec, vgPartialSpec: Partial<vega.Spec>): vega.
 
 const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
   const sanitizedVlaSpec = sanitizeVlaSpec(vlaSpec);
+  console.log('sanitized', sanitizedVlaSpec)
 
   let vgSpec = vl.compile(sanitizedVlaSpec as vl.TopLevelSpec).spec;
+  console.log('compiled', vgSpec)
   const timeEncoding = vlaSpec.encoding.time;
   const dataset = vgSpec.marks[0].from.data; // TODO assumes mark[0] is the main mark
 
@@ -324,6 +366,9 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
       vgSpec.marks[0].from.data = dataset + '_curr'; // TODO assumes mark[0]
     }
   }
+
+  // apply conditional encodes
+
 
   vgSpec = mergeSpecs(vgSpec,
     compileInterpolation(timeEncoding, dataset));
