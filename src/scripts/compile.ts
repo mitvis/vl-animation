@@ -55,7 +55,6 @@ const compileTimeEncoding = (timeEncoding: VlAnimationTimeEncoding, dataset: str
       "on": [
         {
           "events": { "signal": "anim_clock" },
-          // TODO we probably need to modulo anim_clock by some duration to get it to loop
           // increment index if anim_clock passes the scale value of the next item. if incrementing, wrap to 0 if out of bounds.
           "update": `scale('time', anim_val_next) <= anim_clock ? (t_index < length(${timeEncoding.field}_domain) - 1 ? t_index + 1 : 0) : t_index`
         }
@@ -111,9 +110,13 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
         "on": [
           {
             "events": {"type": "timer", "throttle": throttleMs},
-            "update": `${animSelection.select.on.filter} ? anim_clock + ${throttleMs} : anim_clock`
+            "update": `anim_clock > max_range_extent ? 0 : (${animSelection.select.on.filter} ? anim_clock + ${throttleMs} : anim_clock)`
           }
         ]
+      },
+      {
+        "name": "max_range_extent", // max value of time range
+        "init": "extent(range('time'))[1]"
       },
       {
         "name": `${animSelection.name}_toggle`,
