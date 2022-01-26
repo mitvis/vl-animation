@@ -71,13 +71,19 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
       "on": [
         {
           "events": {"type": "timer", "throttle": throttleMs},
-          "update": `anim_clock > max_range_extent ? 0 : (${animSelection.select.on.filter} ? anim_clock + ${throttleMs} : anim_clock)`
+          "update": `${animSelection.select.on.filter} ? (anim_clock + (now() - last_tick_at) > max_range_extent ? 0 : anim_clock + (now() - last_tick_at)) : anim_clock`
         }
       ]
     },
     {
-      "name": "max_range_extent", // max value of time range
-      "init": "extent(range('time'))[1]"
+      "name": "last_tick_at",
+      "init": "now()",
+      "on": [
+        {
+          "events": {"signal": "anim_clock"},
+          "update": "now()"
+        }
+      ]
     }
   ];
 
@@ -88,30 +94,46 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
 
 const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string, stackTransform: vega.Transforms[]): Partial<vega.Spec> => {
 
-  let scales: vega.Scale[] = [
-    {
-      // a continuous scale for mapping values into time
-      "name": "time",
-      "type": "linear",
-      "zero": false,
-      "domain": timeEncoding.scale.domain ?? { "data": dataset, "field": timeEncoding.field },
-      "range": timeEncoding.scale.range ?? [0, 60000]
-    }
-  ];
-
+  let scales: vega.Scale[] = [];
+  let data: vega.Data[] = [];
   let signals: vega.Signal[] = [];
 
-  let data: vega.Data[] = [];
 
-  if (!timeEncoding.scale.domain) {
+  if (timeEncoding.scale.domain) {
+    scales = [
+      ...scales,
+      {
+        // a continuous scale for mapping values into time
+        "name": "time",
+        "type": "linear",
+        "zero": false,
+        "domain": timeEncoding.scale.domain ?? { "data": dataset, "field": timeEncoding.field },
+        "range": timeEncoding.scale.range ?? [0, 10000]
+      }
+    ]
+    signals = [
+      ...signals,
+      {
+        "name": "anim_val_curr", // current keyframe's value in time field domain
+        "update": "invert('time', anim_clock)"
+      },
+      {
+        "name": "max_range_extent", // max value of time range
+        "init": "extent(range('time'))[1]"
+      }
+    ]
+  }
+  else {
     // if there's no explicit domain, it's a field domain. therefore, there are discrete data values to match
     scales = [
       ...scales,
       {
-        // an ordinal scale for getting the individual values in the discrete data domain
-        "name": `${timeEncoding.field}_ordinal`,
-        "type": "ordinal",
-        "domain": { "data": dataset, "field": timeEncoding.field, "sort": true }
+        // a band scale for getting the individual values in the discrete data domain
+        "name": `time_${timeEncoding.field}`,
+        "type": "band",
+        "domain": { "data": dataset, "field": timeEncoding.field, "sort": true },
+        "range": timeEncoding.scale.range ?? [0, 10000],
+        "align": 0
       },
     ];
 
@@ -119,7 +141,7 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
       ...signals,
       {
         "name": `${timeEncoding.field}_domain`,
-        "init": `domain('${timeEncoding.field}_ordinal')`
+        "init": `domain('time_${timeEncoding.field}')`
       },
       {
         "name": "t_index", // index of current keyframe in the time field's domain
@@ -127,10 +149,13 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
         "on": [
           {
             "events": { "signal": "anim_clock" },
-            // increment index if anim_clock passes the scale value of the next item. if incrementing, wrap to 0 if out of bounds.
-            "update": `scale('time', anim_val_next) <= anim_clock ? (t_index < length(${timeEncoding.field}_domain) - 1 ? t_index + 1 : 0) : t_index`
+            "update": `indexof(${timeEncoding.field}_domain, invert('time_${timeEncoding.field}', anim_clock))`
           }
         ]
+      },
+      {
+        "name": "max_range_extent", // max value of time range
+        "init": `extent(range('time_${timeEncoding.field}'))[1]`
       },
       {
         "name": "min_extent", // min value of time field domain
@@ -142,12 +167,12 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
       },
       {
         "name": "anim_val_curr", // current keyframe's value in time field domain
-        "update": `${timeEncoding.field}_domain[t_index]`
+        "update": `invert('time_${timeEncoding.field}', anim_clock)`
       },
       {
         "name": "anim_val_next", // next keyframe's value in time domain
         // if interpolate.loop is true, we want to tween between last and first keyframes. therefore, next of last is first
-        "update": `t_index < length(${timeEncoding.field}_domain) - 1 ? ${timeEncoding.field}_domain[t_index + 1] : ${timeEncoding.interpolate.loop ? 'min_extent' : 'max_extent'}`
+        "update": `t_index < length(${timeEncoding.field}_domain) - 1 ? ${timeEncoding.field}_domain[t_index + 1] : ${timeEncoding.interpolate && timeEncoding.interpolate.loop ? 'min_extent' : 'max_extent'}`
       },
       {
         "name": "anim_tween", // tween signal between keyframes
@@ -155,7 +180,7 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
         "on": [
           {
             "events": { "signal": "anim_clock" },
-            "update": `(anim_clock - scale('time', anim_val_curr)) / (scale('time', anim_val_next) - scale('time', anim_val_curr))`
+            "update": `(anim_clock - scale('time_${timeEncoding.field}', anim_val_curr)) / (scale('time_${timeEncoding.field}', anim_val_next) - scale('time_${timeEncoding.field}', anim_val_curr))`
           },
           {
             "events": { "signal": "anim_val_curr" },
@@ -163,7 +188,58 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
           }
         ]
       }
-    ];
+    ]
+
+    // signals = [
+    //   ...signals,
+    //   {
+    //     "name": `${timeEncoding.field}_domain`,
+    //     "init": `domain('${timeEncoding.field}_ordinal')`
+    //   },
+    //   // TODO this is actually a huge problem -- because the last value is mapped to the "end", it's never shown because it immediately loops
+    //   {
+    //     "name": "t_index", // index of current keyframe in the time field's domain
+    //     "init": "0",
+    //     "on": [
+    //       {
+    //         "events": { "signal": "anim_clock" },
+    //         // increment index if anim_clock passes the scale value of the next item. if incrementing, wrap to 0 if out of bounds.
+    //         "update": `anim_clock == 0 ? 0 : (scale('time', anim_val_next) <= anim_clock ? (t_index < length(${timeEncoding.field}_domain) - 1 ? t_index + 1 : 0) : t_index)`
+    //       }
+    //     ]
+    //   },
+    //   {
+    //     "name": "min_extent", // min value of time field domain
+    //     "init": `extent(${timeEncoding.field}_domain)[0]`
+    //   },
+    //   {
+    //     "name": "max_extent", // max value of time field domain
+    //     "init": `extent(${timeEncoding.field}_domain)[1]`
+    //   },
+    //   {
+    //     "name": "anim_val_curr", // current keyframe's value in time field domain
+    //     "update": `${timeEncoding.field}_domain[t_index]`
+    //   },
+    //   {
+    //     "name": "anim_val_next", // next keyframe's value in time domain
+    //     // if interpolate.loop is true, we want to tween between last and first keyframes. therefore, next of last is first
+    //     "update": `t_index < length(${timeEncoding.field}_domain) - 1 ? ${timeEncoding.field}_domain[t_index + 1] : ${timeEncoding.interpolate && timeEncoding.interpolate.loop ? 'min_extent' : 'max_extent'}`
+    //   },
+    //   {
+    //     "name": "anim_tween", // tween signal between keyframes
+    //     "init": "0",
+    //     "on": [
+    //       {
+    //         "events": { "signal": "anim_clock" },
+    //         "update": `(anim_clock - scale('time', anim_val_curr)) / (scale('time', anim_val_next) - scale('time', anim_val_curr))`
+    //       },
+    //       {
+    //         "events": { "signal": "anim_val_curr" },
+    //         "update": "0"
+    //       }
+    //     ]
+    //   }
+    // ];
 
     data = [
       ...data,
@@ -178,17 +254,6 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
           ...stackTransform
         ]
       }
-    ]
-  }
-  else {
-    // otherwise, we're dealing with a continuous domain and want to use the scale directly
-    signals = [
-      ...signals,
-      {
-        "name": "anim_val_curr", // current keyframe's value in time field domain
-        "update": "invert('time', anim_clock)"
-      }
-      // TODO
     ]
   }
 
