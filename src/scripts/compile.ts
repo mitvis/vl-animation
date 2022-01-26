@@ -8,7 +8,8 @@ import { SelectionParameter, isSelectionParameter, PointSelectionConfig } from '
 import { Transform, FilterTransform } from 'vega-lite/build/src/transform';
 import { FieldEqualPredicate, FieldGTEPredicate, FieldGTPredicate, FieldLTEPredicate, FieldLTPredicate, FieldOneOfPredicate, FieldPredicate, FieldRangePredicate, FieldValidPredicate, ParameterPredicate, Predicate } from 'vega-lite/build/src/predicate';
 import { LogicalAnd } from 'vega-lite/build/src/logical';
-// Types specific to Vega-Lite Animation
+
+type ScaleFieldValueRef = {scale: vega.Field, field: vega.Field}; // ScaledValueRef
 
 export const isParamAnimationSelection = (param: any): param is VlAnimationSelection => {
   if (!isSelectionParameter(param)) {
@@ -56,6 +57,20 @@ const mergeSpecs = (vgSpec: vega.Spec, vgPartialSpec: Partial<vega.Spec>): vega.
     vgSpec = {
       ...vgSpec,
       data: (vgSpec.data ?? []).filter(s => !newDatasetNames.includes(s.name)).concat(vgPartialSpec.data)
+    }
+  }
+  if (vgPartialSpec.marks) {
+    const newMarkNames = vgPartialSpec.marks.map(s => s.name);
+    vgSpec = {
+      ...vgSpec,
+      marks: (vgSpec.marks ?? []).filter(s => !newMarkNames.includes(s.name)).concat(vgPartialSpec.marks)
+    }
+  }
+  if (vgPartialSpec.scales) {
+    const newScaleNames = vgPartialSpec.scales.map(s => s.name);
+    vgSpec = {
+      ...vgSpec,
+      scales: (vgSpec.scales ?? []).filter(s => !newScaleNames.includes(s.name)).concat(vgPartialSpec.scales)
     }
   }
   return vgSpec;
@@ -168,78 +183,8 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
       {
         "name": "anim_val_curr", // current keyframe's value in time field domain
         "update": `invert('time_${timeEncoding.field}', anim_clock)`
-      },
-      {
-        "name": "anim_val_next", // next keyframe's value in time domain
-        // if interpolate.loop is true, we want to tween between last and first keyframes. therefore, next of last is first
-        "update": `t_index < length(${timeEncoding.field}_domain) - 1 ? ${timeEncoding.field}_domain[t_index + 1] : ${timeEncoding.interpolate && timeEncoding.interpolate.loop ? 'min_extent' : 'max_extent'}`
-      },
-      {
-        "name": "anim_tween", // tween signal between keyframes
-        "init": "0",
-        "on": [
-          {
-            "events": { "signal": "anim_clock" },
-            "update": `(anim_clock - scale('time_${timeEncoding.field}', anim_val_curr)) / (scale('time_${timeEncoding.field}', anim_val_next) - scale('time_${timeEncoding.field}', anim_val_curr))`
-          },
-          {
-            "events": { "signal": "anim_val_curr" },
-            "update": "0"
-          }
-        ]
       }
     ]
-
-    // signals = [
-    //   ...signals,
-    //   {
-    //     "name": `${timeEncoding.field}_domain`,
-    //     "init": `domain('${timeEncoding.field}_ordinal')`
-    //   },
-    //   // TODO this is actually a huge problem -- because the last value is mapped to the "end", it's never shown because it immediately loops
-    //   {
-    //     "name": "t_index", // index of current keyframe in the time field's domain
-    //     "init": "0",
-    //     "on": [
-    //       {
-    //         "events": { "signal": "anim_clock" },
-    //         // increment index if anim_clock passes the scale value of the next item. if incrementing, wrap to 0 if out of bounds.
-    //         "update": `anim_clock == 0 ? 0 : (scale('time', anim_val_next) <= anim_clock ? (t_index < length(${timeEncoding.field}_domain) - 1 ? t_index + 1 : 0) : t_index)`
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     "name": "min_extent", // min value of time field domain
-    //     "init": `extent(${timeEncoding.field}_domain)[0]`
-    //   },
-    //   {
-    //     "name": "max_extent", // max value of time field domain
-    //     "init": `extent(${timeEncoding.field}_domain)[1]`
-    //   },
-    //   {
-    //     "name": "anim_val_curr", // current keyframe's value in time field domain
-    //     "update": `${timeEncoding.field}_domain[t_index]`
-    //   },
-    //   {
-    //     "name": "anim_val_next", // next keyframe's value in time domain
-    //     // if interpolate.loop is true, we want to tween between last and first keyframes. therefore, next of last is first
-    //     "update": `t_index < length(${timeEncoding.field}_domain) - 1 ? ${timeEncoding.field}_domain[t_index + 1] : ${timeEncoding.interpolate && timeEncoding.interpolate.loop ? 'min_extent' : 'max_extent'}`
-    //   },
-    //   {
-    //     "name": "anim_tween", // tween signal between keyframes
-    //     "init": "0",
-    //     "on": [
-    //       {
-    //         "events": { "signal": "anim_clock" },
-    //         "update": `(anim_clock - scale('time', anim_val_curr)) / (scale('time', anim_val_next) - scale('time', anim_val_curr))`
-    //       },
-    //       {
-    //         "events": { "signal": "anim_val_curr" },
-    //         "update": "0"
-    //       }
-    //     ]
-    //   }
-    // ];
 
     data = [
       ...data,
@@ -264,7 +209,11 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
   };
 }
 
-const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSelection[], dataset: string, field: string, stackTransform: vega.Transforms[]): Partial<vega.Spec> => {
+const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSelection[], field: string, next?: boolean): Partial<vega.Spec> => {
+  let anim_signal = 'anim_val_curr';
+  if (next) {
+    anim_signal = 'anim_val_next';
+  }
   const predicateToTupleType = (predicate: FieldPredicate) => {
     if ((predicate as FieldEqualPredicate).equal) {
       return "E";
@@ -324,8 +273,8 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
           "name": `${animSelection.name}_tuple`,
           "on": [
             {
-              "events": { "signal": "anim_val_curr" },
-              "update": `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [${Array(and ? and.length : 1).fill('anim_val_curr').join(', ')}]}`,
+              "events": { "signal": anim_signal },
+              "update": `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [${Array(and ? and.length : 1).fill(anim_signal).join(', ')}]}`,
               "force": true
             }
           ]
@@ -349,7 +298,7 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
           "on": [
             {
               "events": { "signal": "anim_clock" },
-              "update": `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [anim_val_curr]}`,
+              "update": `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [${anim_signal}]}`,
               "force": true
             }
           ]
@@ -359,51 +308,102 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 
     // TODO think about what happens if there's more than one animSelection
 
-    let predicateExpr = `datum['${field}'] == anim_val_curr`;
-    if (animSelection.select.predicate) {
-      const vlPredSpec = {
-        "mark": "circle",
-        "transform": [
-          {
-            "filter": animSelection.select.predicate
-          }
-        ]
-      };
-      predicateExpr = (vl.compile(vlPredSpec as any).spec as any).data[1].transform[0].expr;
-    }
-
-    const dataset_curr = dataset + "_curr";
-
-    const data: vega.Data[] = [
-      {
-        "name": dataset_curr,
-        "source": dataset,
-        "transform": [
-          {
-            "type": "filter",
-            "expr": predicateExpr
-          },
-          ...stackTransform
-        ]
-      }
-    ]
-
     return {
-      signals,
-      data
+      signals
     }
   }).reduce((prev, curr) => {
     return mergeSpecs(curr as any, prev as any) as any; // lmao
   });
 }
 
-const compileInterpolation = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string): Partial<vega.Spec> => {
+const compileFilterTransforms = (animationFilters: FilterTransform[], animationSelections: ElaboratedVlAnimationSelection[], dataset: string, markSpecs: vega.Mark[], next?: boolean): Partial<vega.Spec> => {
+  if (animationFilters.length) {
+
+    let dataset_name = `${dataset}_curr`;
+    if (next) {
+      dataset_name = `${dataset}_next`
+    }
+
+    const vlSpec = {
+      "mark": "circle",
+      "params": animationSelections,
+      "transform": animationFilters
+    };
+    const datasetSpec = {
+      ...((vl.compile(vlSpec as any).spec as any).data as any[]).find(d => d.name === 'data_0'),
+      "name": dataset_name,
+      "source": dataset
+    };
+
+    let marks = [];
+
+    marks = markSpecs.map(markSpec => {
+      if (markSpec.from.data === dataset) {
+        markSpec.from.data = `${dataset}_curr`;
+      }
+      return markSpec;
+    });
+
+    return {
+      data: [datasetSpec],
+      marks
+    };
+  }
+  return {};
+}
+
+const compileInterpolation = (animationSelections: ElaboratedVlAnimationSelection[], animationFilters: FilterTransform[], timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string, markSpecs: vega.Mark[], scaleSpecs: vega.Scale[]): Partial<vega.Spec> => {
   if (timeEncoding.interpolate !== false) {
-    const dataset_curr = dataset + "_curr";
-    const dataset_next = dataset + "_next";
-    const dataset_interpolate = dataset + "_interpolate";
+
+    const animSelectionsNext = animationSelections.map(s => {
+      return {...s, "name": s.name + '_next'}
+    })
+    const animationFiltersNext = animationFilters.map(f => {
+      return {
+        ...f,
+        "filter": {
+          ...(f.filter as any),
+          "param": (f.filter as ParameterPredicate).param + '_next'
+        }
+      }
+    })
+
+    const vlAnimSelSpec = {
+      "mark": "circle",
+      "params": animSelectionsNext
+    }
+    const vgAnimSelSpec = vl.compile(vlAnimSelSpec as any).spec
+    const compiledAnimSelections = mergeSpecs({signals: vgAnimSelSpec.signals, data: [vgAnimSelSpec.data[0]]}, compileAnimationSelections(animSelectionsNext, timeEncoding.field, true));
+    const compiledFilterTransforms = compileFilterTransforms(animationFiltersNext, animSelectionsNext, dataset, [], true);
+
+    const dataset_curr = `${dataset}_curr`;
+    const dataset_next = `${dataset}_next`;
+    const dataset_interpolate = `${dataset}_interpolate`;
+
+    const signals: vega.Signal[] = [
+      {
+        "name": "anim_val_next", // next keyframe's value in time domain
+        // if interpolate.loop is true, we want to tween between last and first keyframes. therefore, next of last is first
+        "update": `t_index < length(${timeEncoding.field}_domain) - 1 ? ${timeEncoding.field}_domain[t_index + 1] : ${timeEncoding.interpolate && timeEncoding.interpolate.loop ? 'min_extent' : 'max_extent'}`
+      },
+      {
+        "name": "anim_tween", // tween signal between keyframes
+        "init": "0",
+        "on": [
+          {
+            "events": { "signal": "anim_clock" },
+            "update": `anim_val_next != anim_val_curr ? (anim_clock - scale('time_${timeEncoding.field}', anim_val_curr)) / (scale('time_${timeEncoding.field}', anim_val_next) - scale('time_${timeEncoding.field}', anim_val_curr)) : 0`
+          },
+          {
+            "events": { "signal": "anim_val_curr" },
+            "update": "0"
+          }
+        ]
+      }
+    ]
 
     // TODO line interpolation special case
+
     const data: vega.Data[] = [
       {
         "name": dataset_interpolate,
@@ -424,43 +424,75 @@ const compileInterpolation = (timeEncoding: ElaboratedVlAnimationTimeEncoding, d
       }
     ];
 
-    // TODO add all the lerp shit to the mark encodings
-
-    return {
-      data
-    };
-  }
-
-  return {};
-}
-
-const compileFilterTransforms = (animationFilters: FilterTransform[], animationSelections: ElaboratedVlAnimationSelection[], dataset: string, markSpecs: any[]): Partial<vega.Spec> => {
-  if (animationFilters.length) {
-    const vlSpec = {
-      "mark": "circle",
-      "params": animationSelections,
-      "transform": animationFilters
-    };
-    const datasetSpec = {
-      ...((vl.compile(vlSpec as any).spec as any).data as any[]).find(d => d.name === 'data_0'),
-      "name": `${dataset}_anim_filters`,
-      "source": dataset
-    };
+    let scales: vega.Scale[] = [];
 
     const marks = markSpecs.map(markSpec => {
-      if (markSpec.from.data === dataset) {
-        markSpec.from.data = `${dataset}_anim_filters`;
+      if (markSpec.from?.data == dataset_curr) {
+        markSpec.from.data = dataset_interpolate;
+
+        Object.keys(markSpec.encode.update).forEach((k) => {
+          let encodingDef = markSpec.encode.update[k];
+          if (Array.isArray(encodingDef)) {
+            // for production rule encodings, the encoding is an array. the last entry is the default def
+            encodingDef = encodingDef[encodingDef.length - 1];
+          }
+          if ((encodingDef as ScaleFieldValueRef).field) {
+            const {scale, field} = encodingDef as ScaleFieldValueRef;
+
+            if (scale) {
+              const scaleSpec = scaleSpecs.find(s => s.name === scale);
+              switch (scaleSpec.type) {
+                case 'ordinal':
+                case 'bin-ordinal':
+                case 'quantile':
+                case 'quantize':
+                case 'threshold':
+                return; // if the scale has a discrete output range, don't lerp with it
+              }
+
+              if (timeEncoding.rescale) {
+                // rescale: the scale updates based on the animation frame
+                (scaleSpec.domain as vega.ScaleDataRef).data = dataset_curr;
+                scales = scales.filter(s => s.name !== scaleSpec.name).concat([scaleSpec]);
+                if (!scaleSpecs.find(s => s.name === scaleSpec.name + '_next')) {
+                  // if it doesn't already exist, create a "next" scale for the current scale
+                  const scaleSpecNext = clone(scaleSpec);
+                  scaleSpecNext.name = scaleSpec.name + '_next';
+                  (scaleSpecNext.domain as vega.ScaleDataRef).data = dataset_next;
+                  scales = [...scales, scaleSpecNext];
+                }
+              }
+            }
+
+            const lerp_term = scale === 'color' ? // color scales map numbers to strings, so lerp before scale
+            `isValid(datum.next) ? scale('${scale}', lerp([datum.${field}, datum.next.${field}], anim_tween)) : scale('${scale}', datum.${field})` :
+            scale ? // e.g. position scales map anything to numbers, so scale before lerp
+            `isValid(datum.next) ? lerp([scale('${scale}', datum.${field}), scale('${timeEncoding.rescale ? scale + '_next' : scale}', datum.next.${field})], anim_tween) : scale('${scale}', datum.${field})` :
+            // e.g. map projections have field but no scale. you can directly lerp the field
+            `isValid(datum.next) ? lerp([datum.${field}, datum.next.${field}], anim_tween) : datum.${field}`
+
+            markSpec.encode.update[k] = {
+              "signal": lerp_term
+            }
+          }
+        });
       }
       return markSpec;
-    })
+    });
 
-    return {
-      data: [datasetSpec],
-      marks
+    const spec = {
+      data,
+      signals,
+      marks,
+      scales
     };
+
+    return mergeSpecs(mergeSpecs(compiledAnimSelections, compiledFilterTransforms), spec);
   }
+
   return {};
 }
+
 
 const sanitizeVlaSpec = (vlaSpec: ElaboratedVlAnimationSpec, animationFilterTransforms: FilterTransform[]): ElaboratedVlAnimationSpec => {
   // remove the animation filter transforms. we want to manually compile them because they apply directly
@@ -502,26 +534,12 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
   vgSpec = mergeSpecs(vgSpec,
     compileTimeScale(timeEncoding, dataset, stackTransform));
   vgSpec = mergeSpecs(vgSpec,
-    compileAnimationSelections(animationSelections, dataset, timeEncoding.field, stackTransform));
-
-  // apply filter transform
+    compileAnimationSelections(animationSelections, timeEncoding.field));
   vgSpec = mergeSpecs(vgSpec,
     compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks)
   );
-  // if (animationFilters.length) {
-  //   if (timeEncoding.interpolate) {
-  //     vgSpec.marks[0].from.data = dataset + '_interpolate'; // TODO assumes mark[0]
-  //   }
-  //   else {
-  //     vgSpec.marks[0].from.data = dataset + '_curr'; // TODO assumes mark[0]
-  //   }
-  // }
-
-  // apply conditional encodes
-
-
   vgSpec = mergeSpecs(vgSpec,
-    compileInterpolation(timeEncoding, dataset));
+    compileInterpolation(animationSelections, animationFilters, timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
 
 
   return vgSpec;
@@ -789,7 +807,7 @@ const oldCompileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
 
   */
 
-  type ScaleFieldValueRef = {scale: vega.Field, field: vega.Field}; // ScaledValueRef
+  // type ScaleFieldValueRef = {scale: vega.Field, field: vega.Field}; // ScaledValueRef
 
 
   /*

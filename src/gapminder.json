@@ -18,10 +18,9 @@
     "time": {
       "field": "year",
       "scale": {
-        "type": "linear",
         "range": [
           0,
-          10000
+          5000
         ]
       },
       "interpolate": {
