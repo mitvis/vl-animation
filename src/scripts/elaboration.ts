@@ -14,12 +14,22 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimati
 
   const timeEncoding = vlaUnitSpec.encoding.time;
 
+  const scale = timeEncoding.scale ?? {};
+
+  const elaboratedScaleType = scale.type ?? (scale.domain ? "linear" : "band");
+  const elaboratedScale = {
+    ...scale,
+    "type": elaboratedScaleType,
+    "range": scale.range ?? (elaboratedScaleType === 'linear' ? [0, 5000] : {"step": 500})
+  }
+
   const elaboratedSpec = {
     ...vlaUnitSpec,
     "encoding": {
       ...vlaUnitSpec.encoding,
       "time": {
         ...timeEncoding,
+        "scale": elaboratedScale,
         "interpolate": timeEncoding.interpolate ? {
           "field": timeEncoding.interpolate.field,
           "loop": timeEncoding.interpolate?.loop ?? false

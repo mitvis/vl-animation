@@ -1,7 +1,7 @@
 import * as vega from 'vega';
 import * as vl from 'vega-lite';
 import clone from 'lodash.clonedeep';
-import { ElaboratedVlAnimationSelection, ElaboratedVlAnimationSpec, ElaboratedVlAnimationTimeEncoding, ElaboratedVlAnimationUnitSpec, VlAnimationSelection, VlAnimationSpec } from '..';
+import { ElaboratedVlAnimationSelection, ElaboratedVlAnimationSpec, ElaboratedVlAnimationTimeEncoding, ElaboratedVlAnimationUnitSpec, VlAnimationSelection, VlAnimationSpec, VlAnimationTimeScale } from '..';
 import { EventStream } from 'vega';
 import { VariableParameter } from 'vega-lite/build/src/parameter';
 import { SelectionParameter, isSelectionParameter, PointSelectionConfig } from 'vega-lite/build/src/selection';
@@ -114,17 +114,17 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
   let signals: vega.Signal[] = [];
 
 
-  if (timeEncoding.scale.domain) {
+  if (timeEncoding.scale.type === 'linear') {
     scales = [
       ...scales,
       {
         // a continuous scale for mapping values into time
         "name": "time",
         "type": "linear",
-        "zero": false,
+        "zero": (timeEncoding.scale as any).zero ?? false,
         "domain": timeEncoding.scale.domain ?? { "data": dataset, "field": timeEncoding.field },
-        "range": timeEncoding.scale.range ?? [0, 10000]
-      }
+        "range": timeEncoding.scale.range
+      } as vega.LinearScale
     ]
     signals = [
       ...signals,
@@ -146,10 +146,10 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
         // a band scale for getting the individual values in the discrete data domain
         "name": `time_${timeEncoding.field}`,
         "type": "band",
-        "domain": { "data": dataset, "field": timeEncoding.field, "sort": true },
-        "range": timeEncoding.scale.range ?? [0, 10000],
+        "domain": timeEncoding.scale.domain ?? { "data": dataset, "field": timeEncoding.field },
+        "range": timeEncoding.scale.range,
         "align": 0
-      },
+      } as vega.BandScale
     ];
 
     signals = [

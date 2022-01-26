@@ -15,10 +15,24 @@ type Override<T1, T2> = Omit<T1, keyof T2> & T2;
 
 // Types specific to Vega-Lite Animation
 export type VlAnimationTimeScale = {
-  // "type": string;
-  // "range": {"step": number} | number[];
-  "type": "linear";
+  "type"?: "band";
   "domain"?: any[];
+  "range"?: number[] | {"step": number};
+} | {
+  "type"?: "linear";
+  "domain"?: any[];
+  "zero"?: boolean;
+  "range"?: number[];
+};
+
+export type ElaboratedVlAnimationTimeScale = {
+  "type": "band";
+  "domain"?: any[]; // undefined domain means use data/field domain
+  "range": number[] | {"step": number};
+} | {
+  "type": "linear";
+  "domain"?: any[]; // undefined domain means use data/field domain
+  "zero"?: boolean; // optional, default false
   "range": number[];
 };
 
@@ -35,7 +49,7 @@ export type VlAnimationSelection = Override<SelectionParameter, {
 
 export type VlAnimationTimeEncoding = {
   "field": string,
-  "scale": VlAnimationTimeScale,
+  "scale"?: VlAnimationTimeScale,
   "interpolate"?: {
     "field": string,
     "loop"?: boolean
@@ -73,7 +87,7 @@ export type ElaboratedVlAnimationSelection = Override<SelectionParameter, {
 
 export type ElaboratedVlAnimationTimeEncoding = {
   "field": string,
-  "scale": VlAnimationTimeScale,
+  "scale": ElaboratedVlAnimationTimeScale,
   "interpolate": {
     "field": string,
     "loop": boolean
@@ -135,6 +149,7 @@ const renderSpec = (vlaSpec: VlAnimationSpec, id: string): void => {
 ); */
 
 import * as gapminder from "./gapminder.json";
+import * as gapminderPause from "./gapminder_pause.json";
 import * as barchartrace from "./bar-chart-race.json";
 import * as walmart from "./walmart.json";
 import * as dunkins from "./dunkin_selection.json";
@@ -145,6 +160,7 @@ import * as birds from "./birds.json";
 
 const exampleSpecs = {
 	gapminder,
+  gapminderPause,
 	barchartrace,
 	walmart,
 	barley,
@@ -154,7 +170,7 @@ const exampleSpecs = {
 	dunkins,
 };
 
-renderSpec(exampleSpecs.dunkins as VlAnimationSpec, "connectedScatterplot");
+renderSpec(exampleSpecs.gapminder as VlAnimationSpec, "connectedScatterplot");
 
 (window as any).view.addSignalListener("anim_val_curr", (_: any, value: string) => {
 	document.getElementById("year").innerHTML = new Date(parseInt(value) * 1000).toISOString();
