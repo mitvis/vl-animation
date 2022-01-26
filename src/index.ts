@@ -4,6 +4,8 @@ import { LayerSpec, TopLevel, UnitSpec} from 'vega-lite/build/src/spec';
 import { PointSelectionConfig, SelectionParameter } from 'vega-lite/build/src/selection';
 import { VariableParameter } from 'vega-lite/build/src/parameter';
 import { Expr } from 'vega';
+import { FieldPredicate } from 'vega-lite/build/src/predicate';
+import { LogicalAnd } from 'vega-lite/build/src/logical';
 
 import compileVla from "./scripts/compile";
 import elaborateVla from "./scripts/elaboration";
@@ -26,7 +28,8 @@ export type VlAnimationSelection = Override<SelectionParameter, {
       "type": "timer",
       "filter"?: Expr | Expr[];
     }
-    "predicate"?: LogicalComposition<Predicate>;
+    // "predicate"?: LogicalComposition<Predicate>;
+    "predicate"?: LogicalAnd<FieldPredicate> | FieldPredicate;
   }>
 }>;
 
@@ -63,7 +66,8 @@ export type ElaboratedVlAnimationSelection = Override<SelectionParameter, {
       "type": "timer",
       "filter": Expr | Expr[];
     },
-    "predicate"?: LogicalComposition<Predicate>;
+    // "predicate"?: LogicalComposition<Predicate>;
+    "predicate"?: LogicalAnd<FieldPredicate> | FieldPredicate;
   }>
 }>;
 
@@ -138,8 +142,6 @@ import * as barley from "./barley.json";
 import * as covidtrends from "./covid-trends.json";
 import * as connectedScatterplot from "./connected-scatterplot.json";
 import * as birds from "./birds.json";
-import { Predicate } from 'vega-lite/build/src/predicate';
-import { LogicalComposition } from 'vega-lite/build/src/logical';
 
 const exampleSpecs = {
 	gapminder,
@@ -152,8 +154,7 @@ const exampleSpecs = {
 	dunkins,
 };
 
-// casts are bad!
-renderSpec(exampleSpecs.dunkins as VlAnimationSpec, "connectedScatterplot");
+renderSpec(exampleSpecs.gapminder as VlAnimationSpec, "connectedScatterplot");
 
 (window as any).view.addSignalListener("anim_val_curr", (_: any, value: string) => {
 	document.getElementById("year").innerHTML = new Date(parseInt(value) * 1000).toISOString();
