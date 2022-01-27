@@ -15,6 +15,7 @@
   },
   "scripts": {
     "start": "parcel src/index.html & tsc --watch --noEmit",
+    "deploy": "cp -r ./src/scripts ../editor/lib",
     "test": "jest"
   },
   "devDependencies": {
