@@ -2,7 +2,7 @@ import * as vega from 'vega';
 import * as vl from 'vega-lite';
 import clone from 'lodash.clonedeep';
 import { ElaboratedVlAnimationSelection, ElaboratedVlAnimationSpec, ElaboratedVlAnimationTimeEncoding, ElaboratedVlAnimationUnitSpec, VlAnimationSelection, VlAnimationSpec, VlAnimationTimeScale } from '..';
-import { EventStream } from 'vega';
+import { EventStream, isArray } from 'vega';
 import { VariableParameter } from 'vega-lite/build/src/parameter';
 import { SelectionParameter, isSelectionParameter, PointSelectionConfig } from 'vega-lite/build/src/selection';
 import { Transform, FilterTransform } from 'vega-lite/build/src/transform';
@@ -80,6 +80,14 @@ const mergeSpecs = (vgSpec: vega.Spec, vgPartialSpec: Partial<vega.Spec>): vega.
 const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Partial<vega.Spec> => {
   const throttleMs = 1000/60;
 
+  const pauseExpr = animSelection.select.on.filter ?
+    (
+      isArray(animSelection.select.on.filter) ?
+        animSelection.select.on.filter.join(" && ") :
+        animSelection.select.on.filter
+    ) :
+    "true";
+
   const signals: vega.Signal[] = [
     {
       "name": "anim_clock", // ms elapsed in animation
@@ -87,7 +95,7 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
       "on": [
         {
           "events": {"type": "timer", "throttle": throttleMs},
-          "update": `${animSelection.select.on.filter} ? (anim_clock + (now() - last_tick_at) > max_range_extent ? 0 : anim_clock + (now() - last_tick_at)) : anim_clock`
+          "update": `${pauseExpr} ? (anim_clock + (now() - last_tick_at) > max_range_extent ? 0 : anim_clock + (now() - last_tick_at)) : anim_clock`
         }
       ]
     },
@@ -96,7 +104,7 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
       "init": "now()",
       "on": [
         {
-          "events": {"signal": "anim_clock"},
+          "events": [{"signal": "anim_clock"}, {"signal": pauseExpr}],
           "update": "now()"
         }
       ]

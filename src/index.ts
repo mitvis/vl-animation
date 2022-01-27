@@ -3,7 +3,7 @@ import { Encoding } from 'vega-lite/build/src/encoding';
 import { LayerSpec, TopLevel, UnitSpec} from 'vega-lite/build/src/spec';
 import { PointSelectionConfig, SelectionParameter } from 'vega-lite/build/src/selection';
 import { VariableParameter } from 'vega-lite/build/src/parameter';
-import { Expr } from 'vega';
+import { Datum, Expr } from 'vega';
 import { FieldPredicate } from 'vega-lite/build/src/predicate';
 import { LogicalAnd } from 'vega-lite/build/src/logical';
 
@@ -14,26 +14,28 @@ import elaborateVla from "./scripts/elaboration";
 type Override<T1, T2> = Omit<T1, keyof T2> & T2;
 
 // Types specific to Vega-Lite Animation
-export type VlAnimationTimeScale = {
+export type VlAnimationTimeScale = ({
   "type"?: "band";
-  "domain"?: any[];
   "range"?: number[] | {"step": number};
 } | {
   "type"?: "linear";
-  "domain"?: any[];
   "zero"?: boolean;
   "range"?: number[];
+}) & {
+  "domain"?: any[];
+  "pause"?: {"value": Datum, "duration": number}[]
 };
 
-export type ElaboratedVlAnimationTimeScale = {
+export type ElaboratedVlAnimationTimeScale = ({
   "type": "band";
-  "domain"?: any[]; // undefined domain means use data/field domain
   "range": number[] | {"step": number};
 } | {
   "type": "linear";
-  "domain"?: any[]; // undefined domain means use data/field domain
   "zero"?: boolean; // optional, default false
   "range": number[];
+}) & {
+  "domain"?: any[]; // undefined domain means use data/field domain
+  "pause"?: {"value": Datum, "duration": number}[]
 };
 
 export type VlAnimationSelection = Override<SelectionParameter, {
@@ -170,7 +172,7 @@ const exampleSpecs = {
 	dunkins,
 };
 
-renderSpec(exampleSpecs.dunkins as VlAnimationSpec, "connectedScatterplot");
+renderSpec(exampleSpecs.gapminderPause as VlAnimationSpec, "connectedScatterplot");
 
 (window as any).view.addSignalListener("anim_val_curr", (_: any, value: string) => {
 	document.getElementById("year").innerHTML = new Date(parseInt(value) * 1000).toISOString();
