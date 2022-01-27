@@ -51,8 +51,11 @@
           "scale": {
               "type": "band",
               "range": { "step": 50 }
+          },
+          "interpolate": {
+            "field": "country"
           }
       }
   },
-  "mark": "circle"
+  "mark": "line"
 }
