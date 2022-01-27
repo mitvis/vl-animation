@@ -170,7 +170,7 @@ const exampleSpecs = {
 	dunkins,
 };
 
-renderSpec(exampleSpecs.gapminder as VlAnimationSpec, "connectedScatterplot");
+renderSpec(exampleSpecs.dunkins as VlAnimationSpec, "connectedScatterplot");
 
 (window as any).view.addSignalListener("anim_val_curr", (_: any, value: string) => {
 	document.getElementById("year").innerHTML = new Date(parseInt(value) * 1000).toISOString();

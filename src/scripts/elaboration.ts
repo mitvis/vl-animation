@@ -16,7 +16,7 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimati
 
   const scale = timeEncoding.scale ?? {};
 
-  const elaboratedScaleType = scale.type ?? (scale.domain ? "linear" : "band");
+  const elaboratedScaleType = scale.type ?? ((scale.range as any)?.step ? "band" : (scale.domain ? "linear" : "band"));
   const elaboratedScale = {
     ...scale,
     "type": elaboratedScaleType,

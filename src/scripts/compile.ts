@@ -8,6 +8,7 @@ import { SelectionParameter, isSelectionParameter, PointSelectionConfig } from '
 import { Transform, FilterTransform } from 'vega-lite/build/src/transform';
 import { FieldEqualPredicate, FieldGTEPredicate, FieldGTPredicate, FieldLTEPredicate, FieldLTPredicate, FieldOneOfPredicate, FieldPredicate, FieldRangePredicate, FieldValidPredicate, ParameterPredicate, Predicate } from 'vega-lite/build/src/predicate';
 import { LogicalAnd } from 'vega-lite/build/src/logical';
+import { Encoding } from 'vega-lite/build/src/encoding';
 
 type ScaleFieldValueRef = {scale: vega.Field, field: vega.Field}; // ScaledValueRef
 
@@ -493,8 +494,63 @@ const compileInterpolation = (animationSelections: ElaboratedVlAnimationSelectio
   return {};
 }
 
+const compileEnterExit = (vlaSpec: ElaboratedVlAnimationUnitSpec, markSpecs: vega.Mark[], dataset: string, enter: Encoding<any>, exit: Encoding<any>): Partial<vega.Spec> => {
+  let marks = markSpecs;
+
+  if (enter) {
+    const vlEnterSpec = {
+      ...vlaSpec,
+      "encoding": enter
+    };
+    const enterKeys = Object.keys(enter);
+    const vgEnterSpec = vl.compile(vlEnterSpec as any).spec;
+
+    marks = markSpecs.map(markSpec => {
+      if (markSpec.from.data === dataset || markSpec.from.data.startsWith(dataset + "_")) {
+        const vgUpdate = vgEnterSpec.marks.find(mark => mark.name === markSpec.name).encode.update;
+        const filtered = Object.keys(vgUpdate)
+          .filter(key => enterKeys.includes(key))
+          .reduce((obj, key) => {
+            (obj as any)[key] = vgUpdate[key];
+            return obj;
+          }, {});
+        markSpec.encode.enter = filtered;
+      }
+      return markSpec;
+    })
+  }
+
+  if (exit) {
+    const vlExitSpec = {
+      ...vlaSpec,
+      "encoding": exit
+    };
+    const exitKeys = Object.keys(exit);
+    const vgExitSpec = vl.compile(vlExitSpec as any).spec;
+
+    marks = markSpecs.map(markSpec => {
+      if (markSpec.from.data === dataset || markSpec.from.data.startsWith(dataset + "_")) {
+        const vgUpdate = vgExitSpec.marks.find(mark => mark.name === markSpec.name).encode.update;
+        const filtered = Object.keys(vgUpdate)
+          .filter(key => exitKeys.includes(key))
+          .reduce((obj, key) => {
+            (obj as any)[key] = vgUpdate[key];
+            return obj;
+          }, {});
+        markSpec.encode.exit = filtered;
+      }
+      return markSpec;
+    })
+  }
+
+  return {
+    marks
+  }
+}
+
 
 const sanitizeVlaSpec = (vlaSpec: ElaboratedVlAnimationSpec, animationFilterTransforms: FilterTransform[]): ElaboratedVlAnimationSpec => {
+  delete (vlaSpec as any).default;
   // remove the animation filter transforms. we want to manually compile them because they apply directly
   // to the source dataset by default. this messes up scales, which always need the unfiltered domain.
   // the solution is to compile them into a derived dataset instead.
@@ -536,11 +592,11 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
   vgSpec = mergeSpecs(vgSpec,
     compileAnimationSelections(animationSelections, timeEncoding.field));
   vgSpec = mergeSpecs(vgSpec,
-    compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks)
-  );
+    compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks));
   vgSpec = mergeSpecs(vgSpec,
     compileInterpolation(animationSelections, animationFilters, timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
-
+  vgSpec = mergeSpecs(vgSpec,
+    compileEnterExit(vlaSpec, vgSpec.marks, dataset, vlaSpec.enter, vlaSpec.exit)); // TODO need examples that actually use this to verify it works
 
   return vgSpec;
 }
