@@ -1,4 +1,4 @@
-import { VlAnimationSpec, ElaboratedVlAnimationSpec, VlAnimationUnitSpec, ElaboratedVlAnimationUnitSpec, VlAnimationLayerSpec, VlAnimationTimeEncoding, VlAnimationSelection, ElaboratedVlAnimationSelection, ElaboratedVlAnimationTimeScale } from '..';
+import { VlAnimationSpec, ElaboratedVlAnimationSpec, VlAnimationUnitSpec, ElaboratedVlAnimationUnitSpec, VlAnimationLayerSpec, ElaboratedVlAnimationSelection, ElaboratedVlAnimationTimeScale } from './types';
 import { getAnimationSelectionFromParams, isParamAnimationSelection } from './compile';
 
 /**
