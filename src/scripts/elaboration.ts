@@ -1,7 +1,4 @@
-//import * as vega from 'vega';
-import { isSelectionParameter, PointSelectionConfig } from 'vega-lite/build/src/selection';
-import { EventStream } from 'vega-typings/types';
-import { VlAnimationSpec, ElaboratedVlAnimationSpec, VlAnimationUnitSpec, ElaboratedVlAnimationUnitSpec, VlAnimationLayerSpec, VlAnimationTimeEncoding, VlAnimationSelection, ElaboratedVlAnimationSelection } from '..';
+import { VlAnimationSpec, ElaboratedVlAnimationSpec, VlAnimationUnitSpec, ElaboratedVlAnimationUnitSpec, VlAnimationLayerSpec, VlAnimationTimeEncoding, VlAnimationSelection, ElaboratedVlAnimationSelection, ElaboratedVlAnimationTimeScale } from '..';
 import { getAnimationSelectionFromParams, isParamAnimationSelection } from './compile';
 
 /**
@@ -21,7 +18,7 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimati
     ...scale,
     "type": elaboratedScaleType,
     "range": scale.range ?? (elaboratedScaleType === 'linear' ? [0, 5000] : {"step": 500})
-  }
+  } as ElaboratedVlAnimationTimeScale;
 
   const elaboratedSpec = {
     ...vlaUnitSpec,
@@ -33,7 +30,7 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimati
         "interpolate": timeEncoding.interpolate ? {
           "field": timeEncoding.interpolate.field,
           "loop": timeEncoding.interpolate?.loop ?? false
-        } : false,
+        } : (false as false),
         "rescale": timeEncoding.rescale ?? false,
       }
     }
@@ -99,6 +96,9 @@ const elaborateVla = (vlaSpec: VlAnimationSpec): ElaboratedVlAnimationSpec => {
     return elaborateUnitVla(vlaSpec as VlAnimationUnitSpec);
   }
 }
+
+////////////////////////////////////////////////////
+// dylan wip below
 
 function traverseTree(unitSpec: VlAnimationSpec, parentTimeEncoding: VlAnimationTimeEncoding): ElaboratedVlAnimationSpec {
 	let timeEncoding = JSON.parse(JSON.stringify(parentTimeEncoding));

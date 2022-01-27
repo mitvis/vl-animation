@@ -28,7 +28,7 @@
       "select": {
         "type": "point",
         "on": "timer",
-        "predicate": {"field": "date", "lte": {"expr": "invert('time', anim_clock)"}}
+        "predicate": {"field": "date", "gte": {"expr": "invert('time', anim_clock)"}}
       }
     }
   ],
@@ -51,9 +51,6 @@
           "scale": {
               "type": "band",
               "range": { "step": 50 }
-          },
-          "interpolate": {
-            "field": "country"
           }
       }
   },
