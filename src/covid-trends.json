@@ -11,73 +11,49 @@
                 "as": "new_weekly_avg"
             }],
             "groupby": ["country"],
-            "sort": [{
-                "field": "date",
-                "order": "ascending"
-            }],
+            "sort": [{ "field": "date", "order": "ascending" }],
             "ignorePeers": false,
             "frame": [-7, 0]
         },
         {
             "filter": "datum.cases > 0 && datum.new_daily > 0"
+        },
+        {
+            "filter": { "param": "anim_sel" }
         }
     ],
+    "params": [{
+        "name": "anim_sel",
+        "select": {
+            "type": "point",
+            "on": "timer",
+            "predicate": { "field": "date", "lte": { "expr": "invert('time', anim_clock)" } }
+        }
+    }],
     "encoding": {
         "x": {
             "field": "cases",
             "type": "quantitative",
-            "scale": {
-                "type": "log"
-            },
-            "axis": {
-                "grid": false
-            }
+            "scale": { "type": "log" },
+            "axis": { "grid": false }
         },
         "y": {
             "field": "new_weekly_avg",
             "type": "quantitative",
-            "scale": {
-                "type": "log"
-            },
-            "axis": {
-                "grid": false
-            }
+            "scale": { "type": "log" },
+            "axis": { "grid": false }
         },
-        "color": {
-            "field": "country"
-        },
+        "color": { "field": "country" },
         "time": {
             "field": "date",
             "scale": {
                 "type": "band",
-                "range": {
-                    "step": 50
-                }
+                "range": { "step": 50 }
             },
-            "continuity": {
+            "interpolate": {
                 "field": "country"
             }
         }
     },
-    "layer": [{
-            "mark": "point",
-            "transform": [{
-                "filter": {
-                    "time": [{
-                        "equal": "datum.date"
-                    }]
-                }
-            }]
-        },
-        {
-            "mark": "line",
-            "transform": [{
-                "filter": {
-                    "time": [{
-                        "lte": "datum.date"
-                    }]
-                }
-            }]
-        }
-    ]
+    "mark": "line"
 }

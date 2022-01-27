@@ -17,14 +17,7 @@
     },
     "time": {
       "field": "year",
-      "scale": {
-        "type": "linear",
-        "range": [
-          0,
-          50000
-        ]
-      },
-      "continuity": {
+      "interpolate": {
         "field": "country"
       }
     }

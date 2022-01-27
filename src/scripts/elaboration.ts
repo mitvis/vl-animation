@@ -1,50 +1,104 @@
-//@ts-nocheck
-import {TopLevelUnitSpec} from "vega-lite/build/src/spec/unit";
-import {Encoding} from "vega-lite/build/src/encoding";
-import {AnyMark} from "vega-lite/build/src/mark";
-import {VlAnimationSpec, ElaboratedVlAnimationSpec, VlAnimationLayerSpec, VlAnimationTimeEncoding} from "..";
+import { VlAnimationSpec, ElaboratedVlAnimationSpec, VlAnimationUnitSpec, ElaboratedVlAnimationUnitSpec, VlAnimationLayerSpec, ElaboratedVlAnimationSelection, ElaboratedVlAnimationTimeScale } from './types';
+import { getAnimationSelectionFromParams, isParamAnimationSelection } from './compile';
 
 /**
 /**
- * fills in implicit values in the vla spec
- * @param vlaSpec
- * @returns
- */
-const elaborateVlaOLD = (vlaSpec: VlAnimationSpec): ElaboratedVlAnimationSpec => {
-	const timeEncoding = vlaSpec.encoding.time;
+* fills in implicit values in the vla spec
+* @param vlaSpec
+* @returns
+*/
+const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimationUnitSpec => {
 
-	// if no transforms are provided, implicitly set it to only show data that is at the current time
-	if (!vlaSpec.transform || vlaSpec.transform?.length === 0) {
-		// refactor this
-		vlaSpec.transform = [{filter: `datum.${timeEncoding.field} == anim_val_curr`}];
-		// note: this may need to be moved to only apply to the curr data set, not to all data sets (causes cycle)
-	}
+  const timeEncoding = vlaUnitSpec.encoding.time;
 
-	return {
-		...vlaSpec,
-		encoding: {
-			...vlaSpec.encoding,
-			time: {
-				...timeEncoding,
-				rescale: timeEncoding.rescale ?? false,
-				interpolateLoop: timeEncoding.interpolateLoop ?? false,
-			},
-		},
-	};
-};
+  const scale = timeEncoding.scale ?? {};
 
-function elaborateVla(vlaSpec: VlAnimationSpec): ElaboratedVlAnimationSpec {
-	let defaultTimeEncoding = {
-		field: null,
-		scale: null,
-		continuity: null,
-		rescale: false,
-		interpolateLoop: false,
-	};
+  const elaboratedScaleType = scale.type ?? ((scale.range as any)?.step ? "band" : (scale.domain ? "linear" : "band"));
+  const elaboratedScale = {
+    ...scale,
+    "type": elaboratedScaleType,
+    "range": scale.range ?? (elaboratedScaleType === 'linear' ? [0, 5000] : {"step": 500})
+  } as ElaboratedVlAnimationTimeScale;
 
-	vlaSpec = traverseTree(vlaSpec, defaultTimeEncoding);
-	return vlaSpec;
+  const elaboratedSpec = {
+    ...vlaUnitSpec,
+    "encoding": {
+      ...vlaUnitSpec.encoding,
+      "time": {
+        ...timeEncoding,
+        "scale": elaboratedScale,
+        "interpolate": timeEncoding.interpolate ? {
+          "field": timeEncoding.interpolate.field,
+          "loop": timeEncoding.interpolate?.loop ?? false
+        } : (false as false),
+        "rescale": timeEncoding.rescale ?? false,
+      }
+    }
+  };
+
+  // elaborate encoding into a default selection
+  if (!specContainsAnimationSelection(vlaUnitSpec)) {
+    const param: ElaboratedVlAnimationSelection = {
+      "name": "current_frame",
+      "select": {
+        "type": "point",
+        "on": {
+          "type": "timer",
+          "filter": "true"
+        }
+      }
+    };
+    const filter = {"filter": {"param": "current_frame"}};
+    elaboratedSpec.params = [
+      ...(elaboratedSpec.params ?? []),
+      param
+    ];
+    elaboratedSpec.transform = [
+      ...(elaboratedSpec.transform ?? []),
+      filter
+    ]
+  }
+  else {
+    elaboratedSpec.params = vlaUnitSpec.params.map(param => {
+      if (isParamAnimationSelection(param)) {
+        return {
+          ...param,
+          "select": {
+            ...param.select,
+            "on": {
+              "type": "timer",
+              "filter": (param.select.on !== "timer") ? param.select.on.filter ?? "true" : "true"
+            }
+          }
+        }
+      }
+      else {
+        return param;
+      }
+    })
+  }
+
+  return elaboratedSpec;
 }
+
+const specContainsAnimationSelection = (vlaUnitSpec: VlAnimationUnitSpec): boolean => {
+  if (vlaUnitSpec.params) {
+    return getAnimationSelectionFromParams(vlaUnitSpec.params).length > 0;
+  }
+  return false;
+}
+
+const elaborateVla = (vlaSpec: VlAnimationSpec): ElaboratedVlAnimationSpec => {
+  if ((vlaSpec as VlAnimationLayerSpec).layer) {
+    return null; // TODO connect this back to dylan's traverseTree function (sorry!)
+  }
+  else {
+    return elaborateUnitVla(vlaSpec as VlAnimationUnitSpec);
+  }
+}
+
+////////////////////////////////////////////////////
+// dylan wip below
 
 function traverseTree(unitSpec: VlAnimationSpec, parentTimeEncoding: VlAnimationTimeEncoding): ElaboratedVlAnimationSpec {
 	let timeEncoding = JSON.parse(JSON.stringify(parentTimeEncoding));

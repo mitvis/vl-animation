@@ -1,0 +1,52 @@
+{
+  "data": {
+    "url": "https://raw.githubusercontent.com/vega/vega-datasets/master/data/gapminder.json"
+  },
+  "mark": "point",
+  "params": [
+    {
+      "name": "current_frame",
+      "select": {
+        "type": "point",
+        "on": {
+          "type": "timer",
+          "filter": "is_playing"
+        }
+      }
+    },
+    {
+      "name": "is_playing",
+      "value": true,
+      "bind": {"input": "checkbox"}
+    }
+  ],
+  "transform": [{"filter": {"param": "current_frame"}}],
+  "encoding": {
+    "color": {
+      "field": "country"
+    },
+    "x": {
+      "field": "fertility",
+      "type": "quantitative"
+    },
+    "y": {
+      "field": "life_expect",
+      "type": "quantitative"
+    },
+    "time": {
+      "field": "year",
+      "scale": {
+        "range": [
+          0,
+          5000
+        ],
+        "pause": [
+          { "value": 1965, "duration": 2000 }
+        ]
+      },
+      "interpolate": {
+        "field": "country"
+      }
+    }
+  }
+}

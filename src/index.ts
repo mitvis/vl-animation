@@ -1,117 +1,9 @@
-import * as vega from "vega";
-import {TopLevelUnitSpec} from "vega-lite/build/src/spec/unit";
-import {Encoding} from "vega-lite/build/src/encoding";
-import {Predicate} from "vega-lite/build/src/predicate";
-import {Transform} from "vega-lite/build/src/transform";
-import {GenericUnitSpec, LayerSpec, TopLevel, UnitSpec} from "vega-lite/build/src/spec";
-import {LogicalComposition} from "vega-lite/build/src/logical";
+import * as vega from 'vega';
+
+import {VlAnimationSpec} from './scripts/types';
 
 import compileVla from "./scripts/compile";
 import elaborateVla from "./scripts/elaboration";
-
-// Types specific to Vega-Lite Animation
-export type VlAnimationTimeEncoding = {
-	field: string;
-	scale:
-		| {
-				type: "band";
-				range: {step: number}; // TODO: generalize 'step' to vega.RangeBand
-		  }
-		| {
-				type: "linear";
-				range: [number, number];
-		  };
-	continuity?: {field: string};
-	rescale?: boolean;
-	interpolateLoop?: boolean;
-};
-
-// time-specific filter predicate
-type TimePredicate = {
-	time: TimeFieldComparisonPredicate | TimeFieldComparisonPredicate[];
-};
-
-type TimeFieldComparisonPredicate =
-	| {equal: string}
-	| {lt: string}
-	| {gt: string}
-	| {lte: string}
-	| {gte: string};
-
-type VlaFilterTransform = {
-	filter: LogicalComposition<Predicate | TimePredicate>;
-};
-
-// actual unit spec, is either top level or is top level
-type VlAnimationUnitSpec = Omit<UnitSpec, "transform" | "encoding"> & {
-	transform?: (Transform | VlaFilterTransform)[];
-	encoding?: {time?: VlAnimationTimeEncoding};
-	enter?: Encoding<any>;
-	exit?: Encoding<any>;
-};
-
-/////////////////////////// Initial Specs  ///////////////////////////
-
-export type VlAnimationLayerSpec = LayerSpec | VlAnimationUnitSpec;
-
-// This is the type of an initial input json spec, can be either unit or have layers (written by the user)
-export type VlAnimationSpec =
-	| VlAnimationUnitSpec
-	| (Omit<TopLevel<LayerSpec>, "layer"> & {
-			layer: VlAnimationLayerSpec[];
-	  });
-
-/////////////////////////// Elaborated Specs  ///////////////////////////
-type ElaboratedVlAnimationTimeEncoding = {
-	field: string;
-	scale:
-		| {
-				type: "band";
-				range: {step: number}; // TODO: generalize 'step' to vega.RangeBand
-		  }
-		| {
-				type: "linear";
-				range: [number, number];
-		  };
-	continuity?: {field: string};
-	rescale: boolean;
-	interpolateLoop: boolean;
-};
-
-type ElaboratedVlAnimationUnitSpec = Omit<UnitSpec, "transform" | "encoding"> & {
-	transform: (Transform | VlaFilterTransform)[];
-	encoding: {time: ElaboratedVlAnimationTimeEncoding};
-	enter?: Encoding<any>; // TODO ask josh about this
-	exit?: Encoding<any>;
-};
-
-// As suggested: https://dev.to/vborodulin/ts-how-to-override-properties-with-type-intersection-554l
-// I don't think '&' does what we want for conflicting property names: https://www.typescriptlang.org/play?noLib=true#code/PTAEAEDsHsBkEsBGAuUAXATgVwKYCg0BPABx1AENjiAbMgXlAG89RRJyBbHVAZ03kgBzANx4AvngIkypchlANmrdl1SQsHRDgyiJU0qABm2eGgUUqtUADJQsnZLy0zAN3LVQqY1lPnGK7gBWMVE8IA
-type Override<T1, T2> = Omit<T1, keyof T2> & T2;
-
-type ElaboratedVlAnimationLayerSpec = Override<
-	LayerSpec,
-	{
-		transform?: (Transform | VlaFilterTransform)[]; // this may have been provided in top layer
-		encoding?: {time: ElaboratedVlAnimationTimeEncoding}; // this may have been provided in top layer
-		enter?: Encoding<any>;
-		exit?: Encoding<any>;
-	}
->;
-
-type ElaboratedTopLevelLayeredAnimationSpec = Override<
-	TopLevel<LayerSpec>,
-	{
-		layer: (LayerSpec | ElaboratedVlAnimationLayerSpec)[];
-	}
->;
-
-// the elaborated type we create from the input and pass to the compiler
-export type ElaboratedVlAnimationSpec =
-	| ElaboratedVlAnimationUnitSpec
-	| (Omit<TopLevel<LayerSpec>, "layer"> & {
-			layer: (LayerSpec | ElaboratedVlAnimationUnitSpec)[];
-	  });
 
 /**
  * Renders vega spec into DOM
@@ -139,8 +31,10 @@ const initVega = (vgSpec: vega.Spec, id = "view") => {
  */
 const renderSpec = (vlaSpec: VlAnimationSpec, id: string): void => {
 	const elaboratedVlaSpec = elaborateVla(vlaSpec);
+  console.log('vlaSpec', vlaSpec);
+  console.log('elaboratedVlaSpec', elaboratedVlaSpec);
 	const injectedVgSpec = compileVla(elaboratedVlaSpec);
-	console.log("injected vega", injectedVgSpec);
+	console.log(JSON.stringify(injectedVgSpec, null, 2));
 	initVega(injectedVgSpec, id);
 };
 
@@ -150,9 +44,10 @@ const renderSpec = (vlaSpec: VlAnimationSpec, id: string): void => {
 ); */
 
 import * as gapminder from "./gapminder.json";
+import * as gapminderPause from "./gapminder_pause.json";
 import * as barchartrace from "./bar-chart-race.json";
 import * as walmart from "./walmart.json";
-import * as dunkins from "./dunkins_opening_closing_updated_syntax.json";
+import * as dunkins from "./dunkin_selection.json";
 import * as barley from "./barley.json";
 import * as covidtrends from "./covid-trends.json";
 import * as connectedScatterplot from "./connected-scatterplot.json";
@@ -160,6 +55,7 @@ import * as birds from "./birds.json";
 
 const exampleSpecs = {
 	gapminder,
+  gapminderPause,
 	barchartrace,
 	walmart,
 	barley,
@@ -169,8 +65,7 @@ const exampleSpecs = {
 	dunkins,
 };
 
-// casts are bad!
-renderSpec(exampleSpecs.gapminder as VlAnimationSpec, "connectedScatterplot");
+renderSpec(exampleSpecs.covidtrends as VlAnimationSpec, "connectedScatterplot");
 
 (window as any).view.addSignalListener("anim_val_curr", (_: any, value: string) => {
 	document.getElementById("year").innerHTML = new Date(parseInt(value) * 1000).toISOString();
