@@ -77,8 +77,9 @@ const mergeSpecs = (vgSpec: vega.Spec, vgPartialSpec: Partial<vega.Spec>): vega.
   return vgSpec;
 }
 
+const throttleMs = 1000/60;
+
 const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Partial<vega.Spec> => {
-  const throttleMs = 1000/60;
 
   const pauseExpr = animSelection.select.on.filter ?
     (
@@ -88,6 +89,14 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
     ) :
     "true";
 
+  const pauseEventStreams = animSelection.select.on.filter ?
+    (
+      isArray(animSelection.select.on.filter) ?
+        animSelection.select.on.filter.map(s => ({"signal": s})) :
+        [{"signal": animSelection.select.on.filter}]
+    ) :
+    [];
+
   const signals: vega.Signal[] = [
     {
       "name": "anim_clock", // ms elapsed in animation
@@ -95,7 +104,7 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
       "on": [
         {
           "events": {"type": "timer", "throttle": throttleMs},
-          "update": `${pauseExpr} ? (anim_clock + (now() - last_tick_at) > max_range_extent ? 0 : anim_clock + (now() - last_tick_at)) : anim_clock`
+          "update": `${pauseExpr} && is_playing_scale_pause ? (anim_clock + (now() - last_tick_at) > max_range_extent ? 0 : anim_clock + (now() - last_tick_at)) : anim_clock`
         }
       ]
     },
@@ -104,7 +113,7 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
       "init": "now()",
       "on": [
         {
-          "events": [{"signal": "anim_clock"}, {"signal": pauseExpr}],
+          "events": [{"signal": "anim_clock"}].concat(pauseEventStreams).concat([{"signal": "is_playing_scale_pause"}]),
           "update": "now()"
         }
       ]
@@ -207,6 +216,57 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
           },
           ...stackTransform
         ]
+      }
+    ]
+  }
+
+  if (timeEncoding.scale.pause) {
+    data = [
+      ...data,
+      {
+        "name": "time_pause",
+        "values": timeEncoding.scale.pause,
+        "transform": [
+          {
+            "type": "filter",
+            "expr": "datum.value == anim_val_curr"
+          }
+        ]
+      }
+    ]
+
+    signals = [
+      ...signals,
+      {
+        "name": "scale_pause_duration",
+        "update": "length(data('time_pause')) ? data('time_pause')[0].duration : null"
+      },
+      {
+        "name": "is_playing_scale_pause",
+        "on": [
+          {
+            "events": {"type": "timer", "throttle": throttleMs},
+            "update": "scale_pause_duration ? (now() - last_scale_pause_at > scale_pause_duration) : true"
+          }
+        ]
+      },
+      {
+        "name": "last_scale_pause_at",
+        "on": [
+          {
+            "events": [{"signal": "scale_pause_duration"}],
+            "update": "now()"
+          }
+        ]
+      }
+    ];
+  }
+  else {
+    signals = [
+      ...signals,
+      {
+        "name": "is_playing_scale_pause",
+        "init": "true"
       }
     ]
   }

@@ -41,7 +41,7 @@
           5000
         ],
         "pause": [
-          { "value": 1995, "duration": 1000 }
+          { "value": 1965, "duration": 2000 }
         ]
       },
       "interpolate": {
