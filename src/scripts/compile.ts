@@ -27,9 +27,7 @@ export const isParamAnimationSelection = (param: any): param is VlAnimationSelec
 }
 
 export const getAnimationSelectionFromParams = (params: (VariableParameter | SelectionParameter)[]): VlAnimationSelection[] => {
-  return params.filter(param => {
-    return isParamAnimationSelection(param);
-  }) as VlAnimationSelection[];
+  return params.filter(isParamAnimationSelection) as VlAnimationSelection[];
 }
 
 const getAnimationFilterTransforms = (transform: Transform[], animSelections: VlAnimationSelection[]): FilterTransform[] => {
@@ -39,9 +37,9 @@ const getAnimationFilterTransforms = (transform: Transform[], animSelections: Vl
 }
 
 const getMarkDataset = (markSpec: vega.Mark): string => {
-  if ((markSpec.from as any)?.facet) {
+  if ('facet' in markSpec.from) {
     // mark is a faceted line mark
-    return (markSpec.from as any).facet.data;
+    return markSpec.from.facet.data;
   }
   else {
     return markSpec.from?.data;
@@ -49,9 +47,9 @@ const getMarkDataset = (markSpec: vega.Mark): string => {
 }
 
 const setMarkDataset = (markSpec: vega.Mark, dataset: string): vega.Mark => {
-  if ((markSpec.from as any)?.facet) {
+  if ('facet' in markSpec.from) {
     // mark is a faceted line mark
-    (markSpec.from as any).facet.data = dataset;
+    markSpec.from.facet.data = dataset;
   }
   else {
     markSpec.from.data = dataset;
@@ -65,9 +63,9 @@ const markHasDataset = (markSpec: vega.Mark, dataset: string): boolean => {
 }
 
 const getMarkEncoding = (markSpec: vega.Mark): vega.EncodeEntry => {
-  if ((markSpec.from as any)?.facet) {
+  if ('facet' in markSpec.from && markSpec.type === 'group') {
     // mark is a faceted line mark
-    return (markSpec as vega.GroupMark).marks[0].encode.update
+    return markSpec.marks[0].encode.update
   }
   else {
     return markSpec.encode.update;
@@ -75,9 +73,9 @@ const getMarkEncoding = (markSpec: vega.Mark): vega.EncodeEntry => {
 }
 
 const setMarkEncoding = (markSpec: vega.Mark, key: string, value: any): vega.Mark => {
-  if ((markSpec.from as any)?.facet) {
+  if ('facet' in markSpec.from && markSpec.type === 'group') {
     // mark is a faceted line mark
-    (markSpec as vega.GroupMark).marks[0].encode.update[key] = value;
+    markSpec.marks[0].encode.update[key] = value;
   }
   else {
     markSpec.encode.update[key] = value;
@@ -186,7 +184,7 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
         // a continuous scale for mapping values into time
         "name": "time",
         "type": "linear",
-        "zero": (timeEncoding.scale as any).zero ?? false,
+        "zero": timeEncoding.scale.zero ?? false,
         "domain": timeEncoding.scale.domain ?? { "data": dataset, "field": timeEncoding.field },
         "range": timeEncoding.scale.range
       } as vega.LinearScale
@@ -429,9 +427,7 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
     return {
       signals
     }
-  }).reduce((prev, curr) => {
-    return mergeSpecs(curr as any, prev as any) as any; // lmao
-  });
+  }).reduce((prev, curr) => mergeSpecs(curr, prev), {});
 }
 
 const compileFilterTransforms = (animationFilters: FilterTransform[], animationSelections: ElaboratedVlAnimationSelection[], dataset: string, markSpecs: vega.Mark[], next?: boolean): Partial<vega.Spec> => {
