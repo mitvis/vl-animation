@@ -2,7 +2,7 @@ import * as vega from 'vega';
 import * as vl from 'vega-lite';
 import clone from 'lodash.clonedeep';
 import { ElaboratedVlAnimationSelection, ElaboratedVlAnimationSpec, ElaboratedVlAnimationTimeEncoding, ElaboratedVlAnimationUnitSpec, VlAnimationSelection, VlAnimationSpec, VlAnimationTimeScale } from '..';
-import { EventStream, isArray } from 'vega';
+import { Encode, EventStream, isArray } from 'vega';
 import { VariableParameter } from 'vega-lite/build/src/parameter';
 import { SelectionParameter, isSelectionParameter, PointSelectionConfig } from 'vega-lite/build/src/selection';
 import { Transform, FilterTransform } from 'vega-lite/build/src/transform';
@@ -34,8 +34,55 @@ export const getAnimationSelectionFromParams = (params: (VariableParameter | Sel
 
 const getAnimationFilterTransforms = (transform: Transform[], animSelections: VlAnimationSelection[]): FilterTransform[] => {
   return (transform ?? []).filter(transform => {
-    return (transform as FilterTransform).filter && animSelections.some(s => ((transform as FilterTransform).filter as ParameterPredicate).param.includes(s.name));
+    return (transform as FilterTransform).filter && animSelections.some(s => ((transform as FilterTransform).filter as ParameterPredicate).param?.includes(s.name));
   }) as FilterTransform[];
+}
+
+const getMarkDataset = (markSpec: vega.Mark): string => {
+  if ((markSpec.from as any)?.facet) {
+    // mark is a faceted line mark
+    return (markSpec.from as any).facet.data;
+  }
+  else {
+    return markSpec.from?.data;
+  }
+}
+
+const setMarkDataset = (markSpec: vega.Mark, dataset: string): vega.Mark => {
+  if ((markSpec.from as any)?.facet) {
+    // mark is a faceted line mark
+    (markSpec.from as any).facet.data = dataset;
+  }
+  else {
+    markSpec.from.data = dataset;
+  }
+  return markSpec;
+}
+
+const markHasDataset = (markSpec: vega.Mark, dataset: string): boolean => {
+  const m_dataset = getMarkDataset(markSpec);
+  return m_dataset === dataset || m_dataset === `${dataset}_curr` || m_dataset === `${dataset}_interpolate`;
+}
+
+const getMarkEncoding = (markSpec: vega.Mark): vega.EncodeEntry => {
+  if ((markSpec.from as any)?.facet) {
+    // mark is a faceted line mark
+    return (markSpec as vega.GroupMark).marks[0].encode.update
+  }
+  else {
+    return markSpec.encode.update;
+  }
+}
+
+const setMarkEncoding = (markSpec: vega.Mark, key: string, value: any): vega.Mark => {
+  if ((markSpec.from as any)?.facet) {
+    // mark is a faceted line mark
+    (markSpec as vega.GroupMark).marks[0].encode.update[key] = value;
+  }
+  else {
+    markSpec.encode.update[key] = value;
+  }
+  return markSpec;
 }
 
 const mergeSpecs = (vgSpec: vega.Spec, vgPartialSpec: Partial<vega.Spec>): vega.Spec => {
@@ -204,20 +251,22 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
       }
     ]
 
-    data = [
-      ...data,
-      {
-        "name": `${dataset}_next`,
-        "source": dataset,
-        "transform": [
-          {
-            "type": "filter",
-            "expr": `datum['${timeEncoding.field}'] == anim_val_next`
-          },
-          ...stackTransform
-        ]
-      }
-    ]
+    if (timeEncoding.interpolate) {
+      data = [
+        ...data,
+        {
+          "name": `${dataset}_next`,
+          "source": dataset,
+          "transform": [
+            {
+              "type": "filter",
+              "expr": `datum['${timeEncoding.field}'] == anim_val_next`
+            },
+            ...stackTransform
+          ]
+        }
+      ]
+    }
   }
 
   if (timeEncoding.scale.pause) {
@@ -407,8 +456,8 @@ const compileFilterTransforms = (animationFilters: FilterTransform[], animationS
     let marks = [];
 
     marks = markSpecs.map(markSpec => {
-      if (markSpec.from.data === dataset) {
-        markSpec.from.data = `${dataset}_curr`;
+      if (markHasDataset(markSpec, dataset)) {
+        return setMarkDataset(markSpec, `${dataset}_curr`);
       }
       return markSpec;
     });
@@ -496,11 +545,13 @@ const compileInterpolation = (animationSelections: ElaboratedVlAnimationSelectio
     let scales: vega.Scale[] = [];
 
     const marks = markSpecs.map(markSpec => {
-      if (markSpec.from?.data == dataset_curr) {
-        markSpec.from.data = dataset_interpolate;
+      if (getMarkDataset(markSpec) == dataset_curr) {
+        markSpec = setMarkDataset(markSpec, dataset_interpolate);
 
-        Object.keys(markSpec.encode.update).forEach((k) => {
-          let encodingDef = markSpec.encode.update[k];
+        const encoding = getMarkEncoding(markSpec);
+
+        Object.keys(encoding).forEach((k) => {
+          let encodingDef = encoding[k];
           if (Array.isArray(encodingDef)) {
             // for production rule encodings, the encoding is an array. the last entry is the default def
             encodingDef = encodingDef[encodingDef.length - 1];
@@ -540,9 +591,9 @@ const compileInterpolation = (animationSelections: ElaboratedVlAnimationSelectio
             // e.g. map projections have field but no scale. you can directly lerp the field
             `isValid(datum.next) ? lerp([datum.${field}, datum.next.${field}], anim_tween) : datum.${field}`
 
-            markSpec.encode.update[k] = {
+            markSpec = setMarkEncoding(markSpec, k, {
               "signal": lerp_term
-            }
+            });
           }
         });
       }
@@ -574,7 +625,7 @@ const compileEnterExit = (vlaSpec: ElaboratedVlAnimationUnitSpec, markSpecs: veg
     const vgEnterSpec = vl.compile(vlEnterSpec as any).spec;
 
     marks = markSpecs.map(markSpec => {
-      if (markSpec.from.data === dataset || markSpec.from.data.startsWith(dataset + "_")) {
+      if (markHasDataset(markSpec, dataset)) {
         const vgUpdate = vgEnterSpec.marks.find(mark => mark.name === markSpec.name).encode.update;
         const filtered = Object.keys(vgUpdate)
           .filter(key => enterKeys.includes(key))
@@ -597,7 +648,7 @@ const compileEnterExit = (vlaSpec: ElaboratedVlAnimationUnitSpec, markSpecs: veg
     const vgExitSpec = vl.compile(vlExitSpec as any).spec;
 
     marks = markSpecs.map(markSpec => {
-      if (markSpec.from.data === dataset || markSpec.from.data.startsWith(dataset + "_")) {
+      if (markHasDataset(markSpec, dataset)) {
         const vgUpdate = vgExitSpec.marks.find(mark => mark.name === markSpec.name).encode.update;
         const filtered = Object.keys(vgUpdate)
           .filter(key => exitKeys.includes(key))
@@ -640,7 +691,7 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
   let vgSpec = vl.compile(sanitizedVlaSpec as vl.TopLevelSpec).spec;
   console.log('compiled', vgSpec)
   const timeEncoding = vlaSpec.encoding.time;
-  const dataset = vgSpec.marks[0].from.data;  // TODO assumes mark[0] is the main mark
+  const dataset = getMarkDataset(vgSpec.marks[0]);
 
 
   /*
@@ -651,7 +702,6 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
   if (vlaSpec.mark === 'bar') {
     stackTransform = [...vgSpec.data[1].transform];
   }
-
 
   vgSpec = mergeSpecs(vgSpec,
     createAnimationClock(animationSelections[0])); // TODO think about what happens if there's more than one animSelection
