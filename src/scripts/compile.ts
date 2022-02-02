@@ -430,13 +430,10 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
   }).reduce((prev, curr) => mergeSpecs(curr, prev), {});
 }
 
-const compileFilterTransforms = (animationFilters: FilterTransform[], animationSelections: ElaboratedVlAnimationSelection[], dataset: string, markSpecs: vega.Mark[], next?: boolean): Partial<vega.Spec> => {
+const compileFilterTransforms = (animationFilters: FilterTransform[], animationSelections: ElaboratedVlAnimationSelection[], dataset: string, markSpecs: vega.Mark[]): Partial<vega.Spec> => {
   if (animationFilters.length) {
 
-    let dataset_name = `${dataset}_curr`;
-    if (next) {
-      dataset_name = `${dataset}_next`
-    }
+    const dataset_curr = `${dataset}_curr`;
 
     const vlSpec = {
       "mark": "circle",
@@ -445,7 +442,7 @@ const compileFilterTransforms = (animationFilters: FilterTransform[], animationS
     };
     const datasetSpec = {
       ...((vl.compile(vlSpec as any).spec as any).data as any[]).find(d => d.name === 'data_0'),
-      "name": dataset_name,
+      "name": dataset_curr,
       "source": dataset
     };
 
@@ -453,7 +450,7 @@ const compileFilterTransforms = (animationFilters: FilterTransform[], animationS
 
     marks = markSpecs.map(markSpec => {
       if (markHasDataset(markSpec, dataset)) {
-        return setMarkDataset(markSpec, `${dataset}_curr`);
+        return setMarkDataset(markSpec, dataset_curr);
       }
       return markSpec;
     });
@@ -466,32 +463,12 @@ const compileFilterTransforms = (animationFilters: FilterTransform[], animationS
   return {};
 }
 
-const compileInterpolation = (animationSelections: ElaboratedVlAnimationSelection[], animationFilters: FilterTransform[], timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string, markSpecs: vega.Mark[], scaleSpecs: vega.Scale[]): Partial<vega.Spec> => {
+const compileInterpolation = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string, markSpecs: vega.Mark[], scaleSpecs: vega.Scale[]): Partial<vega.Spec> => {
   if (timeEncoding.interpolate !== false) {
-
-    const animSelectionsNext = animationSelections.map(s => {
-      return {...s, "name": s.name + '_next'}
-    })
-    const animationFiltersNext = animationFilters.map(f => {
-      return {
-        ...f,
-        "filter": {
-          ...(f.filter as any),
-          "param": (f.filter as ParameterPredicate).param + '_next'
-        }
-      }
-    })
-
-    const vlAnimSelSpec = {
-      "mark": "circle",
-      "params": animSelectionsNext
-    }
-    const vgAnimSelSpec = vl.compile(vlAnimSelSpec as any).spec
-    const compiledAnimSelections = mergeSpecs({signals: vgAnimSelSpec.signals, data: [vgAnimSelSpec.data[0]]}, compileAnimationSelections(animSelectionsNext, timeEncoding.field, true));
-    const compiledFilterTransforms = compileFilterTransforms(animationFiltersNext, animSelectionsNext, dataset, [], true);
-
     const dataset_curr = `${dataset}_curr`;
+    const dataset_eq = `${dataset}_eq`;
     const dataset_next = `${dataset}_next`;
+    const dataset_eq_next = `${dataset}_eq_next`;
     const dataset_interpolate = `${dataset}_interpolate`;
 
     const signals: vega.Signal[] = [
@@ -505,12 +482,8 @@ const compileInterpolation = (animationSelections: ElaboratedVlAnimationSelectio
         "init": "0",
         "on": [
           {
-            "events": { "signal": "anim_clock" },
+            "events": [{"signal": "anim_clock"}, {"signal": "anim_val_next"}, {"signal": "anim_val_curr"}],
             "update": `anim_val_next != anim_val_curr ? (anim_clock - scale('time_${timeEncoding.field}', anim_val_curr)) / (scale('time_${timeEncoding.field}', anim_val_next) - scale('time_${timeEncoding.field}', anim_val_curr)) : 0`
-          },
-          {
-            "events": { "signal": "anim_val_curr" },
-            "update": "0"
           }
         ]
       }
@@ -520,8 +493,28 @@ const compileInterpolation = (animationSelections: ElaboratedVlAnimationSelectio
 
     const data: vega.Data[] = [
       {
-        "name": dataset_interpolate,
-        "source": dataset_curr,
+        "name": dataset_eq,
+        "source": dataset,
+        "transform": [
+          {
+            "type": "filter",
+            "expr": `datum.${timeEncoding.field} == anim_val_curr`
+          }
+        ]
+      },
+      {
+        "name": dataset_next,
+        "source": dataset,
+        "transform": [
+          {
+            "type": "filter",
+            "expr": `datum.${timeEncoding.field} == anim_val_next`
+          }
+        ]
+      },
+      {
+        "name": dataset_eq_next,
+        "source": dataset_eq,
         "transform": [
           {
             "type": "lookup",
@@ -533,6 +526,16 @@ const compileInterpolation = (animationSelections: ElaboratedVlAnimationSelectio
           {
             "type": "filter",
             "expr": "isValid(datum.next)"
+          }
+        ]
+      },
+      {
+        "name": dataset_interpolate,
+        "source": [dataset_curr, dataset_eq_next],
+        "transform": [
+          {
+            "type": "filter",
+            "expr": "datum.year == anim_val_curr && isValid(datum.next) || datum.year != anim_val_curr"
           }
         ]
       }
@@ -603,7 +606,7 @@ const compileInterpolation = (animationSelections: ElaboratedVlAnimationSelectio
       scales
     };
 
-    return mergeSpecs(mergeSpecs(compiledAnimSelections, compiledFilterTransforms), spec);
+    return spec;
   }
 
   return {};
@@ -706,7 +709,7 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
   vgSpec = mergeSpecs(vgSpec,
     compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks));
   vgSpec = mergeSpecs(vgSpec,
-    compileInterpolation(animationSelections, animationFilters, timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
+    compileInterpolation(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
   vgSpec = mergeSpecs(vgSpec,
     compileEnterExit(vlaSpec, vgSpec.marks, dataset, vlaSpec.enter, vlaSpec.exit)); // TODO need examples that actually use this to verify it works
 
