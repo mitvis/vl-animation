@@ -409,7 +409,7 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
           "name": `${animSelection.name}_tuple`,
           "on": [
             {
-              "events": { "signal": "anim_val_curr" },
+              "events": [{ "signal": "anim_clock" }, { "signal": "anim_val_curr" }],
               "update": `{unit: "", fields: ${animSelection.name}_tuple_fields, values: ['anim_val_curr']}`,
               "force": true
             }
