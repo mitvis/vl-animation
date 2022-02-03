@@ -1,6 +1,6 @@
-import * as vega from 'vega';
+import * as vega from "vega";
 
-import {VlAnimationSpec} from './scripts/types';
+import {VlAnimationSpec} from "./scripts/types";
 
 import compileVla from "./scripts/compile";
 import elaborateVla from "./scripts/elaboration";
@@ -31,8 +31,8 @@ const initVega = (vgSpec: vega.Spec, id = "view") => {
  */
 const renderSpec = (vlaSpec: VlAnimationSpec, id: string): void => {
 	const elaboratedVlaSpec = elaborateVla(vlaSpec);
-  console.log('vlaSpec', vlaSpec);
-  console.log('elaboratedVlaSpec', elaboratedVlaSpec);
+	console.log("vlaSpec", vlaSpec);
+	console.log("elaboratedVlaSpec", elaboratedVlaSpec);
 	const injectedVgSpec = compileVla(elaboratedVlaSpec);
 	console.log(JSON.stringify(injectedVgSpec, null, 2));
 	initVega(injectedVgSpec, id);
@@ -55,7 +55,7 @@ import * as birds from "./birds.json";
 
 const exampleSpecs = {
 	gapminder,
-  gapminderPause,
+	gapminderPause,
 	barchartrace,
 	walmart,
 	barley,
@@ -71,7 +71,4 @@ renderSpec(exampleSpecs.covidtrends as VlAnimationSpec, "connectedScatterplot");
 	document.getElementById("year").innerHTML = new Date(parseInt(value) * 1000).toISOString();
 });
 
-export {
-  compileVla,
-  elaborateVla,
-};
+export {compileVla, elaborateVla};
