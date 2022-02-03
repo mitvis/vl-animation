@@ -325,11 +325,7 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
   };
 }
 
-const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSelection[], field: string, next?: boolean): Partial<vega.Spec> => {
-  let anim_signal = 'anim_val_curr';
-  if (next) {
-    anim_signal = 'anim_val_next';
-  }
+const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSelection[], field: string): Partial<vega.Spec> => {
   const predicateToTupleType = (predicate: FieldPredicate) => {
     if ((predicate as FieldEqualPredicate).equal) {
       return "E";
@@ -389,8 +385,8 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
           "name": `${animSelection.name}_tuple`,
           "on": [
             {
-              "events": { "signal": anim_signal },
-              "update": `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [${Array(and ? and.length : 1).fill(anim_signal).join(', ')}]}`,
+              "events": { "signal": 'anim_val_curr' },
+              "update": `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [${Array(and ? and.length : 1).fill('anim_val_curr').join(', ')}]}`,
               "force": true
             }
           ]
@@ -413,8 +409,8 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
           "name": `${animSelection.name}_tuple`,
           "on": [
             {
-              "events": { "signal": "anim_clock" },
-              "update": `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [${anim_signal}]}`,
+              "events": { "signal": "anim_val_curr" },
+              "update": `{unit: "", fields: ${animSelection.name}_tuple_fields, values: ['anim_val_curr']}`,
               "force": true
             }
           ]
