@@ -1,15 +1,11 @@
 import compileVla from "./scripts/compile";
 import elaborateVla from "./scripts/elaboration";
 
-export {
-  compileVla,
-  elaborateVla,
-};
+export {compileVla, elaborateVla};
 
 // import * as vega from 'vega';
 
 // import {VlAnimationSpec} from './scripts/types';
-
 
 // /**
 //  * Renders vega spec into DOM
