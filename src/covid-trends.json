@@ -1,6 +1,6 @@
 {
-  "width": 1000,
-  "height": 1000,
+  "width": 500,
+  "height": 500,
   "data": {
       "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/3acfc06e88d2f26ca797be116a813dcc0225bc70/tidy_covid19_global_data.csv"
   },
@@ -28,7 +28,7 @@
       "select": {
         "type": "point",
         "on": "timer",
-        "predicate": {"field": "date", "lte": {"expr": "invert('time', anim_clock)"}}
+        "predicate": {"field": "date", "gte": {"expr": "invert('time', anim_clock)"}}
       }
     }
   ],
