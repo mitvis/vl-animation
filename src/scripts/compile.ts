@@ -142,6 +142,8 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
     ) :
     [];
 
+  const easeFunction = animSelection.select.easing;
+
   const signals: vega.Signal[] = [
     {
       "name": "anim_clock", // ms elapsed in animation
@@ -162,6 +164,10 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
           "update": "now()"
         }
       ]
+    },
+    {
+      "name": "eased_anim_clock",
+      "update": `${easeFunction}(anim_clock / max_range_extent) * max_range_extent`
     }
   ];
 
@@ -193,7 +199,7 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
       ...signals,
       {
         "name": "anim_val_curr", // current keyframe's value in time field domain
-        "update": "invert('time', anim_clock)"
+        "update": "invert('time', eased_anim_clock)"
       },
       {
         "name": "max_range_extent", // max value of time range
@@ -226,8 +232,8 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
         "init": "0",
         "on": [
           {
-            "events": { "signal": "anim_clock" },
-            "update": `indexof(${timeEncoding.field}_domain, invert('time_${timeEncoding.field}', anim_clock))`
+            "events": { "signal": "eased_anim_clock" },
+            "update": `indexof(${timeEncoding.field}_domain, invert('time_${timeEncoding.field}', eased_anim_clock))`
           }
         ]
       },
@@ -245,7 +251,7 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
       },
       {
         "name": "anim_val_curr", // current keyframe's value in time field domain
-        "update": `invert('time_${timeEncoding.field}', anim_clock)`
+        "update": `invert('time_${timeEncoding.field}', eased_anim_clock)`
       }
     ]
 
@@ -409,7 +415,7 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
           "name": `${animSelection.name}_tuple`,
           "on": [
             {
-              "events": [{ "signal": "anim_clock" }, { "signal": "anim_val_curr" }],
+              "events": [{ "signal": "eased_anim_clock" }, { "signal": "anim_val_curr" }],
               "update": `{unit: "", fields: ${animSelection.name}_tuple_fields, values: ['anim_val_curr']}`,
               "force": true
             }
@@ -478,8 +484,8 @@ const compileInterpolation = (timeEncoding: ElaboratedVlAnimationTimeEncoding, d
         "init": "0",
         "on": [
           {
-            "events": [{"signal": "anim_clock"}, {"signal": "anim_val_next"}, {"signal": "anim_val_curr"}],
-            "update": `anim_val_next != anim_val_curr ? (anim_clock - scale('time_${timeEncoding.field}', anim_val_curr)) / (scale('time_${timeEncoding.field}', anim_val_next) - scale('time_${timeEncoding.field}', anim_val_curr)) : 0`
+            "events": [{"signal": "eased_anim_clock"}, {"signal": "anim_val_next"}, {"signal": "anim_val_curr"}],
+            "update": `anim_val_next != anim_val_curr ? (eased_anim_clock - scale('time_${timeEncoding.field}', anim_val_curr)) / (scale('time_${timeEncoding.field}', anim_val_next) - scale('time_${timeEncoding.field}', anim_val_curr)) : 0`
           }
         ]
       }
