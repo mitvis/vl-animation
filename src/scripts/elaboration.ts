@@ -46,7 +46,7 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimati
           "type": "timer",
           "filter": "true"
         },
-        "easing": "linear"
+        "easing": "easeLinear"
       }
     };
     const filter = {"filter": {"param": "current_frame"}};
@@ -70,7 +70,7 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimati
               "type": "timer",
               "filter": (param.select.on !== "timer") ? param.select.on.filter ?? "true" : "true"
             },
-            "easing": param.select.easing ?? "linear"
+            "easing": param.select.easing ?? "easeLinear"
           }
         }
       }
