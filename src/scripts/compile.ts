@@ -83,6 +83,34 @@ const setMarkEncoding = (markSpec: vega.Mark, key: string, value: any): vega.Mar
   return markSpec;
 }
 
+const predicateToTupleType = (predicate: FieldPredicate) => {
+  if ((predicate as FieldEqualPredicate).equal) {
+    return "E";
+  }
+  else if ((predicate as FieldLTPredicate).lt) {
+    return "E-LT";
+  }
+  else if ((predicate as FieldGTPredicate).gt) {
+    return "E-GT";
+  }
+  else if ((predicate as FieldLTEPredicate).lte) {
+    return "E-LTE";
+  }
+  else if ((predicate as FieldGTEPredicate).gte) {
+    return "E-GTE";
+  }
+  else if ((predicate as FieldRangePredicate).range) {
+    return "R";
+  }
+  else if ((predicate as FieldOneOfPredicate).oneOf) {
+    return "E";
+  }
+  else if ((predicate as FieldValidPredicate).valid) {
+    return "E-VALID";
+  }
+  return "E"; // shrug
+}
+
 const mergeSpecs = (vgSpec: vega.Spec, vgPartialSpec: Partial<vega.Spec>): vega.Spec => {
   if (vgPartialSpec.scales) {
     const newScaleNames = vgPartialSpec.scales.map(s => s.name);
@@ -151,7 +179,7 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
       "on": [
         {
           "events": {"type": "timer", "throttle": throttleMs},
-          "update": `${pauseExpr} && is_playing_scale_pause ? (anim_clock + (now() - last_tick_at) > max_range_extent ? 0 : anim_clock + (now() - last_tick_at)) : anim_clock`
+          "update": `${pauseExpr} && is_playing_datum_pause ? (anim_clock + (now() - last_tick_at) > max_range_extent ? 0 : anim_clock + (now() - last_tick_at)) : anim_clock`
         }
       ]
     },
@@ -160,7 +188,7 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
       "init": "now()",
       "on": [
         {
-          "events": [{"signal": "anim_clock"}].concat(pauseEventStreams).concat([{"signal": "is_playing_scale_pause"}]),
+          "events": [{"signal": "anim_clock"}].concat(pauseEventStreams).concat([{"signal": "is_playing_datum_pause"}]),
           "update": "now()"
         }
       ]
@@ -273,12 +301,23 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
     }
   }
 
-  if (timeEncoding.scale.pause) {
+  return {
+    data,
+    scales,
+    signals
+  };
+}
+
+const compileDatumPause = (animSelection: ElaboratedVlAnimationSelection): Partial<vega.Spec> =>  {
+  let data: vega.Data[] = [];
+  let signals: vega.Signal[] = [];
+
+  if (animSelection.select.pause) {
     data = [
       ...data,
       {
         "name": "time_pause",
-        "values": timeEncoding.scale.pause,
+        "values": animSelection.select.pause,
         "transform": [
           {
             "type": "filter",
@@ -291,23 +330,23 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
     signals = [
       ...signals,
       {
-        "name": "scale_pause_duration",
+        "name": "datum_pause_duration",
         "update": "length(data('time_pause')) ? data('time_pause')[0].duration : null"
       },
       {
-        "name": "is_playing_scale_pause",
+        "name": "is_playing_datum_pause",
         "on": [
           {
             "events": {"type": "timer", "throttle": throttleMs},
-            "update": "scale_pause_duration ? (now() - last_scale_pause_at > scale_pause_duration) : true"
+            "update": "datum_pause_duration ? (now() - last_datum_pause_at > datum_pause_duration) : true"
           }
         ]
       },
       {
-        "name": "last_scale_pause_at",
+        "name": "last_datum_pause_at",
         "on": [
           {
-            "events": [{"signal": "scale_pause_duration"}],
+            "events": [{"signal": "datum_pause_duration"}],
             "update": "now()"
           }
         ]
@@ -318,47 +357,18 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
     signals = [
       ...signals,
       {
-        "name": "is_playing_scale_pause",
+        "name": "is_playing_datum_pause",
         "init": "true"
       }
     ]
   }
-
   return {
     data,
-    scales,
     signals
-  };
+  }
 }
 
 const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSelection[], field: string): Partial<vega.Spec> => {
-  const predicateToTupleType = (predicate: FieldPredicate) => {
-    if ((predicate as FieldEqualPredicate).equal) {
-      return "E";
-    }
-    else if ((predicate as FieldLTPredicate).lt) {
-      return "E-LT";
-    }
-    else if ((predicate as FieldGTPredicate).gt) {
-      return "E-GT";
-    }
-    else if ((predicate as FieldLTEPredicate).lte) {
-      return "E-LTE";
-    }
-    else if ((predicate as FieldGTEPredicate).gte) {
-      return "E-GTE";
-    }
-    else if ((predicate as FieldRangePredicate).range) {
-      return "R";
-    }
-    else if ((predicate as FieldOneOfPredicate).oneOf) {
-      return "E";
-    }
-    else if ((predicate as FieldValidPredicate).valid) {
-      return "E-VALID";
-    }
-    return "E"; // shrug
-  }
 
   return animationSelections.map(animSelection => {
     let signals: vega.Signal[] = [
@@ -429,7 +439,7 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
         ...signals,
         {
           "name": `${animSelection.name}__vgsid_`,
-          "update": "round(eased_anim_clock / max_range_extent * 100)",
+          "init": "0",
           "bind": {"input": "range"}
         }
       ]
@@ -437,9 +447,12 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 
     // TODO think about what happens if there's more than one animSelection
 
-    return {
-      signals
-    }
+    const datumPauseSpec = compileDatumPause(animSelection);
+
+    return mergeSpecs(
+      datumPauseSpec,
+      { signals }
+    )
   }).reduce((prev, curr) => mergeSpecs(curr, prev), {});
 }
 

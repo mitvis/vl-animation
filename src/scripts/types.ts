@@ -19,7 +19,6 @@ type VlAnimationTimeScale = ({
   "range"?: number[];
 }) & {
   "domain"?: any[];
-  "pause"?: {"value": vega.Datum, "duration": number}[]
 };
 
 export type VlAnimationSelection = Override<SelectionParameter, {
@@ -31,6 +30,7 @@ export type VlAnimationSelection = Override<SelectionParameter, {
     // "predicate"?: LogicalComposition<Predicate>;
     "predicate"?: LogicalAnd<FieldPredicate> | FieldPredicate;
     "easing"?: string;
+    "pause"?: {"value": vega.Datum, "duration": number}[];
   }>;
   "bind"?: vega.BindRange;
 }>;
@@ -71,7 +71,6 @@ export type ElaboratedVlAnimationTimeScale = ({
   "range": number[];
 }) & {
   "domain"?: any[]; // undefined domain means use data/field domain
-  "pause"?: {"value": vega.Datum, "duration": number}[]
 };
 
 export type ElaboratedVlAnimationSelection = Override<SelectionParameter, {
@@ -83,6 +82,7 @@ export type ElaboratedVlAnimationSelection = Override<SelectionParameter, {
     // "predicate"?: LogicalComposition<Predicate>;
     "predicate"?: LogicalAnd<FieldPredicate> | FieldPredicate;
     "easing": string;
+    "pause"?: {"value": vega.Datum, "duration": number}[];
   }>;
   "bind"?: vega.BindRange;
 }>;

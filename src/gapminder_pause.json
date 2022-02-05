@@ -11,7 +11,10 @@
         "on": {
           "type": "timer",
           "filter": "is_playing"
-        }
+        },
+        "pause": [
+          { "value": 1965, "duration": 2000 }
+        ]
       }
     },
     {
@@ -39,9 +42,6 @@
         "range": [
           0,
           5000
-        ],
-        "pause": [
-          { "value": 1965, "duration": 2000 }
         ]
       },
       "interpolate": {
