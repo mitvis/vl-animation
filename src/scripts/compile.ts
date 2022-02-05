@@ -536,11 +536,11 @@ const compileInterpolation = (timeEncoding: ElaboratedVlAnimationTimeEncoding, d
               }
 
               const lerp_term = scale === 'color' ? // color scales map numbers to strings, so lerp before scale
-                `datum.${timeEncoding.field} == anim_val_curr ? scale('${scale}', interpolateBasis(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})` :
+                `datum.${timeEncoding.field} == anim_val_curr ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})` :
                 scale ? // e.g. position scales map anything to numbers, so scale before lerp
-                `datum.${timeEncoding.field} == anim_val_curr ? scale('${scale}', interpolateBasis(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})` :
+                `datum.${timeEncoding.field} == anim_val_curr ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})` :
                 // e.g. map projections have field but no scale. you can directly lerp the field
-                `datum.${timeEncoding.field} == anim_val_curr ? interpolateBasis(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent) : datum.${field}`
+                `datum.${timeEncoding.field} == anim_val_curr ? interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent) : datum.${field}`
 
               markSpec = setMarkEncoding(markSpec, k, {
                 "signal": lerp_term
