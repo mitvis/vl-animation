@@ -35,13 +35,15 @@ export type VlAnimationSelection = Override<SelectionParameter, {
   "bind"?: vega.BindRange;
 }>;
 
+type VlAnimationInterpolate = {
+  "field": string,
+  "loop"?: boolean
+}
+
 type VlAnimationTimeEncoding = {
   "field": string,
   "scale"?: VlAnimationTimeScale,
-  "interpolate"?: {
-    "field": string,
-    "loop"?: boolean
-  },
+  "interpolate"?: VlAnimationInterpolate,
   "rescale"?: boolean
 };
 
@@ -87,13 +89,15 @@ export type ElaboratedVlAnimationSelection = Override<SelectionParameter, {
   "bind"?: vega.BindRange;
 }>;
 
+export type ElaboratedVlAnimationInterpolate = {
+  "field": string,
+  "loop": boolean
+}
+
 export type ElaboratedVlAnimationTimeEncoding = {
   "field": string,
   "scale": ElaboratedVlAnimationTimeScale,
-  "interpolate": {
-    "field": string,
-    "loop": boolean
-  } | false,
+  "interpolate": ElaboratedVlAnimationInterpolate | false,
   "rescale": boolean,
 };
 
