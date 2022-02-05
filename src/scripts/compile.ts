@@ -424,6 +424,17 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
       ];
     }
 
+    if (animSelection.bind) {
+      signals = [
+        ...signals,
+        {
+          "name": `${animSelection.name}__vgsid_`,
+          "update": "round(eased_anim_clock / max_range_extent * 100)",
+          "bind": {"input": "range"}
+        }
+      ]
+    }
+
     // TODO think about what happens if there's more than one animSelection
 
     return {

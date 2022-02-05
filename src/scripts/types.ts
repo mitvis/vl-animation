@@ -31,7 +31,8 @@ export type VlAnimationSelection = Override<SelectionParameter, {
     // "predicate"?: LogicalComposition<Predicate>;
     "predicate"?: LogicalAnd<FieldPredicate> | FieldPredicate;
     "easing"?: string;
-  }>
+  }>;
+  "bind"?: vega.BindRange;
 }>;
 
 type VlAnimationTimeEncoding = {
@@ -82,7 +83,8 @@ export type ElaboratedVlAnimationSelection = Override<SelectionParameter, {
     // "predicate"?: LogicalComposition<Predicate>;
     "predicate"?: LogicalAnd<FieldPredicate> | FieldPredicate;
     "easing": string;
-  }>
+  }>;
+  "bind"?: vega.BindRange;
 }>;
 
 export type ElaboratedVlAnimationTimeEncoding = {
