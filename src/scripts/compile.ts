@@ -535,24 +535,17 @@ const compileInterpolation = (timeEncoding: ElaboratedVlAnimationTimeEncoding, d
                 return; // if the scale has a discrete output range, don't lerp with it
               }
 
-              if (timeEncoding.rescale) {
-                // rescale: the scale updates based on the animation frame
-                // TODO: move this out of this function into the compileTimeEncoding function
-                (scaleSpec.domain as vega.ScaleDataRef).data = dataset_curr;
-                scales = scales.filter(s => s.name !== scaleSpec.name).concat([scaleSpec]);
-              }
+              const lerp_term = scale === 'color' ? // color scales map numbers to strings, so lerp before scale
+                `datum.${timeEncoding.field} == anim_val_curr ? scale('${scale}', interpolateBasis(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})` :
+                scale ? // e.g. position scales map anything to numbers, so scale before lerp
+                `datum.${timeEncoding.field} == anim_val_curr ? scale('${scale}', interpolateBasis(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})` :
+                // e.g. map projections have field but no scale. you can directly lerp the field
+                `datum.${timeEncoding.field} == anim_val_curr ? interpolateBasis(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent) : datum.${field}`
+
+              markSpec = setMarkEncoding(markSpec, k, {
+                "signal": lerp_term
+              });
             }
-
-            const lerp_term = scale === 'color' ? // color scales map numbers to strings, so lerp before scale
-              `datum.${timeEncoding.field} == anim_val_curr ? scale('${scale}', interpolateBasis(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})` :
-              scale ? // e.g. position scales map anything to numbers, so scale before lerp
-              `datum.${timeEncoding.field} == anim_val_curr ? scale('${scale}', interpolateBasis(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})` :
-              // e.g. map projections have field but no scale. you can directly lerp the field
-              `datum.${timeEncoding.field} == anim_val_curr ? interpolateBasis(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent) : datum.${field}`
-
-            markSpec = setMarkEncoding(markSpec, k, {
-              "signal": lerp_term
-            });
           }
         });
       }
