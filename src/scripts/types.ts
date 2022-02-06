@@ -29,7 +29,7 @@ export type VlAnimationSelection = Override<SelectionParameter, {
     }
     // "predicate"?: LogicalComposition<Predicate>;
     "predicate"?: LogicalAnd<FieldPredicate> | FieldPredicate;
-    "easing"?: string;
+    "easing"?: string | number[]; // string name of d3-ease function, or a number[] with ascending values in [0, 1] to construct a custom interpolator
     "pause"?: {"value": vega.Datum, "duration": number}[];
   }>;
   "bind"?: vega.BindRange;
@@ -83,7 +83,7 @@ export type ElaboratedVlAnimationSelection = Override<SelectionParameter, {
     },
     // "predicate"?: LogicalComposition<Predicate>;
     "predicate"?: LogicalAnd<FieldPredicate> | FieldPredicate;
-    "easing": string;
+    "easing": string | number[];
     "pause"?: {"value": vega.Datum, "duration": number}[];
   }>;
   "bind"?: vega.BindRange;

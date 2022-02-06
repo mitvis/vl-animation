@@ -1,7 +1,7 @@
 import * as vega from 'vega';
 import * as vl from 'vega-lite';
 import { ElaboratedVlAnimationInterpolate, ElaboratedVlAnimationSelection, ElaboratedVlAnimationSpec, ElaboratedVlAnimationTimeEncoding, ElaboratedVlAnimationUnitSpec, VlAnimationSelection } from './types';
-import { EventStream, isArray } from 'vega';
+import { EventStream, isArray, isString } from 'vega';
 import { VariableParameter } from 'vega-lite/build/src/parameter';
 import { SelectionParameter, isSelectionParameter, PointSelectionConfig } from 'vega-lite/build/src/selection';
 import { Transform, FilterTransform } from 'vega-lite/build/src/transform';
@@ -169,7 +169,9 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
     ) :
     [];
 
-  const easeFunction = animSelection.select.easing;
+  const easeExpr = isString(animSelection.select.easing) ?
+  `${animSelection.select.easing}(anim_clock / max_range_extent)` :
+  `interpolateCatmullRom(${animSelection.select.easing}, anim_clock / max_range_extent)`; // if easing is a number[], use it to construct an easing function
 
   const signals: vega.Signal[] = [
     {
@@ -194,7 +196,7 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
     },
     {
       "name": "eased_anim_clock",
-      "update": `${easeFunction}(anim_clock / max_range_extent) * max_range_extent`
+      "update": `${easeExpr} * max_range_extent`
     }
   ];
 
