@@ -654,7 +654,7 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
   vgSpec = mergeSpecs(vgSpec,
     createAnimationClock(animationSelections[0])); // TODO think about what happens if there's more than one animSelection
   vgSpec = mergeSpecs(vgSpec,
-    compileTimeScale(timeEncoding, dataset, stackTransform));
+    compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
   vgSpec = mergeSpecs(vgSpec,
     compileAnimationSelections(animationSelections, timeEncoding.field));
   vgSpec = mergeSpecs(vgSpec,
