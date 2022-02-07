@@ -17,20 +17,7 @@
       },
       {
           "filter": "datum.cases > 0 && datum.new_daily > 0"
-      },
-      {
-          "filter": {"param": "anim_sel"}
       }
-  ],
-  "params": [
-    {
-      "name": "anim_sel",
-      "select": {
-        "type": "point",
-        "on": "timer",
-        "predicate": {"field": "date", "gte": {"expr": "invert('time', anim_clock)"}}
-      }
-    }
   ],
   "encoding": {
       "x": {
@@ -57,5 +44,41 @@
           }
       }
   },
-  "mark": "line"
+  "layer": [
+    {
+      "mark": "line",
+      "params": [
+        {
+          "name": "anim_sel",
+          "select": {
+            "type": "point",
+            "on": "timer",
+            "predicate": {"field": "date", "lte": {"expr": "invert('time', anim_clock)"}}
+          }
+        }
+      ],
+      "transform": [
+        {
+          "filter": {"param": "anim_sel"}
+        }
+      ]
+    },
+    {
+      "mark": "circle",
+      "params": [
+        {
+          "name": "anim_sel_eq",
+          "select": {
+            "type": "point",
+            "on": "timer"
+          }
+        }
+      ],
+      "transform": [
+        {
+          "filter": {"param": "anim_sel_eq"}
+        }
+      ]
+    }
+  ]
 }
