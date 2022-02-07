@@ -628,7 +628,7 @@ const sanitizeVlaSpec = (vlaSpec: ElaboratedVlAnimationSpec, animationFilterTran
 	// the solution is to compile them into a derived dataset instead.
 	return {
 		...vlaSpec,
-		transform: [...(vlaSpec.transform ?? []).filter((t) => !animationFilterTransforms.includes(t as FilterTransform))],
+		transform: [...(vlaSpec.transform ?? []).filter((t) => !animationFilterTransforms?.includes(t as FilterTransform))],
 	};
 };
 
@@ -663,19 +663,86 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 	return vgSpec;
 };
 
-export default compileUnitVla;
-
 const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
+	console.log("in compile VLA!");
 	if ((vlaSpec as ElaboratedVlAnimationLayerSpec).layer) {
-		return traverseTree(vlaSpec); // TODO connect this back to dylan's traverseTree function (sorry!)
+		return compileLayerVla(vlaSpec as ElaboratedVlAnimationLayerSpec); // TODO connect this back to dylan's traverseTree function (sorry!)
 	} else {
 		return compileUnitVla(vlaSpec as ElaboratedVlAnimationUnitSpec);
 	}
 };
 
+function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
+	const {returnedSelections, returnedFilters, sanitizedVlaSpec} = recurseThroughLayers(vlaSpec);
+	console.log("sanitiezed layer", returnedSelections, returnedFilters, sanitizedVlaSpec);
+	let vgSpec = vl.compile(sanitizedVlaSpec as vl.TopLevelSpec).spec;
+	console.log("compiled", vgSpec);
+	const timeEncoding = vlaSpec.encoding.time;
+	const dataset = getMarkDataset(vgSpec.marks[0]);
+
+	/*
+	 * stack transform controls the layout of bar charts. if it exists, we need to copy
+	 * the transform into derived animation datasets so that layout still works :(
+	 */
+	let stackTransform: vega.Transforms[] = [];
+	//@ts-ignore
+	if (vlaSpec.mark === "bar") {
+		stackTransform = [...vgSpec.data[1].transform];
+	}
+
+	const animationSelections = [].concat(...returnedSelections);
+	const animationFilters = [].concat(...returnedFilters);
+
+	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0])); // TODO think about what happens if there's more than one animSelection
+	vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
+	vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field));
+	vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks));
+	vgSpec = mergeSpecs(vgSpec, compileInterpolation(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
+	//vgSpec = mergeSpecs(vgSpec, compileEnterExit(vlaSpec, vgSpec.marks, dataset, vlaSpec.enter, vlaSpec.exit)); // TODO need examples that actually use this to verify it works
+
+	return vgSpec;
+}
+
+function recurseThroughLayers(vlaSpec: any): any {
+	const returnedSelections = [];
+	const returnedFilters = [];
+	let animationSelections = null,
+		animationFilters = null,
+		sanitizedVlaSpec = null;
+
+	if (vlaSpec.params) {
+		animationSelections = getAnimationSelectionFromParams(vlaSpec.params) as ElaboratedVlAnimationSelection[];
+	}
+
+	if (vlaSpec.transform && animationSelections) {
+		animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
+	}
+
+	sanitizedVlaSpec = sanitizeVlaSpec(vlaSpec, animationFilters);
+
+	returnedSelections.push(animationSelections);
+	returnedFilters.push(animationFilters);
+
+	if ((sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer) {
+		//@ts-ignore
+		const {newReturnedSelections, newReturnedFilters, newSanitizedVlaSpecs} = (sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer.map((layerUnit) => recurseThroughLayers(layerUnit));
+		returnedSelections.concat(newReturnedSelections);
+		returnedFilters.concat(newReturnedFilters);
+
+		(sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer = newSanitizedVlaSpecs;
+	}
+
+	return {returnedSelections, returnedFilters, sanitizedVlaSpec};
+}
+
+function traverseTreeWithFunction(vlaSpec: ElaboratedVlAnimationSpec) {
+	// Option 1: compile each layer/unit separately and see if we can add each one together?
+	// Option 2: recurse
+}
+
 ////////////////////////////////////////////////////
 // dylan wip below
-
+/*
 function traverseTree(vlaSpec: ElaboratedVlAnimationSpec): vega.Spec {
 	const changedUnitOrLayerSpec = compileUnitVla(vlaSpec as ElaboratedVlAnimationUnitSpec);
 
@@ -693,3 +760,6 @@ function traverseTree(vlaSpec: ElaboratedVlAnimationSpec): vega.Spec {
 		return elaborateUnitVla(changedUnitOrLayerSpec as VlAnimationUnitSpec);
 	}
 }
+*/
+
+export default compileVla;

@@ -142,6 +142,9 @@ export type ElaboratedVlAnimationLayerSpec = Override<
 	{
 		layer: (ElaboratedVlAnimationLayerSpec | ElaboratedVlAnimationUnitSpec)[];
 		encoding?: Encoding<any> & {time?: ElaboratedVlAnimationTimeEncoding};
+		params?: (VariableParameter | SelectionParameter | ElaboratedVlAnimationSelection)[];
+		enter?: Encoding<any>;
+		exit?: Encoding<any>;
 	}
 >;
 

@@ -94,6 +94,7 @@ const specContainsAnimationSelection = (vlaUnitSpec: VlAnimationUnitSpec): boole
 };
 
 const elaborateVla = (vlaSpec: VlAnimationSpec): ElaboratedVlAnimationSpec => {
+	console.log("in elaborate!");
 	if ((vlaSpec as VlAnimationLayerSpec).layer) {
 		return traverseTree(vlaSpec); // TODO connect this back to dylan's traverseTree function (sorry!)
 	} else {
@@ -123,7 +124,7 @@ function traverseTree(vlaSpec: VlAnimationSpec, parentTimeEncoding: VlAnimationT
 			(changedUnitOrLayerSpec as ElaboratedVlAnimationLayerSpec).layer = newLayer;
 		}
 
-		return traverseTree(changedUnitOrLayerSpec, timeEncoding);
+		return changedUnitOrLayerSpec as ElaboratedVlAnimationSpec;
 	} else {
 		return elaborateUnitVla(changedUnitOrLayerSpec as VlAnimationUnitSpec);
 	}
@@ -141,10 +142,10 @@ function elaborateUnitRecursive(unitSpec: VlAnimationLayerSpec, timeEncoding: Vl
 
 function addParentTimeEncoding(unitSpec: VlAnimationLayerSpec, timeEncoding: VlAnimationTimeEncoding): VlAnimationLayerSpec {
 	if (!unitSpec.encoding) {
-		return unitSpec;
+		unitSpec.encoding = {};
 	}
 
-	const existingTimeSpec = unitSpec.encoding.time ? unitSpec.encoding.time : {};
+	const existingTimeSpec = unitSpec?.encoding?.time ? unitSpec.encoding.time : {};
 
 	unitSpec.encoding.time = Object.assign(existingTimeSpec, timeEncoding);
 	return unitSpec;
