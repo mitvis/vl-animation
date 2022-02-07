@@ -7,6 +7,7 @@ import {
 	ElaboratedVlAnimationTimeEncoding,
 	ElaboratedVlAnimationUnitSpec,
 	VlAnimationSelection,
+	ElaboratedVlAnimationLayerSpec,
 } from "./types";
 import {EventStream, isArray, isString} from "vega";
 import {VariableParameter} from "vega-lite/build/src/parameter";
@@ -663,3 +664,32 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 };
 
 export default compileUnitVla;
+
+const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
+	if ((vlaSpec as ElaboratedVlAnimationLayerSpec).layer) {
+		return traverseTree(vlaSpec); // TODO connect this back to dylan's traverseTree function (sorry!)
+	} else {
+		return compileUnitVla(vlaSpec as ElaboratedVlAnimationUnitSpec);
+	}
+};
+
+////////////////////////////////////////////////////
+// dylan wip below
+
+function traverseTree(vlaSpec: ElaboratedVlAnimationSpec): vega.Spec {
+	const changedUnitOrLayerSpec = compileUnitVla(vlaSpec as ElaboratedVlAnimationUnitSpec);
+
+	if ((vlaSpec as ElaboratedVlAnimationLayerSpec).layer) {
+		// elaborates the current spec, to be called recusively on
+
+		if ((vlaSpec as ElaboratedVlAnimationLayerSpec).layer) {
+			changedUnitOrLayerSpec.layer = (vlaSpec as ElaboratedVlAnimationLayerSpec).layer.map((layerUnit) => traverseTree(layerUnit));
+
+			(changedUnitOrLayerSpec as ElaboratedVlAnimationLayerSpec).layer = newLayer;
+		}
+
+		return traverseTree(changedUnitOrLayerSpec);
+	} else {
+		return elaborateUnitVla(changedUnitOrLayerSpec as VlAnimationUnitSpec);
+	}
+}

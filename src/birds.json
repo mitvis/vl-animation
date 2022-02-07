@@ -48,6 +48,7 @@
                     "param": "birds"
                 }
             }],
+
             "encoding": {
                 "opacity": { "value": 1 }
             }
@@ -71,13 +72,7 @@
             }],
             "transform": [{
                 "filter": {
-                    "time": [{
-                            "gt": "datum.day-10"
-                        },
-                        {
-                            "lt": "datum.day"
-                        }
-                    ]
+                    "param": "trails"
                 }
             }],
             "encoding": {
