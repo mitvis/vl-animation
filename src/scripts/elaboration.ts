@@ -96,7 +96,9 @@ const specContainsAnimationSelection = (vlaUnitSpec: VlAnimationUnitSpec): boole
 const elaborateVla = (vlaSpec: VlAnimationSpec): ElaboratedVlAnimationSpec => {
 	console.log("in elaborate!");
 	if ((vlaSpec as VlAnimationLayerSpec).layer) {
-		return traverseTree(vlaSpec); // TODO connect this back to dylan's traverseTree function (sorry!)
+		const elaborated = traverseTree(vlaSpec); // TODO connect this back to dylan's traverseTree function (sorry!)
+		console.log("elaborated", elaborated);
+		return elaborated;
 	} else {
 		return elaborateUnitVla(vlaSpec as VlAnimationUnitSpec);
 	}

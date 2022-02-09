@@ -673,7 +673,7 @@ const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
 };
 
 function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
-	const {returnedSelections, returnedFilters, sanitizedVlaSpec} = recurseThroughLayers(vlaSpec);
+	const {returnedSelections, returnedFilters, timeEncodings, sanitizedVlaSpec} = recurseThroughLayers(vlaSpec);
 	console.log("sanitiezed layer", returnedSelections, returnedFilters, sanitizedVlaSpec);
 	let vgSpec = vl.compile(sanitizedVlaSpec as vl.TopLevelSpec).spec;
 	console.log("compiled", vgSpec);
@@ -702,37 +702,43 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 
 	return vgSpec;
 }
-
-function recurseThroughLayers(vlaSpec: any): any {
+function recurseThroughLayersWrapper() {
 	const returnedSelections = [];
 	const returnedFilters = [];
-	let animationSelections = null,
-		animationFilters = null,
-		sanitizedVlaSpec = null;
+	function recurseThroughLayers(vlaSpec: any): any {
+		let animationSelections = null,
+			timeEncodings = null,
+			animationFilters = null,
+			sanitizedVlaSpec = null;
 
-	if (vlaSpec.params) {
-		animationSelections = getAnimationSelectionFromParams(vlaSpec.params) as ElaboratedVlAnimationSelection[];
+		if (vlaSpec.params) {
+			animationSelections = getAnimationSelectionFromParams(vlaSpec.params) as ElaboratedVlAnimationSelection[];
+		}
+
+		if (vlaSpec.transform && animationSelections) {
+			animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
+		}
+		console.log("pre-sanitized", vlaSpec, animationFilters);
+		sanitizedVlaSpec = sanitizeVlaSpec(vlaSpec, animationFilters);
+		console.log("post-sanitized", vlaSpec, animationFilters);
+
+		returnedSelections.push(animationSelections);
+		returnedFilters.push(animationFilters);
+
+		if ((sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer) {
+			//@ts-ignore
+			const layerUnits = (sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer.map((layerUnit) => recurseThroughLayers(layerUnit));
+			for (const layer in layerUnits) {
+				const {newReturnedSelections, newReturnedFilters, newSanitizedVlaSpecs} = layer;
+			}
+			returnedSelections.concat(newReturnedSelections);
+			returnedFilters.concat(newReturnedFilters);
+
+			(sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer = newSanitizedVlaSpecs;
+		}
+
+		return {returnedSelections, returnedFilters, timeEncodings, sanitizedVlaSpec};
 	}
-
-	if (vlaSpec.transform && animationSelections) {
-		animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
-	}
-
-	sanitizedVlaSpec = sanitizeVlaSpec(vlaSpec, animationFilters);
-
-	returnedSelections.push(animationSelections);
-	returnedFilters.push(animationFilters);
-
-	if ((sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer) {
-		//@ts-ignore
-		const {newReturnedSelections, newReturnedFilters, newSanitizedVlaSpecs} = (sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer.map((layerUnit) => recurseThroughLayers(layerUnit));
-		returnedSelections.concat(newReturnedSelections);
-		returnedFilters.concat(newReturnedFilters);
-
-		(sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer = newSanitizedVlaSpecs;
-	}
-
-	return {returnedSelections, returnedFilters, sanitizedVlaSpec};
 }
 
 function traverseTreeWithFunction(vlaSpec: ElaboratedVlAnimationSpec) {
