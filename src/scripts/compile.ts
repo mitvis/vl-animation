@@ -1,3 +1,4 @@
+//@ts-nocheck
 import * as vega from "vega";
 import * as vl from "vega-lite";
 import {
@@ -653,6 +654,9 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 		stackTransform = [...vgSpec.data[1].transform];
 	}
 
+	// These assume a singular relationship
+	// figure out which vega mark a layer got compiled into (use index in vega array)
+	// don't worry about nested layers, but maybe just try to user layer_X_marks
 	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0])); // TODO think about what happens if there's more than one animSelection
 	vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
 	vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field));
@@ -673,12 +677,13 @@ const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
 };
 
 function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
-	const {returnedSelections, returnedFilters, timeEncodings, sanitizedVlaSpec} = recurseThroughLayers(vlaSpec);
-	console.log("sanitiezed layer", returnedSelections, returnedFilters, sanitizedVlaSpec);
+	const {returnedSelections, returnedFilters, sanitizedVlaSpec} = recurseThroughLayersWrapper(vlaSpec);
+
+	console.log("before compiling", returnedSelections, returnedFilters, sanitizedVlaSpec);
 	let vgSpec = vl.compile(sanitizedVlaSpec as vl.TopLevelSpec).spec;
 	console.log("compiled", vgSpec);
 	const timeEncoding = vlaSpec.encoding.time;
-	const dataset = getMarkDataset(vgSpec.marks[0]);
+	const dataset = getMarkDataset(vgSpec.marks[0]); // Q: does this work for all marks, or does this need to happen for specific marks for each layer?, what happens here?
 
 	/*
 	 * stack transform controls the layout of bar charts. if it exists, we need to copy
@@ -693,21 +698,36 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	const animationSelections = [].concat(...returnedSelections);
 	const animationFilters = [].concat(...returnedFilters);
 
-	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0])); // TODO think about what happens if there's more than one animSelection
-	vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
-	vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field));
-	vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks));
-	vgSpec = mergeSpecs(vgSpec, compileInterpolation(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
+	/*
+	- don't sanitize the transforms inside of layers (only top level)
+	- for each layer, use the index of the layer to find the corresponding Vega mark that's generated ( i.e. vgSpec.marks.find(mark => mark.name === `layer_${idx}_mark`) )
+	- use that mark to find the name of the dataset -- getMarkDataset()
+	- call compile functions with e.g. compileTimeScale(timeEncoding, dataset, vgSpec.marks, ... )
+	- - check how it works if you have some encodings defined top level and some inside layers
+	- - it *should* do the right thing if you pass the right dataset and all of vgSpec.marks 
+	*/
+
+	// QUESTION:
+	// These assume a singular relationship
+	// figure out which vega mark a layer got compiled into (use index in vega array)
+	// don't worry about nested layers, but maybe just try to user layer_X_marks
+	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0])); // for now, do this once at the top level (this is the param w/ timer events)
+
+	vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform)); // run inside of for loop providing the specific dataset to the mark (also does rescaling)
+	vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field)); //parms with timers (check what happens to the signals when you compile a regular layer, if they all get dumped into the top, then run this with everything, else use a by layer approach)
+	vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks)); // with layers you run this at the top, but you don't need to do this for each layer (ie don't do it with sanitized )
+	vgSpec = mergeSpecs(vgSpec, compileInterpolation(timeEncoding, dataset, vgSpec.marks, vgSpec.scales)); // this should be done per mark (run in layers)
 	//vgSpec = mergeSpecs(vgSpec, compileEnterExit(vlaSpec, vgSpec.marks, dataset, vlaSpec.enter, vlaSpec.exit)); // TODO need examples that actually use this to verify it works
 
 	return vgSpec;
 }
-function recurseThroughLayersWrapper() {
-	const returnedSelections = [];
-	const returnedFilters = [];
+
+function recurseThroughLayersWrapper(vlaLayerSpec) {
+	let returnedSelections = [];
+	let returnedFilters = [];
+
 	function recurseThroughLayers(vlaSpec: any): any {
 		let animationSelections = null,
-			timeEncodings = null,
 			animationFilters = null,
 			sanitizedVlaSpec = null;
 
@@ -718,29 +738,44 @@ function recurseThroughLayersWrapper() {
 		if (vlaSpec.transform && animationSelections) {
 			animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
 		}
+
 		console.log("pre-sanitized", vlaSpec, animationFilters);
 		sanitizedVlaSpec = sanitizeVlaSpec(vlaSpec, animationFilters);
 		console.log("post-sanitized", vlaSpec, animationFilters);
 
-		returnedSelections.push(animationSelections);
-		returnedFilters.push(animationFilters);
+		concatArrayInPlace(returnedSelections, animationSelections);
+		returnedFilters = concatArrayInPlace(returnedFilters, animationFilters);
 
 		if ((sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer) {
 			//@ts-ignore
 			const layerUnits = (sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer.map((layerUnit) => recurseThroughLayers(layerUnit));
-			for (const layer in layerUnits) {
-				const {newReturnedSelections, newReturnedFilters, newSanitizedVlaSpecs} = layer;
+			const sanitizedLayerSpecs = [];
+			for (const layer of layerUnits) {
+				sanitizedLayerSpecs.push(layer);
 			}
-			returnedSelections.concat(newReturnedSelections);
-			returnedFilters.concat(newReturnedFilters);
+			// TODO: don't sanitize each layer, VL compiler will handle this and apply it to datasets
 
-			(sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer = newSanitizedVlaSpecs;
+			(sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer = sanitizedLayerSpecs;
 		}
 
-		return {returnedSelections, returnedFilters, timeEncodings, sanitizedVlaSpec};
+		return sanitizedVlaSpec;
+	}
+
+	// remove any nulls
+	returnedSelections = returnedSelections.filter((val) => !!val);
+	returnedFilters = returnedFilters.filter((val) => !!val);
+
+	const sanitizedVlaSpec = recurseThroughLayers(vlaLayerSpec);
+	return {sanitizedVlaSpec, returnedSelections, returnedFilters};
+}
+function concatArrayInPlace(arr, arrToAdd) {
+	for (const value of arrToAdd) {
+		arr.push(arr);
 	}
 }
-
+function getTimeEncoding(vlaSpec: ElaboratedVlAnimationLayerSpec) {
+	//TODO
+}
 function traverseTreeWithFunction(vlaSpec: ElaboratedVlAnimationSpec) {
 	// Option 1: compile each layer/unit separately and see if we can add each one together?
 	// Option 2: recurse
