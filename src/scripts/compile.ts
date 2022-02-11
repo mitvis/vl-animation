@@ -714,6 +714,7 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 		stackTransform = [...vgSpec.data[1].transform];
 	}
 
+	// flatten and remove and duplicates
 	const animationSelections = [].concat(...returnedSelections);
 	const animationFilters = [].concat(...returnedFilters);
 
@@ -734,10 +735,7 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	// Creates signals, this can be at a global level
 	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0])); // for now, do this once at the top level (this is the param w/ timer events)
 
-	/*for (let idx = 0; idx < vlaSpec.layer.length; idx++) {
-		// find the mark that corresponds to the current layer
-		const layerMark = vgSpec.marks.find((mark) => mark.name === `layer_${idx}_mark`);
-	}*/
+	/*}*/
 
 	// Add Time Scale
 	for (let i = 0; i < vgSpec.marks.length; i++) {
@@ -748,24 +746,28 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 
 	//compile animations at top layer as de-duping occurs in function
 	vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field)); //parms with timers (check what happens to the signals when you compile a regular layer, if they all get dumped into the top, then run this with everything, else use a by layer approach)
-	const dataset = getMarkDataset(vgSpec.marks[0]);
+	for (let idx = 0; idx < vlaSpec.layer.length; idx++) {
+		// find the mark that corresponds to the current layer
+		const layerMark = vgSpec.marks.find((mark) => mark.name.includes(`layer_${idx}`));
+		const dataset = getMarkDataset(layerMark);
+		vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(returnedFilters[idx], returnedSelections[idx], dataset, vgSpec.marks)); // with layers you run this at the top, but you don't need to do this for each layer (ie don't do it with sanitized )
+		vgSpec = mergeSpecs(vgSpec, compileInterpolation(timeEncoding, dataset, vgSpec.marks, vgSpec.scales)); // this should be done per mark (run in layers)
+	}
 
-	vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks)); // with layers you run this at the top, but you don't need to do this for each layer (ie don't do it with sanitized )
-	vgSpec = mergeSpecs(vgSpec, compileInterpolation(timeEncoding, dataset, vgSpec.marks, vgSpec.scales)); // this should be done per mark (run in layers)
 	//vgSpec = mergeSpecs(vgSpec, compileEnterExit(vlaSpec, vgSpec.marks, dataset, vlaSpec.enter, vlaSpec.exit)); // TODO need examples that actually use this to verify it works
 
 	return vgSpec;
 }
 
 type RecurseThroughLayersWrapperReturn = {
-	returnedSelections: ElaboratedVlAnimationSelection[];
-	returnedFilters: FilterTransform[];
+	returnedSelections: ElaboratedVlAnimationSelection[][];
+	returnedFilters: FilterTransform[][];
 	sanitizedVlaSpec: ElaboratedVlAnimationSpec;
 };
 
 function recurseThroughLayersWrapper(vlaLayerSpec: ElaboratedVlAnimationLayerSpec): RecurseThroughLayersWrapperReturn {
-	let returnedSelections: ElaboratedVlAnimationSelection[] = [];
-	let returnedFilters: FilterTransform[] = [];
+	let returnedSelections: ElaboratedVlAnimationSelection[][] = []; // we need to map selections and filters to layer
+	let returnedFilters: FilterTransform[][] = [];
 
 	function recurseThroughLayers(vlaSpec: any): any {
 		let animationSelections = null,
@@ -784,8 +786,11 @@ function recurseThroughLayersWrapper(vlaLayerSpec: ElaboratedVlAnimationLayerSpe
 		sanitizedVlaSpec = sanitizeVlaSpec(vlaSpec, animationFilters);
 		console.log("post-sanitized", vlaSpec, animationFilters);
 
-		concatArrayInPlace(returnedSelections, animationSelections);
-		concatArrayInPlace(returnedFilters, animationFilters);
+		//TODO what is only a selection is defined (ie ) A: this may be taken care for in elaboration
+		if (animationSelections && animationFilters) {
+			returnedSelections.push(animationSelections);
+			returnedFilters.push(animationFilters);
+		}
 
 		if ((sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer) {
 			//@ts-ignore
@@ -795,7 +800,9 @@ function recurseThroughLayersWrapper(vlaLayerSpec: ElaboratedVlAnimationLayerSpe
 				sanitizedLayerSpecs.push(layer);
 			}
 
-			// Don't sanitize each layer, VL compiler will handle this and apply it to datasets
+			// We must sanitize each layer as otherwise, it breaks ()
+			// adds                     "expr": "!length(data(\"anim_sel_eq_store\")) || vlSelectionTest(\"anim_sel_eq_store\", datum)",
+			// to data transform
 			(sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer = sanitizedLayerSpecs;
 		}
 
@@ -812,12 +819,11 @@ function recurseThroughLayersWrapper(vlaLayerSpec: ElaboratedVlAnimationLayerSpe
 
 function concatArrayInPlace(arr: any[], arrToAdd: any[]): void {
 	if (!isIterable(arr) || !isIterable(arrToAdd)) {
+		arr.push([]);
 		return;
 	}
 
-	for (const value of arrToAdd) {
-		arr.push(value);
-	}
+	arr.push(arrToAdd);
 }
 
 function getTimeEncoding(vlaSpec: ElaboratedVlAnimationLayerSpec) {
