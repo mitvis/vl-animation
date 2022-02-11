@@ -639,10 +639,9 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 	const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
 
 	const sanitizedVlaSpec = sanitizeVlaSpec(vlaSpec, animationFilters);
-	console.log("sanitized", sanitizedVlaSpec);
 
 	let vgSpec = vl.compile(sanitizedVlaSpec as vl.TopLevelSpec).spec;
-	console.log("compiled", vgSpec);
+
 	const timeEncoding = vlaSpec.encoding.time;
 	const dataset = getMarkDataset(vgSpec.marks[0]);
 
@@ -692,17 +691,12 @@ function findTimeEncoding(layerSpec: ElaboratedVlAnimationLayerSpec): Elaborated
 function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	const {returnedSelections, returnedFilters, sanitizedVlaSpec} = recurseThroughLayersWrapper(vlaSpec);
 
-	console.log("before compiling", returnedSelections, returnedFilters, sanitizedVlaSpec);
 	let vgSpec = vl.compile(sanitizedVlaSpec as vl.TopLevelSpec).spec;
-	console.log("compiled", vgSpec);
 
 	const timeEncoding = findTimeEncoding(vlaSpec);
 
-	//
-
-	// Q: does this work for all marks, or does this need to happen for specific marks for each layer?, what happens here?
-
 	/*
+	 * TODO layerize this
 	 * stack transform controls the layout of bar charts. if it exists, we need to copy
 	 * the transform into derived animation datasets so that layout still works :(
 	 */
@@ -714,9 +708,8 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 		stackTransform = [...vgSpec.data[1].transform];
 	}
 
-	// flatten and remove and duplicates
+	// flatten animation selections
 	const animationSelections = [].concat(...returnedSelections);
-	const animationFilters = [].concat(...returnedFilters);
 
 	/*
 	- don't sanitize the transforms inside of layers (only top level)
@@ -727,15 +720,8 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	- - it *should* do the right thing if you pass the right dataset and all of vgSpec.marks 
 	*/
 
-	// QUESTION:
-	// These assume a singular relationship
-	// figure out which vega mark a layer got compiled into (use index in vega array)
-	// don't worry about nested layers, but maybe just try to user layer_X_marks
-
 	// Creates signals, this can be at a global level
 	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0])); // for now, do this once at the top level (this is the param w/ timer events)
-
-	/*}*/
 
 	// Add Time Scale
 	for (let i = 0; i < vgSpec.marks.length; i++) {
@@ -744,8 +730,9 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 		vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, markDataset, vgSpec.marks, vgSpec.scales, stackTransform)); // run inside of for loop providing the specific dataset to the mark (also does rescaling)
 	}
 
-	//compile animations at top layer as de-duping occurs in function
+	//compile animations at top layer as de-duping of signals occurs in merge
 	vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field)); //parms with timers (check what happens to the signals when you compile a regular layer, if they all get dumped into the top, then run this with everything, else use a by layer approach)
+
 	for (let idx = 0; idx < vlaSpec.layer.length; idx++) {
 		// find the mark that corresponds to the current layer
 		const layerMark = vgSpec.marks.find((mark) => mark.name.includes(`layer_${idx}`));
