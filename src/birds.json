@@ -2,7 +2,7 @@
     "width": 1000,
     "height": 600,
     "data": {
-        "url": "./data/birds.csv"
+        "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/6cb2070b6ffdd2d4bc1a91fdd635737048414881/bird_data.csv"
     },
     "transform": [{ "calculate": "toNumber(datum.day)", "as": "n_day" }],
     "projection": {
@@ -31,7 +31,7 @@
     },
     "layer": [{
             "mark": "circle",
-            "params": {
+            "params": [{
                 "name": "birds",
                 "select": {
                     "type": "point",
@@ -42,7 +42,7 @@
                         "and": [{ "field": "day", "eq": "invert('time', anim_clock)" }]
                     }
                 }
-            },
+            }],
             "transform": [{
                 "filter": {
                     "param": "birds"
