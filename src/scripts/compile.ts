@@ -1,4 +1,3 @@
-//@ts-nocheck
 import * as vega from "vega";
 import * as vl from "vega-lite";
 import {
@@ -9,8 +8,9 @@ import {
 	ElaboratedVlAnimationUnitSpec,
 	VlAnimationSelection,
 	ElaboratedVlAnimationLayerSpec,
+	VlAnimationTimeEncoding,
 } from "./types";
-import {EventStream, isArray, isString} from "vega";
+import {EventStream, isArray, isIterable, isString} from "vega";
 import {VariableParameter} from "vega-lite/build/src/parameter";
 import {SelectionParameter, isSelectionParameter, PointSelectionConfig} from "vega-lite/build/src/selection";
 import {Transform, FilterTransform} from "vega-lite/build/src/transform";
@@ -676,28 +676,52 @@ const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
 	}
 };
 
+function findTimeEncoding(layerSpec: ElaboratedVlAnimationLayerSpec): ElaboratedVlAnimationTimeEncoding {
+	if (layerSpec?.encoding?.time) {
+		return layerSpec.encoding.time;
+	} else {
+		// TODO generalize to multiple depth layers
+		const unitContainingTime = layerSpec.layer.find((layerUnitSpec) => !!layerUnitSpec?.encoding?.time);
+		if (unitContainingTime) {
+			return unitContainingTime.encoding.time;
+		}
+	}
+}
+
 function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	const {returnedSelections, returnedFilters, sanitizedVlaSpec} = recurseThroughLayersWrapper(vlaSpec);
 
 	console.log("before compiling", returnedSelections, returnedFilters, sanitizedVlaSpec);
 	let vgSpec = vl.compile(sanitizedVlaSpec as vl.TopLevelSpec).spec;
 	console.log("compiled", vgSpec);
-	const timeEncoding = vlaSpec.encoding.time;
-	const dataset = getMarkDataset(vgSpec.marks[0]); // Q: does this work for all marks, or does this need to happen for specific marks for each layer?, what happens here?
+
+	const timeEncoding = findTimeEncoding(vlaSpec);
+
+	//
+	for(let i = 0; i < vgSpec.marks.length; i++){
+		const markDataset = getMarkDataset(vgSpec.marks[i]);
+
+	}
+	// Q: does this work for all marks, or does this need to happen for specific marks for each layer?, what happens here?
 
 	/*
 	 * stack transform controls the layout of bar charts. if it exists, we need to copy
 	 * the transform into derived animation datasets so that layout still works :(
 	 */
 	let stackTransform: vega.Transforms[] = [];
+
 	//@ts-ignore
 	if (vlaSpec.mark === "bar") {
+		// TODO: Search through marks, and for any that are bars, find the matching dataset and add the stack transform
 		stackTransform = [...vgSpec.data[1].transform];
 	}
 
 	const animationSelections = [].concat(...returnedSelections);
 	const animationFilters = [].concat(...returnedFilters);
 
+	for(let idx = 0; idx < vlaSpec.layer.length; idx++){
+		vgSpec.marks.find(mark => mark.name === `layer_${idx}_mark`
+	}
 	/*
 	- don't sanitize the transforms inside of layers (only top level)
 	- for each layer, use the index of the layer to find the corresponding Vega mark that's generated ( i.e. vgSpec.marks.find(mark => mark.name === `layer_${idx}_mark`) )
@@ -711,6 +735,7 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	// These assume a singular relationship
 	// figure out which vega mark a layer got compiled into (use index in vega array)
 	// don't worry about nested layers, but maybe just try to user layer_X_marks
+
 	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0])); // for now, do this once at the top level (this is the param w/ timer events)
 
 	vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform)); // run inside of for loop providing the specific dataset to the mark (also does rescaling)
@@ -722,9 +747,15 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	return vgSpec;
 }
 
-function recurseThroughLayersWrapper(vlaLayerSpec) {
-	let returnedSelections = [];
-	let returnedFilters = [];
+type RecurseThroughLayersWrapperReturn = {
+	returnedSelections: ElaboratedVlAnimationSelection[];
+	returnedFilters: FilterTransform[];
+	sanitizedVlaSpec: ElaboratedVlAnimationSpec;
+};
+
+function recurseThroughLayersWrapper(vlaLayerSpec: ElaboratedVlAnimationLayerSpec): RecurseThroughLayersWrapperReturn {
+	let returnedSelections: ElaboratedVlAnimationSelection[] = [];
+	let returnedFilters: FilterTransform[] = [];
 
 	function recurseThroughLayers(vlaSpec: any): any {
 		let animationSelections = null,
@@ -744,7 +775,10 @@ function recurseThroughLayersWrapper(vlaLayerSpec) {
 		console.log("post-sanitized", vlaSpec, animationFilters);
 
 		concatArrayInPlace(returnedSelections, animationSelections);
-		returnedFilters = concatArrayInPlace(returnedFilters, animationFilters);
+		concatArrayInPlace(returnedFilters, animationFilters);
+
+		/*
+		// Don't sanitize each layer, VL compiler will handle this and apply it to datasets
 
 		if ((sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer) {
 			//@ts-ignore
@@ -753,10 +787,9 @@ function recurseThroughLayersWrapper(vlaLayerSpec) {
 			for (const layer of layerUnits) {
 				sanitizedLayerSpecs.push(layer);
 			}
-			// TODO: don't sanitize each layer, VL compiler will handle this and apply it to datasets
 
-			(sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer = sanitizedLayerSpecs;
-		}
+			//(sanitizedVlaSpec as ElaboratedVlAnimationLayerSpec).layer = sanitizedLayerSpecs;
+		}*/
 
 		return sanitizedVlaSpec;
 	}
@@ -768,11 +801,17 @@ function recurseThroughLayersWrapper(vlaLayerSpec) {
 	const sanitizedVlaSpec = recurseThroughLayers(vlaLayerSpec);
 	return {sanitizedVlaSpec, returnedSelections, returnedFilters};
 }
-function concatArrayInPlace(arr, arrToAdd) {
+
+function concatArrayInPlace(arr: any[], arrToAdd: any[]): void {
+	if (!isIterable(arr) || !isIterable(arrToAdd)) {
+		return;
+	}
+
 	for (const value of arrToAdd) {
 		arr.push(arr);
 	}
 }
+
 function getTimeEncoding(vlaSpec: ElaboratedVlAnimationLayerSpec) {
 	//TODO
 }
