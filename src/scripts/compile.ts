@@ -209,7 +209,7 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
   }
 }
 
-const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string, markSpecs: vega.Mark[], scaleSpecs: vega.Scale[], stackTransform: vega.Transforms[]): Partial<vega.Spec> => {
+const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string, markSpecs: vega.Mark[], scaleSpecs: vega.Scale[]): Partial<vega.Spec> => {
 
   let scales: vega.Scale[] = [];
   let data: vega.Data[] = [];
@@ -289,11 +289,9 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
     ]
   }
 
-  const dataset_curr = `${dataset}_curr`;
-
   if (timeEncoding.rescale) {
     markSpecs.forEach(markSpec => {
-      if (getMarkDataset(markSpec) == dataset_curr) {
+      if (markHasDataset(markSpec, dataset)) {
 
         const encoding = getMarkEncoding(markSpec);
 
@@ -310,7 +308,7 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
               const scaleSpec = scaleSpecs.find(s => s.name === scale);
 
               // rescale: the scale updates based on the animation frame
-              (scaleSpec.domain as vega.ScaleDataRef).data = dataset_curr;
+              (scaleSpec.domain as vega.ScaleDataRef).data = `${dataset}_curr`;
               scales = scales.filter(s => s.name !== scaleSpec.name).concat([scaleSpec]);
             }
           }
@@ -474,7 +472,7 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
   }).reduce((prev, curr) => mergeSpecs(curr, prev), {});
 }
 
-const compileFilterTransforms = (animationFilters: FilterTransform[], animationSelections: ElaboratedVlAnimationSelection[], dataset: string, markSpecs: vega.Mark[]): Partial<vega.Spec> => {
+const compileFilterTransforms = (animationFilters: FilterTransform[], animationSelections: ElaboratedVlAnimationSelection[], dataset: string, markSpecs: vega.Mark[], stackTransform: vega.Transforms[]): Partial<vega.Spec> => {
   if (animationFilters.length) {
 
     const dataset_curr = `${dataset}_curr`;
@@ -487,8 +485,10 @@ const compileFilterTransforms = (animationFilters: FilterTransform[], animationS
     const datasetSpec = {
       ...((vl.compile(vlSpec as any).spec as any).data as any[]).find(d => d.name === 'data_0'),
       "name": dataset_curr,
-      "source": dataset
+      "source": dataset,
     };
+
+    datasetSpec.transform = [...datasetSpec.transform, ...stackTransform];
 
     let marks = [];
 
@@ -654,17 +654,17 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
   */
   let stackTransform: vega.Transforms[] = [];
   if (vlaSpec.mark === 'bar') {
-    stackTransform = [...vgSpec.data[1].transform];
+    stackTransform = [...vgSpec.data.find(d => d.name === 'data_0').transform];
   }
 
   vgSpec = mergeSpecs(vgSpec,
     createAnimationClock(animationSelections[0])); // TODO think about what happens if there's more than one animSelection
   vgSpec = mergeSpecs(vgSpec,
-    compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
+    compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
   vgSpec = mergeSpecs(vgSpec,
     compileAnimationSelections(animationSelections, timeEncoding.field));
   vgSpec = mergeSpecs(vgSpec,
-    compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks));
+    compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
   vgSpec = mergeSpecs(vgSpec,
     compileInterpolation(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
   vgSpec = mergeSpecs(vgSpec,
