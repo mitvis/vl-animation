@@ -189,7 +189,11 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
       "init": "now()",
       "on": [
         {
-          "events": [{"signal": "anim_clock"}].concat(pauseEventStreams).concat([{"signal": "is_playing_datum_pause"}]),
+          "events": [
+            {"signal": "anim_clock"},
+            ...pauseEventStreams,
+            ...(animSelection.select.pause ? [{"signal": "is_playing_datum_pause"}] : [])
+          ],
           "update": "now()"
         }
       ]

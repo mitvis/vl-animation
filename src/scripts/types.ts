@@ -79,7 +79,7 @@ export type ElaboratedVlAnimationSelection = Override<SelectionParameter, {
   "select": Override<PointSelectionConfig, {
     "on": {
       "type": "timer",
-      "filter": vega.Expr | vega.Expr[];
+      "filter"?: vega.Expr | vega.Expr[];
     },
     // "predicate"?: LogicalComposition<Predicate>;
     "predicate"?: LogicalAnd<FieldPredicate> | FieldPredicate;
