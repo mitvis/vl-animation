@@ -55,7 +55,6 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimati
 				type: "point",
 				on: {
 					type: "timer",
-					filter: "true",
 				},
 				easing: "easeLinear",
 			},

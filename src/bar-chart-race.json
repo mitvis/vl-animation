@@ -19,13 +19,13 @@
     "time": {
       "field": "date",
       "scale": {
-        "type": "linear",
+        "type": "band",
         "range": [
           0,
           50000
         ]
       },
-      "continuity": {
+      "interpolate": {
         "field": "name"
       },
       "rescale": true
