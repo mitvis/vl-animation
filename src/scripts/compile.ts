@@ -696,29 +696,19 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	const timeEncoding = findTimeEncoding(vlaSpec);
 
 	/*
-	 * TODO layerize this
+	 * TODO layerize this: removing for now as mark doesn't exist on layer specs
 	 * stack transform controls the layout of bar charts. if it exists, we need to copy
 	 * the transform into derived animation datasets so that layout still works :(
-	 */
+	 
 	let stackTransform: vega.Transforms[] = [];
 
-	//@ts-ignore
 	if (vlaSpec.mark === "bar") {
-		// TODO: Search through marks, and for any that are bars, find the matching dataset and add the stack transform
 		stackTransform = [...vgSpec.data[1].transform];
 	}
+	*/
 
 	// flatten animation selections
 	const animationSelections = [].concat(...returnedSelections);
-
-	/*
-	- don't sanitize the transforms inside of layers (only top level)
-	- for each layer, use the index of the layer to find the corresponding Vega mark that's generated ( i.e. vgSpec.marks.find(mark => mark.name === `layer_${idx}_mark`) )
-	- use that mark to find the name of the dataset -- getMarkDataset()
-	- call compile functions with e.g. compileTimeScale(timeEncoding, dataset, vgSpec.marks, ... )
-	- - check how it works if you have some encodings defined top level and some inside layers
-	- - it *should* do the right thing if you pass the right dataset and all of vgSpec.marks 
-	*/
 
 	// Creates signals, this can be at a global level
 	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0])); // for now, do this once at the top level (this is the param w/ timer events)
@@ -727,7 +717,7 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	for (let i = 0; i < vgSpec.marks.length; i++) {
 		const markDataset = getMarkDataset(vgSpec.marks[i]);
 		//TODO clean this up, it probably doesn't need to occur for each mark
-		vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, markDataset, vgSpec.marks, vgSpec.scales, stackTransform)); // run inside of for loop providing the specific dataset to the mark (also does rescaling)
+		vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, markDataset, vgSpec.marks, vgSpec.scales, [])); // run inside of for loop providing the specific dataset to the mark (also does rescaling)
 	}
 
 	//compile animations at top layer as de-duping of signals occurs in merge
@@ -741,6 +731,7 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 		vgSpec = mergeSpecs(vgSpec, compileInterpolation(timeEncoding, dataset, vgSpec.marks, vgSpec.scales)); // this should be done per mark (run in layers)
 	}
 
+	// removed for now until we get specs with enter and exits
 	//vgSpec = mergeSpecs(vgSpec, compileEnterExit(vlaSpec, vgSpec.marks, dataset, vlaSpec.enter, vlaSpec.exit)); // TODO need examples that actually use this to verify it works
 
 	return vgSpec;
