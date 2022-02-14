@@ -95,7 +95,6 @@ export type ElaboratedVlAnimationTimeScale = (
 	domain?: any[]; // undefined domain means use data/field domain
 };
 
-<<<<<<< HEAD
 export type ElaboratedVlAnimationSelection = Override<
 	SelectionParameter,
 	{
@@ -104,7 +103,7 @@ export type ElaboratedVlAnimationSelection = Override<
 			{
 				on: {
 					type: "timer";
-					filter: vega.Expr | vega.Expr[];
+					filter?: vega.Expr | vega.Expr[];
 				};
 				// "predicate"?: LogicalComposition<Predicate>;
 				predicate?: LogicalAnd<FieldPredicate> | FieldPredicate;
@@ -115,21 +114,6 @@ export type ElaboratedVlAnimationSelection = Override<
 		bind?: vega.BindRange;
 	}
 >;
-=======
-export type ElaboratedVlAnimationSelection = Override<SelectionParameter, {
-  "select": Override<PointSelectionConfig, {
-    "on": {
-      "type": "timer",
-      "filter"?: vega.Expr | vega.Expr[];
-    },
-    // "predicate"?: LogicalComposition<Predicate>;
-    "predicate"?: LogicalAnd<FieldPredicate> | FieldPredicate;
-    "easing": string | number[];
-    "pause"?: {"value": vega.Datum, "duration": number}[];
-  }>;
-  "bind"?: vega.BindRange;
-}>;
->>>>>>> d706f3ca0c75a038e836e46f399754582314ac69
 
 export type ElaboratedVlAnimationInterpolate = {
 	field: string;
@@ -154,7 +138,7 @@ export type ElaboratedVlAnimationUnitSpec = Override<
 >;
 
 export type ElaboratedVlAnimationLayerSpec = Override<
-	LayerSpec<any>,
+	LayerSpec<any> | UnitSpec<any>,
 	{
 		layer: (ElaboratedVlAnimationLayerSpec | ElaboratedVlAnimationUnitSpec)[];
 		encoding?: Encoding<any> & {time?: ElaboratedVlAnimationTimeEncoding};

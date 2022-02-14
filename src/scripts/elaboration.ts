@@ -17,7 +17,7 @@ import {getAnimationSelectionFromParams, isParamAnimationSelection} from "./comp
 * @param vlaSpec
 * @returns
 */
-const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimationUnitSpec => {
+const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec, layerId: string = "0"): ElaboratedVlAnimationUnitSpec => {
 	const timeEncoding = vlaUnitSpec.encoding.time;
 
 	const scale = timeEncoding.scale ?? {};
@@ -50,7 +50,7 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimati
 	// elaborate encoding into a default selection
 	if (!specContainsAnimationSelection(vlaUnitSpec)) {
 		const param: ElaboratedVlAnimationSelection = {
-			name: "current_frame",
+			name: `current_frame_${layerId}`,
 			select: {
 				type: "point",
 				on: {
@@ -59,7 +59,7 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimati
 				easing: "easeLinear",
 			},
 		};
-		const filter = {filter: {param: "current_frame"}};
+		const filter = {filter: {param: `current_frame_${layerId}`}};
 		elaboratedSpec.params = [...(elaboratedSpec.params ?? []), param];
 		elaboratedSpec.transform = [...(elaboratedSpec.transform ?? []), filter];
 	} else {
@@ -95,7 +95,7 @@ const specContainsAnimationSelection = (vlaUnitSpec: VlAnimationUnitSpec): boole
 const elaborateVla = (vlaSpec: VlAnimationSpec): ElaboratedVlAnimationSpec => {
 	console.log("in elaborate!");
 	if ((vlaSpec as VlAnimationLayerSpec).layer) {
-		const elaborated = traverseTree(vlaSpec); // TODO connect this back to dylan's traverseTree function (sorry!)
+		const elaborated = traverseTree(vlaSpec, {field: null}, 0); // TODO connect this back to dylan's traverseTree function (sorry!)
 		console.log("elaborated", elaborated);
 		return elaborated;
 	} else {
@@ -106,7 +106,7 @@ const elaborateVla = (vlaSpec: VlAnimationSpec): ElaboratedVlAnimationSpec => {
 ////////////////////////////////////////////////////
 // dylan wip below
 
-function traverseTree(vlaSpec: VlAnimationSpec, parentTimeEncoding: VlAnimationTimeEncoding = {field: null}): ElaboratedVlAnimationSpec {
+function traverseTree(vlaSpec: VlAnimationSpec, parentTimeEncoding: VlAnimationTimeEncoding = {field: null}, index: number): ElaboratedVlAnimationSpec {
 	let timeEncoding = JSON.parse(JSON.stringify(parentTimeEncoding));
 
 	if (vlaSpec?.encoding?.time) {
@@ -120,14 +120,14 @@ function traverseTree(vlaSpec: VlAnimationSpec, parentTimeEncoding: VlAnimationT
 		// elaborates the current spec, to be called recusively on
 
 		if ((changedUnitOrLayerSpec as VlAnimationLayerSpec).layer) {
-			const newLayer = (changedUnitOrLayerSpec as VlAnimationLayerSpec).layer.map((layerUnit) => traverseTree(layerUnit, timeEncoding));
+			const newLayer = (changedUnitOrLayerSpec as VlAnimationLayerSpec).layer.map((layerUnit) => traverseTree(layerUnit, timeEncoding, ++index));
 
 			(changedUnitOrLayerSpec as ElaboratedVlAnimationLayerSpec).layer = newLayer;
 		}
 
 		return changedUnitOrLayerSpec as ElaboratedVlAnimationSpec;
 	} else {
-		return elaborateUnitVla(changedUnitOrLayerSpec as VlAnimationUnitSpec);
+		return elaborateUnitVla(changedUnitOrLayerSpec as VlAnimationUnitSpec, `${index + 1}`);
 	}
 }
 

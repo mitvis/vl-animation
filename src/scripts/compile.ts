@@ -28,6 +28,7 @@ import {
 } from "vega-lite/build/src/predicate";
 import {LogicalAnd} from "vega-lite/build/src/logical";
 import {Encoding} from "vega-lite/build/src/encoding";
+import {getCompositeMarkTooltip} from "vega-lite/build/src/compositemark/common";
 
 type ScaleFieldValueRef = {scale: vega.Field; field: vega.Field}; // ScaledValueRef
 
@@ -480,7 +481,7 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 };
 
 // Change each dataset to point towards filtered data
-const compileFilterTransforms = (animationFilters: FilterTransform[], animationSelections: ElaboratedVlAnimationSelection[], dataset: string, markSpecs: vega.Mark[]): Partial<vega.Spec> => {
+/*const compileFilterTransforms = (animationFilters: FilterTransform[], animationSelections: ElaboratedVlAnimationSelection[], dataset: string, markSpecs: vega.Mark[]): Partial<vega.Spec> => {
 	if (animationFilters.length) {
 		const dataset_curr = `${dataset}_curr`;
 
@@ -511,7 +512,7 @@ const compileFilterTransforms = (animationFilters: FilterTransform[], animationS
 	}
 	return {};
 };
-
+*/
 const compileInterpolation = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string, markSpecs: vega.Mark[], scaleSpecs: vega.Scale[]): Partial<vega.Spec> => {
 	if (timeEncoding.interpolate !== false) {
 		const dataset_curr = `${dataset}_curr`;
@@ -767,7 +768,7 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 	 */
 	let stackTransform: vega.Transforms[] = [];
 	if (vlaSpec.mark === "bar") {
-		stackTransform = [...vgSpec.data[1].transform];
+		stackTransform = [...vgSpec.data.find((d) => d.name === "data_0").transform];
 	}
 
 	// These assume a singular relationship
@@ -776,7 +777,7 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0])); // TODO think about what happens if there's more than one animSelection
 	vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
 	vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field));
-	vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks));
+	vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
 	vgSpec = mergeSpecs(vgSpec, compileInterpolation(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
 	vgSpec = mergeSpecs(vgSpec, compileEnterExit(vlaSpec, vgSpec.marks, dataset, vlaSpec.enter, vlaSpec.exit)); // TODO need examples that actually use this to verify it works
 
@@ -793,11 +794,13 @@ const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
 };
 
 function findTimeEncoding(layerSpec: ElaboratedVlAnimationLayerSpec): ElaboratedVlAnimationTimeEncoding {
-	if (layerSpec?.encoding?.time) {
+	console.log("finding time", layerSpec);
+	if (layerSpec?.encoding?.time && layerSpec.encoding.time.field) {
 		return layerSpec.encoding.time;
 	} else {
 		// TODO generalize to multiple depth layers
 		const unitContainingTime = layerSpec.layer.find((layerUnitSpec) => !!layerUnitSpec?.encoding?.time);
+		console.log("in find time encoding", layerSpec, unitContainingTime);
 		if (unitContainingTime) {
 			return unitContainingTime.encoding.time;
 		}
@@ -807,7 +810,9 @@ function findTimeEncoding(layerSpec: ElaboratedVlAnimationLayerSpec): Elaborated
 function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	const {returnedSelections, returnedFilters, sanitizedVlaSpec} = recurseThroughLayersWrapper(vlaSpec);
 
+	console.log("pre layer compile", sanitizedVlaSpec);
 	let vgSpec = vl.compile(sanitizedVlaSpec as vl.TopLevelSpec).spec;
+	console.log("post layer compile", JSON.parse(JSON.stringify(vgSpec)));
 
 	const timeEncoding = findTimeEncoding(vlaSpec);
 
@@ -829,21 +834,37 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	// Creates signals, this can be at a global level
 	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0])); // for now, do this once at the top level (this is the param w/ timer events)
 
+	console.log("past anim clock", vgSpec);
+
 	// Add Time Scale
 	for (let i = 0; i < vgSpec.marks.length; i++) {
 		const markDataset = getMarkDataset(vgSpec.marks[i]);
 		//TODO clean this up, it probably doesn't need to occur for each mark
 		vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, markDataset, vgSpec.marks, vgSpec.scales)); // run inside of for loop providing the specific dataset to the mark (also does rescaling)
 	}
+	console.log("past time scales ", JSON.parse(JSON.stringify(vgSpec)));
 
 	//compile animations at top layer as de-duping of signals occurs in merge
-	vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field)); //parms with timers (check what happens to the signals when you compile a regular layer, if they all get dumped into the top, then run this with everything, else use a by layer approach)
+	const animSel = compileAnimationSelections(animationSelections, timeEncoding.field);
+	console.log("animationSelections", JSON.parse(JSON.stringify(vgSpec)));
+	vgSpec = mergeSpecs(vgSpec, animSel); //parms with timers (check what happens to the signals when you compile a regular layer, if they all get dumped into the top, then run this with everything, else use a by layer approach)
+	console.log("past anim sel", JSON.parse(JSON.stringify(vgSpec)));
+
+	console.log(vlaSpec.layer);
 
 	for (let idx = 0; idx < vlaSpec.layer.length; idx++) {
 		// find the mark that corresponds to the current layer
 		const layerMark = vgSpec.marks.find((mark) => mark.name.includes(`layer_${idx}`));
 		const dataset = getMarkDataset(layerMark);
-		vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(returnedFilters[idx], returnedSelections[idx], dataset, vgSpec.marks)); // with layers you run this at the top, but you don't need to do this for each layer (ie don't do it with sanitized )
+		console.log("past add stack", layerMark);
+
+		let stackTransform: vega.Transforms[] = [];
+		console.log("layermark bars", layerMark, vlaSpec);
+		//@ts-ignore
+		if (vlaSpec.layer[idx].mark === "bar") {
+			stackTransform = [...vgSpec.data.find((d) => d.name === dataset).transform];
+		}
+		vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(returnedFilters[idx], returnedSelections[idx], dataset, vgSpec.marks, stackTransform)); // with layers you run this at the top, but you don't need to do this for each layer (ie don't do it with sanitized )
 		vgSpec = mergeSpecs(vgSpec, compileInterpolation(timeEncoding, dataset, vgSpec.marks, vgSpec.scales)); // this should be done per mark (run in layers)
 	}
 
@@ -909,42 +930,47 @@ function recurseThroughLayersWrapper(vlaLayerSpec: ElaboratedVlAnimationLayerSpe
 
 	const sanitizedVlaSpec = recurseThroughLayers(vlaLayerSpec);
 	return {sanitizedVlaSpec, returnedSelections, returnedFilters};
-} /*
-const compileFilterTransforms = (animationFilters: FilterTransform[], animationSelections: ElaboratedVlAnimationSelection[], dataset: string, markSpecs: vega.Mark[], stackTransform: vega.Transforms[]): Partial<vega.Spec> => {
-  if (animationFilters.length) {
-
-    const dataset_curr = `${dataset}_curr`;
-
-    const vlSpec = {
-      "mark": "circle",
-      "params": animationSelections,
-      "transform": animationFilters
-    };
-    const datasetSpec = {
-      ...((vl.compile(vlSpec as any).spec as any).data as any[]).find(d => d.name === 'data_0'),
-      "name": dataset_curr,
-      "source": dataset,
-    };
-
-    datasetSpec.transform = [...datasetSpec.transform, ...stackTransform];
-
-    let marks = [];
-
-    marks = markSpecs.map(markSpec => {
-      if (markHasDataset(markSpec, dataset)) {
-        return setMarkDataset(markSpec, dataset_curr);
-      }
-      return markSpec;
-    });
-
-    return {
-      data: [datasetSpec],
-      marks
-    };
-  }
-  return {};
 }
-*/
+
+const compileFilterTransforms = (
+	animationFilters: FilterTransform[],
+	animationSelections: ElaboratedVlAnimationSelection[],
+	dataset: string,
+	markSpecs: vega.Mark[],
+	stackTransform: vega.Transforms[]
+): Partial<vega.Spec> => {
+	if (animationFilters.length) {
+		const dataset_curr = `${dataset}_curr`;
+
+		const vlSpec = {
+			mark: "circle",
+			params: animationSelections,
+			transform: animationFilters,
+		};
+		const datasetSpec = {
+			...((vl.compile(vlSpec as any).spec as any).data as any[]).find((d) => d.name === "data_0"),
+			name: dataset_curr,
+			source: dataset,
+		};
+
+		datasetSpec.transform = [...datasetSpec.transform, ...stackTransform];
+
+		let marks = [];
+
+		marks = markSpecs.map((markSpec) => {
+			if (markHasDataset(markSpec, dataset)) {
+				return setMarkDataset(markSpec, dataset_curr);
+			}
+			return markSpec;
+		});
+
+		return {
+			data: [datasetSpec],
+			marks,
+		};
+	}
+	return {};
+};
 
 function concatArrayInPlace(arr: any[], arrToAdd: any[]): void {
 	if (!isIterable(arr) || !isIterable(arrToAdd)) {
