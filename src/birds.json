@@ -39,7 +39,7 @@
                         "type": "timer"
                     },
                     "predicate": {
-                        "and": [{ "field": "day", "eq": "invert('time', anim_clock)" }]
+                        "and": [{ "field": "n_day", "eq": "invert('time', anim_clock)" }]
                     }
                 }
             }],
@@ -63,10 +63,7 @@
                         "type": "timer"
                     },
                     "predicate": {
-                        "and": [
-                            { "field": "day", "gt": "invert('time', anim_clock)-10" },
-                            { "field": "day", "lte": "invert('time', anim_clock)-1" }
-                        ]
+                        "and": [{ "field": "n_day", "lte": "invert('time', anim_clock)" }]
                     }
                 }
             }],
