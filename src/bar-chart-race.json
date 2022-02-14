@@ -1,34 +1,28 @@
 {
-  "data": {
-    "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/fcc1e69167289e4e3c78b8a86ae258b14cc83a2d/category-brands.csv"
-  },
-  "mark": "bar",
-  "encoding": {
-    "color": {
-      "field": "category"
+    "data": {
+        "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/fcc1e69167289e4e3c78b8a86ae258b14cc83a2d/category-brands.csv"
     },
-    "x": {
-      "field": "value",
-      "type": "quantitative"
-    },
-    "y": {
-      "field": "name",
-      "type": "nominal",
-      "sort": {"field": "value", "order": "descending"}
-    },
-    "time": {
-      "field": "date",
-      "scale": {
-        "type": "band",
-        "range": [
-          0,
-          50000
-        ]
-      },
-      "interpolate": {
-        "field": "name"
-      },
-      "rescale": true
+    "mark": "bar",
+    "encoding": {
+        "color": {
+            "field": "category"
+        },
+        "x": {
+            "field": "value",
+            "type": "quantitative"
+        },
+        "y": {
+            "field": "name",
+            "type": "nominal",
+            "sort": { "field": "value", "order": "descending" }
+        },
+        "time": {
+            "field": "date",
+            "scale": {
+                "type": "band",
+                "range": [0, 5000]
+            },
+            "rescale": true
+        }
     }
-  }
 }

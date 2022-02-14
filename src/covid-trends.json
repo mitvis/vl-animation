@@ -1,84 +1,75 @@
 {
-  "width": 500,
-  "height": 500,
-  "data": {
-      "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/3acfc06e88d2f26ca797be116a813dcc0225bc70/tidy_covid19_global_data.csv"
-  },
-  "transform": [{
-          "window": [{
-              "op": "mean",
-              "field": "new_daily",
-              "as": "new_weekly_avg"
-          }],
-          "groupby": ["country"],
-          "sort": [{ "field": "date", "order": "ascending" }],
-          "ignorePeers": false,
-          "frame": [-7, 0]
-      },
-      {
-          "filter": "datum.cases > 0 && datum.new_daily > 0"
-      }
-  ],
-  "encoding": {
-      "x": {
-          "field": "cases",
-          "type": "quantitative",
-          "scale": { "type": "log" },
-          "axis": { "grid": false }
-      },
-      "y": {
-          "field": "new_weekly_avg",
-          "type": "quantitative",
-          "scale": { "type": "log" },
-          "axis": { "grid": false }
-      },
-      "color": { "field": "country" },
-      "time": {
-          "field": "date",
-          "scale": {
-              "type": "band",
-              "range": { "step": 50 }
-          },
-          "interpolate": {
-            "field": "country"
-          }
-      }
-  },
-  "layer": [
-    {
-      "mark": "line",
-      "params": [
-        {
-          "name": "anim_sel",
-          "select": {
-            "type": "point",
-            "on": "timer",
-            "predicate": {"field": "date", "lte": {"expr": "invert('time', anim_clock)"}}
-          }
-        }
-      ],
-      "transform": [
-        {
-          "filter": {"param": "anim_sel"}
-        }
-      ]
+    "width": 500,
+    "height": 500,
+    "data": {
+        "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/3acfc06e88d2f26ca797be116a813dcc0225bc70/tidy_covid19_global_data.csv"
     },
-    {
-      "mark": "circle",
-      "params": [
+    "transform": [{
+            "window": [{
+                "op": "mean",
+                "field": "new_daily",
+                "as": "new_weekly_avg"
+            }],
+            "groupby": ["country"],
+            "sort": [{ "field": "date", "order": "ascending" }],
+            "ignorePeers": false,
+            "frame": [-7, 0]
+        },
         {
-          "name": "anim_sel_eq",
-          "select": {
-            "type": "point",
-            "on": "timer"
-          }
+            "filter": "datum.cases > 0 && datum.new_daily > 0"
         }
-      ],
-      "transform": [
+    ],
+    "encoding": {
+        "x": {
+            "field": "cases",
+            "type": "quantitative",
+            "scale": { "type": "log" },
+            "axis": { "grid": false }
+        },
+        "y": {
+            "field": "new_weekly_avg",
+            "type": "quantitative",
+            "scale": { "type": "log" },
+            "axis": { "grid": false }
+        },
+        "color": { "field": "country" },
+        "time": {
+            "field": "date",
+            "scale": {
+                "type": "band",
+                "range": { "step": 50 }
+            },
+            "interpolate": {
+                "field": "country"
+            }
+        }
+    },
+    "layer": [{
+            "mark": "line",
+            "params": [{
+                "name": "anim_sel",
+                "select": {
+                    "type": "point",
+                    "on": "timer",
+                    "predicate": { "field": "date", "lte": { "expr": "invert('time', anim_clock)" } }
+                }
+            }],
+            "transform": [{
+                "filter": { "param": "anim_sel" }
+            }]
+        },
         {
-          "filter": {"param": "anim_sel_eq"}
+            "mark": "circle",
+            "params": [{
+                "name": "anim_sel_eq",
+                "select": {
+                    "type": "point",
+                    "on": "timer"
+                }
+            }],
+            "transform": [{
+                "filter": { "param": "anim_sel_eq" }
+            }]
         }
-      ]
-    }
-  ]
+    ]
 }

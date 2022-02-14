@@ -1,43 +1,43 @@
 {
-  "width": 500,
-  "height": 500,
-  "data": {"url": "https://raw.githubusercontent.com/vega/vega-datasets/master/data/driving.json"},
-  "transform": [
-    {
-      "calculate": "':)'", "as": "key"
-    },
-    {
-      "filter": {"param": "anim_sel"}
+    "width": 500,
+    "height": 500,
+    "data": { "url": "https://raw.githubusercontent.com/vega/vega-datasets/master/data/driving.json" },
+    "transform": [{
+            "calculate": "':)'",
+            "as": "key"
+        },
+        {
+            "filter": { "param": "anim_sel" }
+        }
+    ],
+    "params": [{
+        "name": "anim_sel",
+        "select": {
+            "type": "point",
+            "on": "timer",
+            "predicate": { "field": "year", "lte": { "expr": "invert('time', anim_clock)" } }
+        }
+    }],
+    "mark": "circle",
+    "encoding": {
+        "x": {
+            "field": "miles",
+            "type": "quantitative",
+            "scale": { "zero": false }
+        },
+        "y": {
+            "field": "gas",
+            "type": "quantitative",
+            "scale": { "zero": false }
+        },
+        "order": { "field": "year" },
+        "time": {
+            "field": "year",
+            "scale": {
+                "type": "band",
+                "range": { "step": 200 }
+            },
+            "interpolate": { "field": "key" }
+        }
     }
-  ],
-  "params": [
-    {
-      "name": "anim_sel",
-      "select": {
-        "type": "point",
-        "on": "timer",
-        "predicate": {"field": "year", "lte": {"expr": "invert('time', anim_clock)"}}
-      }
-    }
-  ],
-  "mark": "circle",
-  "encoding": {
-    "x": {
-      "field": "miles", "type": "quantitative",
-      "scale": {"zero": false}
-    },
-    "y": {
-      "field": "gas", "type": "quantitative",
-      "scale": {"zero": false}
-    },
-    "order": {"field": "year"},
-    "time": {
-      "field": "year",
-      "scale": {
-        "type": "band",
-        "range": {"step": 200}
-      },
-      "interpolate": {"field": "key"}
-    }
-  }
 }
