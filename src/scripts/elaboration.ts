@@ -95,7 +95,7 @@ const specContainsAnimationSelection = (vlaUnitSpec: VlAnimationUnitSpec): boole
 const elaborateVla = (vlaSpec: VlAnimationSpec): ElaboratedVlAnimationSpec => {
 	console.log("in elaborate!");
 	if ((vlaSpec as VlAnimationLayerSpec).layer) {
-		const elaborated = traverseTree(vlaSpec, {field: null}, 0); // TODO connect this back to dylan's traverseTree function (sorry!)
+		const elaborated = traverseTree(vlaSpec, {field: null}, 0);
 		console.log("elaborated", elaborated);
 		return elaborated;
 	} else {
@@ -104,7 +104,6 @@ const elaborateVla = (vlaSpec: VlAnimationSpec): ElaboratedVlAnimationSpec => {
 };
 
 ////////////////////////////////////////////////////
-// dylan wip below
 
 function traverseTree(vlaSpec: VlAnimationSpec, parentTimeEncoding: VlAnimationTimeEncoding = {field: null}, index: number): ElaboratedVlAnimationSpec {
 	let timeEncoding = JSON.parse(JSON.stringify(parentTimeEncoding));
@@ -151,28 +150,5 @@ function addParentTimeEncoding(unitSpec: VlAnimationLayerSpec, timeEncoding: VlA
 	unitSpec.encoding.time = Object.assign(existingTimeSpec, timeEncoding);
 	return unitSpec;
 }
-
-/*
-
-function validateOrAddTimeTransform(unitSpec: VlAnimationLayerSpec, timeEncoding: VlAnimationTimeEncoding) : VlAnimationLayerSpec {
-	if (!unitSpec.mark || !timeEncoding.field) {
-		return unitSpec;
-	}
-
-	// if a mark is present, then
-	if (!unitSpec.transform) {
-		unitSpec.transform = [];
-	}
-
-	const timeTransformExists = unitSpec.transform.find((transform) => transform?.filter?.time);
-
-	if (!timeTransformExists) {
-		// without a time transform, add it to this spec
-		unitSpec.transform.push({filter: {time: [{equal: `datum.${timeEncoding.field}`}]}});
-	}
-	return unitSpec;
-}
-*/
-////////////////////////////////////////////////////
 
 export default elaborateVla;
