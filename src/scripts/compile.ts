@@ -7,10 +7,9 @@ import {
 	ElaboratedVlAnimationTimeEncoding,
 	ElaboratedVlAnimationUnitSpec,
 	VlAnimationSelection,
-	ElaboratedVlAnimationLayerSpec,
-	VlAnimationTimeEncoding,
+	ElaboratedVlAnimationLayerSpec
 } from "./types";
-import {array, EventStream, isArray, isIterable, isString} from "vega";
+import {EventStream, isArray, isString} from "vega";
 import {VariableParameter} from "vega-lite/build/src/parameter";
 import {SelectionParameter, isSelectionParameter, PointSelectionConfig} from "vega-lite/build/src/selection";
 import {Transform, FilterTransform} from "vega-lite/build/src/transform";
@@ -28,7 +27,6 @@ import {
 } from "vega-lite/build/src/predicate";
 import {LogicalAnd} from "vega-lite/build/src/logical";
 import {Encoding} from "vega-lite/build/src/encoding";
-import {getCompositeMarkTooltip} from "vega-lite/build/src/compositemark/common";
 
 type ScaleFieldValueRef = {scale: vega.Field; field: vega.Field}; // ScaledValueRef
 
@@ -206,130 +204,6 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
 	};
 };
 
-/*
-
-Comment out after merge with racing bar chart fix 
-const compileTimeScale = (
-	timeEncoding: ElaboratedVlAnimationTimeEncoding,
-	dataset: string,
-	markSpecs: vega.Mark[],
-	scaleSpecs: vega.Scale[],
-	stackTransform: vega.Transforms[]
-): Partial<vega.Spec> => {
-	let scales: vega.Scale[] = [];
-	let data: vega.Data[] = [];
-	let signals: vega.Signal[] = [];
-
-	if (timeEncoding.scale.type === "linear") {
-		scales = [
-			...scales,
-			{
-				// a continuous scale for mapping values into time
-				name: "time",
-				type: "linear",
-				zero: timeEncoding.scale.zero ?? false,
-				domain: timeEncoding.scale.domain ?? {data: dataset, field: timeEncoding.field},
-				range: timeEncoding.scale.range,
-			} as vega.LinearScale,
-		];
-		signals = [
-			...signals,
-			{
-				name: "anim_val_curr", // current keyframe's value in time field domain
-				update: "invert('time', eased_anim_clock)",
-			},
-			{
-				name: "max_range_extent", // max value of time range
-				init: "extent(range('time'))[1]",
-			},
-		];
-	} else {
-		// if there's no explicit domain, it's a field domain. therefore, there are discrete data values to match
-		scales = [
-			...scales,
-			{
-				// a band scale for getting the individual values in the discrete data domain
-				name: `time_${timeEncoding.field}`,
-				type: "band",
-				domain: timeEncoding.scale.domain ?? {data: dataset, field: timeEncoding.field},
-				range: timeEncoding.scale.range,
-				align: 0,
-			} as vega.BandScale,
-		];
-
-		signals = [
-			...signals,
-			{
-				name: `${timeEncoding.field}_domain`,
-				init: `domain('time_${timeEncoding.field}')`,
-			},
-			{
-				name: "t_index", // index of current keyframe in the time field's domain
-				init: "0",
-				on: [
-					{
-						events: {signal: "eased_anim_clock"},
-						update: `indexof(${timeEncoding.field}_domain, invert('time_${timeEncoding.field}', eased_anim_clock))`,
-					},
-				],
-			},
-			{
-				name: "max_range_extent", // max value of time range
-				init: `extent(range('time_${timeEncoding.field}'))[1]`,
-			},
-			{
-				name: "min_extent", // min value of time field domain
-				init: `extent(${timeEncoding.field}_domain)[0]`,
-			},
-			{
-				name: "max_extent", // max value of time field domain
-				init: `extent(${timeEncoding.field}_domain)[1]`,
-			},
-			{
-				name: "anim_val_curr", // current keyframe's value in time field domain
-				update: `invert('time_${timeEncoding.field}', eased_anim_clock)`,
-			},
-		];
-	}
-
-	const dataset_curr = `${dataset}_curr`;
-
-	if (timeEncoding.rescale) {
-		markSpecs.forEach((markSpec) => {
-			if (getMarkDataset(markSpec) == dataset_curr) {
-				const encoding = getMarkEncoding(markSpec);
-
-				Object.keys(encoding).forEach((k) => {
-					let encodingDef = encoding[k];
-					if (Array.isArray(encodingDef)) {
-						// for production rule encodings, the encoding is an array. the last entry is the default def
-						encodingDef = encodingDef[encodingDef.length - 1];
-					}
-					if ((encodingDef as ScaleFieldValueRef).field) {
-						const {scale} = encodingDef as ScaleFieldValueRef;
-
-						if (scale) {
-							const scaleSpec = scaleSpecs.find((s) => s.name === scale);
-
-							// rescale: the scale updates based on the animation frame
-							(scaleSpec.domain as vega.ScaleDataRef).data = dataset_curr;
-							scales = scales.filter((s) => s.name !== scaleSpec.name).concat([scaleSpec]);
-						}
-					}
-				});
-			}
-		});
-	}
-
-	return {
-		data,
-		scales,
-		signals,
-	};
-};
-
-*/
-
 const compileDatumPause = (animSelection: ElaboratedVlAnimationSelection): Partial<vega.Spec> => {
 	let data: vega.Data[] = [];
 	let signals: vega.Signal[] = [];
@@ -402,6 +276,11 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 			if (animSelection.select.predicate) {
 				const predicate = animSelection.select.predicate;
 				const and = (predicate as LogicalAnd<FieldPredicate>).and;
+        const getPredValue = (p: FieldPredicate): string => {
+          const pred = p as any;
+          const key = Object.keys(pred).find(k => k !== 'field'); // find the value key e.g. 'eq', 'lte'
+          return pred[key];
+        };
 				// TODO: this will currently only support a non-nested "and" composition or a single pred because i do not want to deal
 				signals = [
 					...signals,
@@ -427,9 +306,11 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 						on: [
 							{
 								events: {signal: "anim_val_curr"},
-								update: `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [${Array(and ? and.length : 1)
-									.fill("anim_val_curr")
-									.join(", ")}]}`,
+								update: `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [${(
+                  and ?
+                    and.map(getPredValue).join(', ') :
+                    getPredValue(predicate as FieldPredicate)
+                )}]}`,
 								force: true,
 							},
 						],
@@ -480,39 +361,6 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 		.reduce((prev, curr) => mergeSpecs(curr, prev), {});
 };
 
-// Change each dataset to point towards filtered data
-/*const compileFilterTransforms = (animationFilters: FilterTransform[], animationSelections: ElaboratedVlAnimationSelection[], dataset: string, markSpecs: vega.Mark[]): Partial<vega.Spec> => {
-	if (animationFilters.length) {
-		const dataset_curr = `${dataset}_curr`;
-
-		const vlSpec = {
-			mark: "circle",
-			params: animationSelections,
-			transform: animationFilters,
-		};
-		const datasetSpec = {
-			...((vl.compile(vlSpec as any).spec as any).data as any[]).find((d) => d.name === "data_0"),
-			name: dataset_curr,
-			source: dataset,
-		};
-
-		let marks = [];
-
-		marks = markSpecs.map((markSpec) => {
-			if (markHasDataset(markSpec, dataset)) {
-				return setMarkDataset(markSpec, dataset_curr);
-			}
-			return markSpec;
-		});
-
-		return {
-			data: [datasetSpec],
-			marks,
-		};
-	}
-	return {};
-};
-*/
 const compileInterpolation = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string, markSpecs: vega.Mark[], scaleSpecs: vega.Scale[]): Partial<vega.Spec> => {
 	if (timeEncoding.interpolate !== false) {
 		const dataset_curr = `${dataset}_curr`;
@@ -787,7 +635,7 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
 	console.log("in compile VLA!");
 	if ((vlaSpec as ElaboratedVlAnimationLayerSpec).layer) {
-		return compileLayerVla(vlaSpec as ElaboratedVlAnimationLayerSpec); // TODO connect this back to dylan's traverseTree function (sorry!)
+		return compileLayerVla(vlaSpec as ElaboratedVlAnimationLayerSpec);
 	} else {
 		return compileUnitVla(vlaSpec as ElaboratedVlAnimationUnitSpec);
 	}
@@ -805,6 +653,7 @@ function findTimeEncoding(layerSpec: ElaboratedVlAnimationLayerSpec): Elaborated
 			return unitContainingTime.encoding.time;
 		}
 	}
+  return null; // TODO will this happen?
 }
 
 function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
@@ -820,7 +669,7 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	 * TODO layerize this: removing for now as mark doesn't exist on layer specs
 	 * stack transform controls the layout of bar charts. if it exists, we need to copy
 	 * the transform into derived animation datasets so that layout still works :(
-	 
+
 	let stackTransform: vega.Transforms[] = [];
 
 	if (vlaSpec.mark === "bar") {
@@ -971,80 +820,5 @@ const compileFilterTransforms = (
 	}
 	return {};
 };
-
-function concatArrayInPlace(arr: any[], arrToAdd: any[]): void {
-	if (!isIterable(arr) || !isIterable(arrToAdd)) {
-		arr.push([]);
-		return;
-	}
-
-	arr.push(arrToAdd);
-}
-
-function getTimeEncoding(vlaSpec: ElaboratedVlAnimationLayerSpec) {
-	//TODO
-}
-function traverseTreeWithFunction(vlaSpec: ElaboratedVlAnimationSpec) {
-	// Option 1: compile each layer/unit separately and see if we can add each one together?
-	// Option 2: recurse
-}
-
-////////////////////////////////////////////////////
-// dylan wip below
-/*
-function traverseTree(vlaSpec: ElaboratedVlAnimationSpec): vega.Spec {
-	const changedUnitOrLayerSpec = compileUnitVla(vlaSpec as ElaboratedVlAnimationUnitSpec);
-
-	if ((vlaSpec as ElaboratedVlAnimationLayerSpec).layer) {
-		// elaborates the current spec, to be called recusively on
-
-		if ((vlaSpec as ElaboratedVlAnimationLayerSpec).layer) {
-			changedUnitOrLayerSpec.layer = (vlaSpec as ElaboratedVlAnimationLayerSpec).layer.map((layerUnit) => traverseTree(layerUnit));
-
-			(changedUnitOrLayerSpec as ElaboratedVlAnimationLayerSpec).layer = newLayer;
-		}
-
-		return traverseTree(changedUnitOrLayerSpec);
-	} else {
-		return elaborateUnitVla(changedUnitOrLayerSpec as VlAnimationUnitSpec);
-	}
-const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
-  const animationSelections = getAnimationSelectionFromParams(vlaSpec.params) as ElaboratedVlAnimationSelection[];
-  const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
-
-  const sanitizedVlaSpec = sanitizeVlaSpec(vlaSpec, animationFilters);
-  console.log('sanitized', sanitizedVlaSpec)
-
-  let vgSpec = vl.compile(sanitizedVlaSpec as vl.TopLevelSpec).spec;
-  console.log('compiled', vgSpec)
-  const timeEncoding = vlaSpec.encoding.time;
-  const dataset = getMarkDataset(vgSpec.marks[0]);
-
-
-  /*
-  * stack transform controls the layout of bar charts. if it exists, we need to copy
-  * the transform into derived animation datasets so that layout still works :(
-  
-  let stackTransform: vega.Transforms[] = [];
-  if (vlaSpec.mark === 'bar') {
-    stackTransform = [...vgSpec.data.find(d => d.name === 'data_0').transform];
-  }
-
-  vgSpec = mergeSpecs(vgSpec,
-    createAnimationClock(animationSelections[0])); // TODO think about what happens if there's more than one animSelection
-  vgSpec = mergeSpecs(vgSpec,
-    compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
-  vgSpec = mergeSpecs(vgSpec,
-    compileAnimationSelections(animationSelections, timeEncoding.field));
-  vgSpec = mergeSpecs(vgSpec,
-    compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
-  vgSpec = mergeSpecs(vgSpec,
-    compileInterpolation(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
-  vgSpec = mergeSpecs(vgSpec,
-    compileEnterExit(vlaSpec, vgSpec.marks, dataset, vlaSpec.enter, vlaSpec.exit)); // TODO need examples that actually use this to verify it works
-
-  return vgSpec;
-}
-*/
 
 export default compileVla;
