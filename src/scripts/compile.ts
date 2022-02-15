@@ -188,7 +188,11 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
 			init: "now()",
 			on: [
 				{
-					events: [{signal: "anim_clock"}].concat(pauseEventStreams).concat([{signal: "is_playing_datum_pause"}]),
+          events: [
+            {"signal": "anim_clock"},
+            ...pauseEventStreams,
+            ...(animSelection.select.pause ? [{"signal": "is_playing_datum_pause"}] : [])
+          ],
 					update: "now()",
 				},
 			],
@@ -616,7 +620,7 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 	 */
 	let stackTransform: vega.Transforms[] = [];
 	if (vlaSpec.mark === "bar") {
-		stackTransform = [...vgSpec.data.find((d) => d.name === "data_0").transform];
+		stackTransform = [...vgSpec.data.find((d) => d.name === dataset).transform];
 	}
 
 	// These assume a singular relationship
