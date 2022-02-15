@@ -1,80 +1,88 @@
 {
-    "width": 1000,
-    "height": 600,
-    "data": {
-        "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/6cb2070b6ffdd2d4bc1a91fdd635737048414881/bird_data.csv"
+  "width": 1000,
+  "height": 600,
+  "projection": {
+    "type": "mercator"
+  },
+  "data": {
+    "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/6cb2070b6ffdd2d4bc1a91fdd635737048414881/bird_data.csv"
+  },
+  "transform": [
+    {
+      "calculate": "toNumber(datum.day)",
+      "as": "n_day"
     },
-    "transform": [{ "calculate": "toNumber(datum.day)", "as": "n_day" }],
-    "projection": {
-        "type": "mercator"
+    {
+      "filter": {
+        "param": "trails"
+      }
+    }
+  ],
+  "mark": "circle",
+  "params": [
+    {
+      "name": "birds",
+      "select": {
+        "type": "point",
+        "on": {
+          "type": "timer"
+        },
+        "predicate": {
+          "field": "n_day",
+          "eq": "anim_val_curr"
+        }
+      }
     },
-    "encoding": {
-        "longitude": {
-            "field": "lon"
+    {
+      "name": "trails",
+      "select": {
+        "type": "point",
+        "on": {
+          "type": "timer"
         },
-        "latitude": {
-            "field": "lat"
-        },
-        "color": {
-            "field": "species"
-        },
-        "time": {
-            "field": "n_day",
-            "scale": {
-                "type": "band",
-                "range": { "step": 100 }
+        "predicate": {
+          "and": [
+            {
+              "field": "n_day",
+              "lte": "anim_val_curr"
             },
-            "continuity": {
-                "field": "species"
+            {
+              "field": "n_day",
+              "gte": "anim_val_curr - 10"
             }
+          ]
         }
+      }
+    }
+  ],
+  "encoding": {
+    "longitude": {
+      "field": "lon"
     },
-    "layer": [{
-            "mark": "circle",
-            "params": [{
-                "name": "birds",
-                "select": {
-                    "type": "point",
-                    "on": {
-                        "type": "timer"
-                    },
-                    "predicate": {
-                        "and": [{ "field": "n_day", "eq": "invert('time', anim_clock)" }]
-                    }
-                }
-            }],
-            "transform": [{
-                "filter": {
-                    "param": "birds"
-                }
-            }],
-
-            "encoding": {
-                "opacity": { "value": 1 }
-            }
-        },
-        {
-            "mark": "circle",
-            "params": [{
-                "name": "trails",
-                "select": {
-                    "type": "point",
-                    "on": {
-                        "type": "timer"
-                    },
-                    "predicate": {
-                        "and": [{ "field": "n_day", "lte": "invert('time', anim_clock)" }]
-                    }
-                }
-            }],
-            "transform": [{
-                "filter": {
-                    "param": "trails"
-                }
-            }],
-            "encoding": {
-                "opacity": { "value": 0.5 }
-            }
+    "latitude": {
+      "field": "lat"
+    },
+    "color": {
+      "field": "species"
+    },
+    "opacity": {
+      "condition": {
+        "param": "birds",
+        "value": 1
+      },
+      "value": 0.2
+    },
+    "time": {
+      "field": "n_day",
+      "scale": {
+        "type": "band",
+        "range": {
+          "step": 100
         }
-    ]
+      },
+      "continuity": {
+        "field": "species"
+      }
+    }
+  }
 }

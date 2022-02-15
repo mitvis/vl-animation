@@ -1,0 +1,101 @@
+{
+  "width": 1000,
+  "height": 600,
+  "projection": {
+    "type": "mercator"
+  },
+  "encoding": {
+    "longitude": {
+      "field": "lon"
+    },
+    "latitude": {
+      "field": "lat"
+    },
+    "color": {
+      "field": "species"
+    }
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/6cb2070b6ffdd2d4bc1a91fdd635737048414881/bird_data.csv"
+      },
+      "transform": [
+        {
+          "calculate": "toNumber(datum.day)",
+          "as": "n_day"
+        },
+        {
+          "filter": {
+            "param": "trails"
+          }
+        }
+      ],
+      "mark": "circle",
+      "params": [
+        {
+          "name": "birds",
+          "select": {
+            "type": "point",
+            "on": {
+              "type": "timer"
+            },
+            "predicate": {
+              "field": "n_day",
+              "eq": "anim_val_curr"
+            }
+          }
+        },
+        {
+          "name": "trails",
+          "select": {
+            "type": "point",
+            "on": {
+              "type": "timer"
+            },
+            "predicate": {
+              "and": [
+                {
+                  "field": "n_day",
+                  "lte": "anim_val_curr"
+                },
+                {
+                  "field": "n_day",
+                  "gte": "anim_val_curr - 10"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "encoding": {
+        "opacity": {
+          "condition": {
+            "param": "birds",
+            "value": 1
+          },
+          "value": 0.2
+        },
+        "time": {
+          "field": "n_day",
+          "scale": {
+            "type": "band",
+            "range": {
+              "step": 100
+            }
+          },
+          "continuity": {
+            "field": "species"
+          }
+        }
+      }
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/vega/vega-datasets/master/data/world-110m.json",
+        "format": {"type": "topojson", "feature": "countries"}
+      },
+      "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "gray"}
+    }
+  ]
+}
