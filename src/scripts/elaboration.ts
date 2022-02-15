@@ -69,10 +69,9 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec, layerId: string = "0
 					...param,
 					select: {
 						...param.select,
-						on: {
-							type: "timer",
-							filter: param.select.on !== "timer" ? param.select.on.filter ?? "true" : "true",
-						},
+						on: param.select.on === "timer" ? {
+							type: "timer"
+						} : param.select.on,
 						easing: param.select.easing ?? "easeLinear",
 					},
 				};
