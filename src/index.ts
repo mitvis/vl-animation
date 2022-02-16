@@ -69,6 +69,6 @@ export {compileVla, elaborateVla};
 
 // renderSpec(exampleSpecs.dunkins as VlAnimationSpec, "connectedScatterplot");
 
-// (window as any).view.addSignalListener("anim_val_curr", (_: any, value: string) => {
+// (window as any).view.addSignalListener("anim_value", (_: any, value: string) => {
 // 	document.getElementById("year").innerHTML = new Date(parseInt(value) * 1000).toISOString();
 // });

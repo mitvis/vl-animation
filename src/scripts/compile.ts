@@ -221,7 +221,7 @@ const compileDatumPause = (animSelection: ElaboratedVlAnimationSelection): Parti
 				transform: [
 					{
 						type: "filter",
-						expr: "datum.value == anim_val_curr",
+						expr: "datum.value == anim_value",
 					},
 				],
 			},
@@ -309,7 +309,7 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 						name: `${animSelection.name}_tuple`,
 						on: [
 							{
-								events: {signal: "anim_val_curr"},
+								events: {signal: "anim_value"},
 								update: `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [${(
                   and ?
                     and.map(getPredValue).join(', ') :
@@ -336,8 +336,8 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 						name: `${animSelection.name}_tuple`,
 						on: [
 							{
-								events: [{signal: "eased_anim_clock"}, {signal: "anim_val_curr"}],
-								update: `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [anim_val_curr]}`,
+								events: [{signal: "eased_anim_clock"}, {signal: "anim_value"}],
+								update: `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [anim_value]}`,
 								force: true,
 							},
 						],
@@ -400,11 +400,11 @@ const compileInterpolation = (timeEncoding: ElaboratedVlAnimationTimeEncoding, d
 
 							const lerp_term =
 								scale === "color" // color scales map numbers to strings, so lerp before scale
-									? `datum.${timeEncoding.field} == anim_val_curr ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})`
+									? `datum.${timeEncoding.field} == anim_value ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})`
 									: scale // e.g. position scales map anything to numbers, so scale before lerp
-									? `datum.${timeEncoding.field} == anim_val_curr ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})`
+									? `datum.${timeEncoding.field} == anim_value ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})`
 									: // e.g. map projections have field but no scale. you can directly lerp the field
-									  `datum.${timeEncoding.field} == anim_val_curr ? interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent) : datum.${field}`;
+									  `datum.${timeEncoding.field} == anim_value ? interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent) : datum.${field}`;
 
 							markSpec = setMarkEncoding(markSpec, k, {
 								signal: lerp_term,
@@ -447,7 +447,7 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
 		signals = [
 			...signals,
 			{
-				name: "anim_val_curr", // current keyframe's value in time field domain
+				name: "anim_value", // current keyframe's value in time field domain
 				update: "invert('time', eased_anim_clock)",
 			},
 			{
@@ -498,7 +498,7 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
 				init: `extent(${timeEncoding.field}_domain)[1]`,
 			},
 			{
-				name: "anim_val_curr", // current keyframe's value in time field domain
+				name: "anim_value", // current keyframe's value in time field domain
 				update: `invert('time_${timeEncoding.field}', eased_anim_clock)`,
 			},
 		];
@@ -623,9 +623,6 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 		stackTransform = [...vgSpec.data.find((d) => d.name === dataset).transform];
 	}
 
-	// These assume a singular relationship
-	// figure out which vega mark a layer got compiled into (use index in vega array)
-	// don't worry about nested layers, but maybe just try to user layer_X_marks
 	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0])); // TODO think about what happens if there's more than one animSelection
 	vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
 	vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field));

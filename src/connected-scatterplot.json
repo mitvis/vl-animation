@@ -15,7 +15,7 @@
         "select": {
             "type": "point",
             "on": "timer",
-            "predicate": { "field": "year", "lte": { "expr": "invert('time', anim_clock)" } }
+            "predicate": { "field": "year", "lte": { "expr": "anim_value" } }
         }
     }],
     "mark": "circle",

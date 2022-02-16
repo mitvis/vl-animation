@@ -42,7 +42,7 @@
             },
             "predicate": {
               "field": "n_day",
-              "eq": "anim_val_curr"
+              "eq": "anim_value"
             }
           }
         },
@@ -57,11 +57,11 @@
               "and": [
                 {
                   "field": "n_day",
-                  "lte": "anim_val_curr"
+                  "lte": "anim_value"
                 },
                 {
                   "field": "n_day",
-                  "gte": "anim_val_curr - 10"
+                  "gte": "anim_value - 10"
                 }
               ]
             }
