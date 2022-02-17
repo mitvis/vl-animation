@@ -9,7 +9,7 @@ import {
 	VlAnimationSelection,
 	ElaboratedVlAnimationLayerSpec
 } from "./types";
-import {EventStream, isArray, isString} from "vega";
+import {EventStream, ExprRef, isArray, isString} from "vega";
 import {VariableParameter} from "vega-lite/build/src/parameter";
 import {SelectionParameter, isSelectionParameter, PointSelectionConfig} from "vega-lite/build/src/selection";
 import {Transform, FilterTransform} from "vega-lite/build/src/transform";
@@ -283,7 +283,14 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
         const getPredValue = (p: FieldPredicate): string => {
           const pred = p as any;
           const key = Object.keys(pred).find(k => k !== 'field'); // find the value key e.g. 'eq', 'lte'
-          return pred[key];
+					let value = pred[key];
+					if (isString(value)) {
+						return value;
+					}
+					if ((value as ExprRef).expr) {
+						return value.expr;
+					}
+          return value;
         };
 				// TODO: this will currently only support a non-nested "and" composition or a single pred because i do not want to deal
 				signals = [
