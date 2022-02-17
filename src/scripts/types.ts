@@ -46,7 +46,7 @@ export type VlAnimationSelection = Override<
 	}
 >;
 
-type VlAnimationInterpolate = {
+type VlAnimationKey = {
 	field: string;
 	loop?: boolean;
 };
@@ -54,7 +54,7 @@ type VlAnimationInterpolate = {
 export type VlAnimationTimeEncoding = {
 	field: string;
 	scale?: VlAnimationTimeScale;
-	interpolate?: VlAnimationInterpolate;
+	key?: VlAnimationKey;
 	rescale?: boolean;
 };
 
@@ -115,7 +115,7 @@ export type ElaboratedVlAnimationSelection = Override<
 	}
 >;
 
-export type ElaboratedVlAnimationInterpolate = {
+export type ElaboratedVlAnimationKey = {
 	field: string;
 	loop: boolean;
 };
@@ -123,7 +123,7 @@ export type ElaboratedVlAnimationInterpolate = {
 export type ElaboratedVlAnimationTimeEncoding = {
 	field: string;
 	scale: ElaboratedVlAnimationTimeScale;
-	interpolate: ElaboratedVlAnimationInterpolate | false;
+	key: ElaboratedVlAnimationKey | false;
 	rescale: boolean;
 };
 

@@ -36,10 +36,10 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec, layerId: string = "0
 			time: {
 				...timeEncoding,
 				scale: elaboratedScale,
-				interpolate: timeEncoding.interpolate
+				key: timeEncoding.key
 					? {
-							field: timeEncoding.interpolate.field,
-							loop: timeEncoding.interpolate?.loop ?? false,
+							field: timeEncoding.key.field,
+							loop: timeEncoding.key?.loop ?? false,
 					  }
 					: (false as false),
 				rescale: timeEncoding.rescale ?? false,

@@ -1,7 +1,7 @@
 import * as vega from "vega";
 import * as vl from "vega-lite";
 import {
-	ElaboratedVlAnimationInterpolate,
+	ElaboratedVlAnimationKey,
 	ElaboratedVlAnimationSelection,
 	ElaboratedVlAnimationSpec,
 	ElaboratedVlAnimationTimeEncoding,
@@ -366,9 +366,9 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 };
 
 const compileInterpolation = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string, markSpecs: vega.Mark[], scaleSpecs: vega.Scale[]): Partial<vega.Spec> => {
-	if (timeEncoding.interpolate !== false) {
+	if (timeEncoding.key !== false) {
 		const dataset_curr = `${dataset}_curr`;
-		const interpolate = timeEncoding.interpolate as ElaboratedVlAnimationInterpolate;
+		const key = timeEncoding.key as ElaboratedVlAnimationKey;
 
 		// TODO line interpolation special case
 
@@ -400,11 +400,11 @@ const compileInterpolation = (timeEncoding: ElaboratedVlAnimationTimeEncoding, d
 
 							const lerp_term =
 								scale === "color" // color scales map numbers to strings, so lerp before scale
-									? `datum.${timeEncoding.field} == anim_value ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})`
+									? `datum.${timeEncoding.field} == anim_value ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})`
 									: scale // e.g. position scales map anything to numbers, so scale before lerp
-									? `datum.${timeEncoding.field} == anim_value ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})`
+									? `datum.${timeEncoding.field} == anim_value ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})`
 									: // e.g. map projections have field but no scale. you can directly lerp the field
-									  `datum.${timeEncoding.field} == anim_value ? interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${interpolate.field}', datum.${interpolate.field}), eased_anim_clock / max_range_extent) : datum.${field}`;
+									  `datum.${timeEncoding.field} == anim_value ? interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent) : datum.${field}`;
 
 							markSpec = setMarkEncoding(markSpec, k, {
 								signal: lerp_term,

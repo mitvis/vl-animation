@@ -37,7 +37,7 @@
                 "type": "band",
                 "range": { "step": 200 }
             },
-            "interpolate": { "field": "key" }
+            "key": { "field": "key" }
         }
     }
 }

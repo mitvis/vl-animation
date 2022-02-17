@@ -39,7 +39,7 @@
                 "type": "band",
                 "range": { "step": 50 }
             },
-            "interpolate": {
+            "key": {
                 "field": "country"
             }
         }
