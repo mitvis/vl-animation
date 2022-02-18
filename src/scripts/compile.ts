@@ -55,6 +55,7 @@ const getAnimationFilterTransforms = (transform: Transform[], animSelections: Vl
 };
 
 const getMarkDataset = (markSpec: vega.Mark): string => {
+	if (!markSpec.from) return null;
 	if ("facet" in markSpec.from) {
 		// mark is a faceted line mark
 		return markSpec.from.facet.data;
@@ -619,7 +620,7 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 	let vgSpec = vl.compile(sanitizedVlaSpec as vl.TopLevelSpec).spec;
 
 	const timeEncoding = vlaSpec.encoding.time;
-	const dataset = getMarkDataset(vgSpec.marks[0]);
+	const dataset = getMarkDataset(vgSpec.marks.find(mark => getMarkDataset(mark)));
 
 	/*
 	 * stack transform controls the layout of bar charts. if it exists, we need to copy
