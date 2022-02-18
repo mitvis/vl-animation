@@ -1,0 +1,33 @@
+{
+  "data": {
+    "url": "https://raw.githubusercontent.com/vega/vega-datasets/master/data/gapminder.json"
+  },
+  "mark": "point",
+  "params": [{
+    "name": "pts",
+    "select": "interval"
+  }],
+  "encoding": {
+    "color": {
+      "condition": {
+        "param": "pts",
+        "field": "country"
+      },
+      "value": "grey"
+    },
+    "x": {
+      "field": "fertility",
+      "type": "quantitative"
+    },
+    "y": {
+      "field": "life_expect",
+      "type": "quantitative"
+    },
+    "time": {
+      "field": "year",
+      "key": {
+        "field": "country"
+      }
+    }
+  }
+}
