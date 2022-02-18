@@ -7,7 +7,7 @@ import {
 	ElaboratedVlAnimationTimeEncoding,
 	ElaboratedVlAnimationUnitSpec,
 	VlAnimationSelection,
-	ElaboratedVlAnimationLayerSpec
+	ElaboratedVlAnimationLayerSpec,
 } from "./types";
 import {EventStream, ExprRef, isArray, isString} from "vega";
 import {VariableParameter} from "vega-lite/build/src/parameter";
@@ -173,11 +173,14 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
 		? `${animSelection.select.easing}(anim_clock / max_range_extent)`
 		: `interpolateCatmullRom(${animSelection.select.easing}, anim_clock / max_range_extent)`; // if easing is a number[], use it to construct an easing function
 
-	const bindStream = animSelection.bind ?
-		[{
-			"events": {"signal": `${animSelection.name}__vgsid_`},
-			"update": `scale('time_year', ${animSelection.name}__vgsid_)`
-		}] : [];
+	const bindStream = animSelection.bind
+		? [
+				{
+					events: {signal: `${animSelection.name}__vgsid_`},
+					update: `scale('time_year', ${animSelection.name}__vgsid_)`,
+				},
+		  ]
+		: [];
 
 	const signals: vega.Signal[] = [
 		{
@@ -188,7 +191,7 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
 					events: {type: "timer", throttle: throttleMs},
 					update: `${pauseExpr} && is_playing_datum_pause ? (anim_clock + (now() - last_tick_at) > max_range_extent ? 0 : anim_clock + (now() - last_tick_at)) : anim_clock`,
 				},
-				...bindStream
+				...bindStream,
 			],
 		},
 		{
@@ -196,11 +199,7 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
 			init: "now()",
 			on: [
 				{
-          events: [
-            {"signal": "anim_clock"},
-            ...pauseEventStreams,
-            ...(animSelection.select.pause ? [{"signal": "is_playing_datum_pause"}] : [])
-          ],
+					events: [{signal: "anim_clock"}, ...pauseEventStreams, ...(animSelection.select.pause ? [{signal: "is_playing_datum_pause"}] : [])],
 					update: "now()",
 				},
 			],
@@ -288,9 +287,9 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 			if (animSelection.select.predicate) {
 				const predicate = animSelection.select.predicate;
 				const and = (predicate as LogicalAnd<FieldPredicate>).and;
-        const getPredValue = (p: FieldPredicate): string => {
-          const pred = p as any;
-          const key = Object.keys(pred).find(k => k !== 'field'); // find the value key e.g. 'eq', 'lte'
+				const getPredValue = (p: FieldPredicate): string => {
+					const pred = p as any;
+					const key = Object.keys(pred).find((k) => k !== "field"); // find the value key e.g. 'eq', 'lte'
 					const value = pred[key];
 					if (isString(value)) {
 						return value;
@@ -298,8 +297,8 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 					if ((value as ExprRef).expr) {
 						return value.expr;
 					}
-          return String(value);
-        };
+					return String(value);
+				};
 				// TODO: this will currently only support a non-nested "and" composition or a single pred because i do not want to deal
 				signals = [
 					...signals,
@@ -325,11 +324,7 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 						on: [
 							{
 								events: {signal: "anim_value"},
-								update: `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [${(
-                  and ?
-                    and.map(getPredValue).join(', ') :
-                    getPredValue(predicate as FieldPredicate)
-                )}]}`,
+								update: `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [${and ? and.map(getPredValue).join(", ") : getPredValue(predicate as FieldPredicate)}]}`,
 								force: true,
 							},
 						],
@@ -374,15 +369,15 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 					{
 						name: "is_playing",
 						init: "true",
-						bind: {"input": "checkbox"},
+						bind: {input: "checkbox"},
 						on: [
 							{
-								"events": {"signal": "current_frame__vgsid_"},
-								"update": `${animSelection.name}__vgsid__modify ? false : is_playing`,
-								"force": true
-							}
-						]
-					}
+								events: {signal: "current_frame__vgsid_"},
+								update: `${animSelection.name}__vgsid__modify ? false : is_playing`,
+								force: true,
+							},
+						],
+					},
 				];
 			}
 
@@ -642,7 +637,7 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 	let vgSpec = vl.compile(sanitizedVlaSpec as vl.TopLevelSpec).spec;
 
 	const timeEncoding = vlaSpec.encoding.time;
-	const dataset = getMarkDataset(vgSpec.marks.find(mark => getMarkDataset(mark)));
+	const dataset = getMarkDataset(vgSpec.marks.find((mark) => getMarkDataset(mark)));
 
 	/*
 	 * stack transform controls the layout of bar charts. if it exists, we need to copy
@@ -678,13 +673,13 @@ function findTimeEncoding(layerSpec: ElaboratedVlAnimationLayerSpec): Elaborated
 		return layerSpec.encoding.time;
 	} else {
 		// TODO generalize to multiple depth layers
-		const unitContainingTime = layerSpec.layer.find((layerUnitSpec) => !!layerUnitSpec?.encoding?.time);
+		const unitContainingTime = layerSpec.layer.find((layerUnitSpec) => !!layerUnitSpec?.encoding?.time?.field);
 		console.log("in find time encoding", layerSpec, unitContainingTime);
 		if (unitContainingTime) {
 			return unitContainingTime.encoding.time;
 		}
 	}
-  return null; // TODO will this happen?
+	return null; // TODO will this happen?
 }
 
 function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
