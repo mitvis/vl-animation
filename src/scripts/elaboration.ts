@@ -10,6 +10,7 @@ import {
 	VlAnimationTimeEncoding,
 } from "./types";
 import {getAnimationSelectionFromParams, isParamAnimationSelection} from "./compile";
+import { isArray } from "vega";
 
 /**
 /**
@@ -65,7 +66,7 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec, layerId: string = "0
 	} else {
 		elaboratedSpec.params = vlaUnitSpec.params.map((param) => {
 			if (isParamAnimationSelection(param)) {
-				return {
+				const sel: ElaboratedVlAnimationSelection = {
 					...param,
 					select: {
 						...param.select,
@@ -75,6 +76,12 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec, layerId: string = "0
 						easing: param.select.easing ?? "easeLinear",
 					},
 				};
+				if (param.bind) { // if there's a slider bound, compiler will also create a pause checkbox
+					sel.select.on.filter = sel.select.on.filter ? (
+						isArray(sel.select.on.filter) ? [...sel.select.on.filter, "is_playing"] : [sel.select.on.filter, "is_playing"]
+					) : "is_playing";
+				}
+				return sel;
 			} else {
 				return param;
 			}

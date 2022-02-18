@@ -173,6 +173,12 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
 		? `${animSelection.select.easing}(anim_clock / max_range_extent)`
 		: `interpolateCatmullRom(${animSelection.select.easing}, anim_clock / max_range_extent)`; // if easing is a number[], use it to construct an easing function
 
+	const bindStream = animSelection.bind ?
+		[{
+			"events": {"signal": `${animSelection.name}__vgsid_`},
+			"update": `scale('time_year', ${animSelection.name}__vgsid_)`
+		}] : [];
+
 	const signals: vega.Signal[] = [
 		{
 			name: "anim_clock", // ms elapsed in animation
@@ -182,6 +188,7 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection): Pa
 					events: {type: "timer", throttle: throttleMs},
 					update: `${pauseExpr} && is_playing_datum_pause ? (anim_clock + (now() - last_tick_at) > max_range_extent ? 0 : anim_clock + (now() - last_tick_at)) : anim_clock`,
 				},
+				...bindStream
 			],
 		},
 		{
@@ -358,9 +365,24 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 					...signals,
 					{
 						name: `${animSelection.name}__vgsid_`,
-						init: "0",
-						bind: {input: "range"},
+						bind: animSelection.bind,
 					},
+					{
+						name: `${animSelection.name}__vgsid__modify`,
+						init: "true",
+					},
+					{
+						name: "is_playing",
+						init: "true",
+						bind: {"input": "checkbox"},
+						on: [
+							{
+								"events": {"signal": "current_frame__vgsid_"},
+								"update": `${animSelection.name}__vgsid__modify ? false : is_playing`,
+								"force": true
+							}
+						]
+					}
 				];
 			}
 
