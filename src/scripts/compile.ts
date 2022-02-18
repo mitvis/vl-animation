@@ -685,9 +685,7 @@ function findTimeEncoding(layerSpec: ElaboratedVlAnimationLayerSpec): Elaborated
 function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	const {returnedSelections, returnedFilters, sanitizedVlaSpec} = recurseThroughLayersWrapper(vlaSpec);
 
-	console.log("pre layer compile", sanitizedVlaSpec);
 	let vgSpec = vl.compile(sanitizedVlaSpec as vl.TopLevelSpec).spec;
-	console.log("post layer compile", JSON.parse(JSON.stringify(vgSpec)));
 
 	const timeEncoding = findTimeEncoding(vlaSpec);
 
@@ -709,32 +707,23 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	// Creates signals, this can be at a global level
 	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0])); // for now, do this once at the top level (this is the param w/ timer events)
 
-	console.log("past anim clock", vgSpec);
-
 	// Add Time Scale
 	for (let i = 0; i < vgSpec.marks.length; i++) {
 		const markDataset = getMarkDataset(vgSpec.marks[i]);
 		//TODO clean this up, it probably doesn't need to occur for each mark
 		vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, markDataset, vgSpec.marks, vgSpec.scales)); // run inside of for loop providing the specific dataset to the mark (also does rescaling)
 	}
-	console.log("past time scales ", JSON.parse(JSON.stringify(vgSpec)));
 
 	//compile animations at top layer as de-duping of signals occurs in merge
 	const animSel = compileAnimationSelections(animationSelections, timeEncoding.field);
-	console.log("animationSelections", JSON.parse(JSON.stringify(vgSpec)));
 	vgSpec = mergeSpecs(vgSpec, animSel); //parms with timers (check what happens to the signals when you compile a regular layer, if they all get dumped into the top, then run this with everything, else use a by layer approach)
-	console.log("past anim sel", JSON.parse(JSON.stringify(vgSpec)));
-
-	console.log(vlaSpec.layer);
 
 	for (let idx = 0; idx < vlaSpec.layer.length; idx++) {
 		// find the mark that corresponds to the current layer
 		const layerMark = vgSpec.marks.find((mark) => mark.name.includes(`layer_${idx}`));
 		const dataset = getMarkDataset(layerMark);
-		console.log("past add stack", layerMark);
 
 		let stackTransform: vega.Transforms[] = [];
-		console.log("layermark bars", layerMark, vlaSpec);
 		//@ts-ignore
 		if (vlaSpec.layer[idx].mark === "bar") {
 			stackTransform = [...vgSpec.data.find((d) => d.name === dataset).transform];
