@@ -129,6 +129,9 @@ const mergeSpecs = (vgSpec: vega.Spec, vgPartialSpec: Partial<vega.Spec>): vega.
 	}
 	if (vgPartialSpec.signals) {
 		const newSignalNames = vgPartialSpec.signals.map((s) => s.name);
+		if (vgSpec.signals.map(s => s.name).filter(s => s === 'current_frame_tuple').length > 1) {
+			debugger;
+		}
 		vgSpec = {
 			...vgSpec,
 			signals: (vgSpec.signals ?? []).filter((s) => !newSignalNames.includes(s.name)).concat(vgPartialSpec.signals),
@@ -352,7 +355,7 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 						on: [
 							{
 								events: [{signal: "eased_anim_clock"}, {signal: "anim_value"}],
-								update: `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [anim_value]}`,
+								update: `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [anim_value ? anim_value : min_extent]}`,
 								force: true,
 							},
 						],
@@ -507,13 +510,7 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
 			},
 			{
 				name: "t_index", // index of current keyframe in the time field's domain
-				init: "0",
-				on: [
-					{
-						events: {signal: "eased_anim_clock"},
-						update: `indexof(${timeEncoding.field}_domain, invert('time_${timeEncoding.field}', eased_anim_clock))`,
-					},
-				],
+				update: `indexof(${timeEncoding.field}_domain, anim_value)`,
 			},
 			{
 				name: "max_range_extent", // max value of time range
