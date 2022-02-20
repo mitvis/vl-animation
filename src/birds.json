@@ -26,10 +26,6 @@
         "type": "point",
         "on": {
           "type": "timer"
-        },
-        "predicate": {
-          "field": "n_day",
-          "eq": "anim_value"
         }
       }
     },
