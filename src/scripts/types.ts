@@ -62,8 +62,8 @@ export type VlAnimationTimeEncoding = {
 export type VlAnimationUnitSpec = Override<
 	UnitSpec<any>,
 	{
-		params: (VariableParameter | SelectionParameter | VlAnimationSelection)[];
-		encoding: Encoding<any> & {time?: VlAnimationTimeEncoding};
+		params?: (VariableParameter | SelectionParameter | VlAnimationSelection)[];
+		encoding?: Encoding<any> & {time?: VlAnimationTimeEncoding};
 		enter?: Encoding<any>;
 		exit?: Encoding<any>;
 	}
@@ -72,8 +72,9 @@ export type VlAnimationUnitSpec = Override<
 export type VlAnimationLayerSpec = Override<
 	LayerSpec<any>,
 	{
-		layer: VlAnimationSpec[];
+		layer: VlAnimationUnitSpec[];
 		encoding?: Encoding<any> & {time?: VlAnimationTimeEncoding};
+		params?: (VariableParameter | SelectionParameter | VlAnimationSelection)[];
 	}
 >;
 
@@ -130,8 +131,8 @@ export type ElaboratedVlAnimationTimeEncoding = {
 export type ElaboratedVlAnimationUnitSpec = Override<
 	UnitSpec<any>,
 	{
-		params: (VariableParameter | SelectionParameter | ElaboratedVlAnimationSelection)[];
-		encoding: Encoding<any> & {time?: ElaboratedVlAnimationTimeEncoding};
+		params?: (VariableParameter | SelectionParameter | ElaboratedVlAnimationSelection)[];
+		encoding?: Encoding<any> & {time?: ElaboratedVlAnimationTimeEncoding};
 		enter?: Encoding<any>;
 		exit?: Encoding<any>;
 	}
@@ -140,7 +141,7 @@ export type ElaboratedVlAnimationUnitSpec = Override<
 export type ElaboratedVlAnimationLayerSpec = Override<
 	LayerSpec<any> | UnitSpec<any>,
 	{
-		layer: (ElaboratedVlAnimationLayerSpec | ElaboratedVlAnimationUnitSpec)[];
+		layer: ElaboratedVlAnimationUnitSpec[];
 		encoding?: Encoding<any> & {time?: ElaboratedVlAnimationTimeEncoding};
 		params?: (VariableParameter | SelectionParameter | ElaboratedVlAnimationSelection)[];
 		enter?: Encoding<any>;

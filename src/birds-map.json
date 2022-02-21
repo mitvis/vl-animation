@@ -18,6 +18,13 @@
   "layer": [
     {
       "data": {
+        "url": "https://raw.githubusercontent.com/deldersveld/topojson/master/continents/north-america.json",
+        "format": {"type": "topojson", "feature": "continent_North_America_subunits"}
+      },
+      "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "gray"}
+    },
+    {
+      "data": {
         "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/6cb2070b6ffdd2d4bc1a91fdd635737048414881/bird_data.csv"
       },
       "transform": [
@@ -89,13 +96,6 @@
           }
         }
       }
-    },
-    {
-      "data": {
-        "url": "https://raw.githubusercontent.com/vega/vega-datasets/master/data/world-110m.json",
-        "format": {"type": "topojson", "feature": "countries"}
-      },
-      "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "gray"}
     }
   ]
 }
