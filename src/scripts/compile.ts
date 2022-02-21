@@ -491,7 +491,7 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
 				// a band scale for getting the individual values in the discrete data domain
 				name: `time_${timeEncoding.field}`,
 				type: "band",
-				domain: timeEncoding.scale.domain ?? {data: dataset, field: timeEncoding.field},
+				domain: timeEncoding.scale.domain ?? {data: dataset, field: timeEncoding.field, sort: true},
 				range: timeEncoding.scale.range,
 				align: 0,
 			} as vega.BandScale,
@@ -696,11 +696,14 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 };
 
 function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
+	let allAnimationSelections: any[] = [];
 	const animationSelections = getAnimationSelectionFromParams(vlaSpec.params) as ElaboratedVlAnimationSelection[];
 	const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
+	allAnimationSelections = allAnimationSelections.concat(animationSelections);
 	let sanitizedVlaSpec = sanitizeVlaSpec(vlaSpec, animationFilters) as ElaboratedVlAnimationLayerSpec;
 	sanitizedVlaSpec.layer = sanitizedVlaSpec.layer.map(layerSpec => {
 		const animationSelections = getAnimationSelectionFromParams(layerSpec.params) as ElaboratedVlAnimationSelection[];
+		allAnimationSelections = allAnimationSelections.concat(animationSelections);
 		const animationFilters = getAnimationFilterTransforms(layerSpec.transform, animationSelections);
 		return sanitizeVlaSpec(layerSpec, animationFilters) as ElaboratedVlAnimationUnitSpec;
 	})
@@ -711,12 +714,13 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 		const timeEncoding = vlaSpec.encoding.time;
 		const dataset = getMarkDataset(vgSpec.marks.find((mark) => getMarkDataset(mark)));
 
+		vgSpec = mergeSpecs(vgSpec, createAnimationClock(allAnimationSelections[0], timeEncoding.field));
+
 		vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
 
 		if (vlaSpec.params) {
 			const animationSelections = getAnimationSelectionFromParams(vlaSpec.params) as ElaboratedVlAnimationSelection[];
 			if (animationSelections.length) {
-				vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], timeEncoding.field));
 				vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field));
 
 				if (vlaSpec.transform) {
@@ -742,9 +746,9 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 		const animationSelections = getAnimationSelectionFromParams(layerSpec.params) as ElaboratedVlAnimationSelection[];
 
 		if (animationSelections.length) {
-			vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], timeEncoding.field)); // TODO shrug
-
 			const timeField = timeEncoding ? timeEncoding.field : vlaSpec.encoding?.time?.field;
+
+			vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], timeField));
 			vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeField));
 
 			let stackTransform: vega.Transforms[] = [];
