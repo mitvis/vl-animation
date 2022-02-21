@@ -161,7 +161,7 @@ const mergeSpecs = (vgSpec: vega.Spec, vgPartialSpec: Partial<vega.Spec>): vega.
 
 const throttleMs = 1000 / 60;
 
-const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection, field: string): Partial<vega.Spec> => {
+const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection, timeEncoding: ElaboratedVlAnimationTimeEncoding): Partial<vega.Spec> => {
 	const pauseExpr = animSelection.select.on.filter ? (isArray(animSelection.select.on.filter) ? animSelection.select.on.filter.join(" && ") : animSelection.select.on.filter) : "true";
 
 	const pauseEventStreams = animSelection.select.on.filter
@@ -178,7 +178,7 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection, fie
 		? [
 				{
 					events: {signal: `${animSelection.name}__vgsid_`},
-					update: `scale('time_${field}', ${animSelection.name}__vgsid_)`,
+					update: `scale('${ timeEncoding.scale.type === 'band' ? `time_${timeEncoding.field}` : 'time'}', ${animSelection.name}__vgsid_)`
 				},
 		  ]
 		: [];
@@ -787,7 +787,7 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 		stackTransform = [...vgSpec.data.find((d) => d.name === dataset).transform];
 	}
 
-	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], timeEncoding.field)); // TODO think about what happens if there's more than one animSelection
+	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], timeEncoding)); // TODO think about what happens if there's more than one animSelection
 	vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
 	vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field));
 	vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
@@ -823,7 +823,7 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 		const timeEncoding = vlaSpec.encoding.time;
 		const dataset = getMarkDataset(vgSpec.marks.find((mark) => getMarkDataset(mark)));
 
-		vgSpec = mergeSpecs(vgSpec, createAnimationClock(allAnimationSelections[0], timeEncoding.field));
+		vgSpec = mergeSpecs(vgSpec, createAnimationClock(allAnimationSelections[0], timeEncoding));
 
 		vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
 
@@ -861,10 +861,10 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 			const animationSelections = getAnimationSelectionFromParams(layerSpec.params) as ElaboratedVlAnimationSelection[];
 
 			if (animationSelections.length) {
-				const timeField = timeEncoding ? timeEncoding.field : vlaSpec.encoding?.time?.field;
+				const nearestTimeEncoding = timeEncoding ?? vlaSpec.encoding?.time;
 
-				vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], timeField));
-				vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeField));
+				vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], nearestTimeEncoding));
+				vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, nearestTimeEncoding.field));
 
 				let stackTransform: vega.Transforms[] = [];
 				if (layerSpec.mark === "bar") {
