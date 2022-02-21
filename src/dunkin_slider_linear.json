@@ -1,0 +1,46 @@
+{
+  "width": 500,
+  "height": 300,
+  "background": "#333",
+  "data": {
+    "url": "https://gist.githubusercontent.com/dwootton/a3c02e0f170d0b84638e014c63d1f908/raw/6a9504ac7ba878f18799e2e3777ca766e4953ddc/dunkins_no_24_hr.csv"
+  },
+  "transform": [
+    {"calculate": "toNumber(datum.open_datetime)", "as": "open_datetime"},
+    {"calculate": "toNumber(datum.closed_datetime)", "as": "closed_datetime"}
+  ],
+  "projection": {"type": "albersUsa"},
+  "params": [
+    {
+      "name": "open_dunks",
+      "select": {
+        "type": "point",
+        "on": "timer",
+        "predicate": {
+          "and": [
+            {"field": "open_datetime", "lte": {"expr": "anim_value"}},
+            {"field": "closed_datetime", "gt": {"expr": "anim_value"}}
+          ]
+        }
+      },
+      "bind": {"input": "range", "min": 1632456000, "max": 1632540600, "step": 1800}
+    }
+  ],
+  "mark": "circle",
+  "encoding": {
+    "longitude": {"field": "longitude", "type": "quantitative"},
+    "latitude": {"field": "latitude", "type": "quantitative"},
+    "color": {
+      "condition": {"param": "open_dunks", "value": "yellow"},
+      "value": "grey"
+    },
+    "time": {
+      "field": "open_datetime",
+      "scale": {
+        "type": "linear",
+        "domain": [1632456000, 1632540600],
+        "range": [0, 10000]
+      }
+    }
+  }
+}
