@@ -373,7 +373,7 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 						bind: {input: "checkbox"},
 						on: [
 							{
-								events: {signal: "current_frame__vgsid_"},
+								events: {signal: `${animSelection.name}__vgsid_`},
 								update: `${animSelection.name}__vgsid__modify ? false : is_playing`,
 								force: true,
 							},
