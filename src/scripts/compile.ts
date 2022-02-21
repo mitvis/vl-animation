@@ -27,6 +27,7 @@ import {
 } from "vega-lite/build/src/predicate";
 import {LogicalAnd} from "vega-lite/build/src/logical";
 import {Encoding} from "vega-lite/build/src/encoding";
+import { cloneDeep } from "lodash";
 
 type ScaleFieldValueRef = {scale: vega.Field; field: vega.Field}; // ScaledValueRef
 
@@ -390,10 +391,85 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 		.reduce((prev, curr) => mergeSpecs(curr, prev), {});
 };
 
-const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string, markSpecs: vega.Mark[], scaleSpecs: vega.Scale[]): Partial<vega.Spec> => {
+const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string, markSpecs: vega.Mark[], scaleSpecs: vega.Scale[], stackTransform: vega.Transforms[]): Partial<vega.Spec> => {
 	if (timeEncoding.key !== false) {
-		const dataset_curr = `${dataset}_curr`;
+    const dataset_curr = `${dataset}_curr`;
+    const dataset_eq = `${dataset}_eq`;
+    const dataset_next = `${dataset}_next`;
+    const dataset_eq_next = `${dataset}_eq_next`;
+    const dataset_interpolate = `${dataset}_interpolate`;
+
 		const key = timeEncoding.key as ElaboratedVlAnimationKey;
+
+    const signals: vega.Signal[] = [
+      {
+        "name": "anim_val_next", // next keyframe's value in time domain
+        // if interpolate.loop is true, we want to tween between last and first keyframes. therefore, next of last is first
+        "update": `t_index < length(${timeEncoding.field}_domain) - 1 ? ${timeEncoding.field}_domain[t_index + 1] : ${key && key.loop ? 'min_extent' : 'max_extent'}`
+      },
+      {
+        "name": "anim_tween", // tween signal between keyframes
+        "init": "0",
+        "on": [
+          {
+            "events": [{"signal": "eased_anim_clock"}, {"signal": "anim_val_next"}, {"signal": "anim_value"}],
+            "update": `anim_val_next != anim_value ? (eased_anim_clock - scale('time_${timeEncoding.field}', anim_value)) / (scale('time_${timeEncoding.field}', anim_val_next) - scale('time_${timeEncoding.field}', anim_value)) : 0`
+          }
+        ]
+      }
+    ]
+
+		const data: vega.Data[] = [
+      {
+        "name": dataset_eq,
+        "source": dataset,
+        "transform": [
+          {
+            "type": "filter",
+            "expr": `datum.${timeEncoding.field} == anim_value`
+          },
+					...stackTransform
+        ]
+      },
+      {
+        "name": dataset_next,
+        "source": dataset,
+        "transform": [
+          {
+            "type": "filter",
+            "expr": `datum.${timeEncoding.field} == anim_val_next`
+          },
+					...stackTransform
+        ]
+      },
+      {
+        "name": dataset_eq_next,
+        "source": dataset_eq,
+        "transform": [
+          {
+            "type": "lookup",
+            "from": dataset_next,
+            "key": key.field,
+            "fields": [key.field],
+            "as": ["next"]
+          },
+          {
+            "type": "filter",
+            "expr": "isValid(datum.next)"
+          }
+        ]
+      },
+      {
+        "name": dataset_interpolate,
+        "source": [dataset_curr, dataset_eq_next],
+        "transform": [
+          {
+            "type": "filter",
+            "expr": `datum.${timeEncoding.field} == anim_value && isValid(datum.next) || datum.${timeEncoding.field} != anim_value`
+          }
+        ]
+      }
+    ];
 
 		// TODO line interpolation special case
 
@@ -401,6 +477,8 @@ const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: st
 
 		const marks = markSpecs.map((markSpec) => {
 			if (getMarkDataset(markSpec) == dataset_curr) {
+        markSpec = setMarkDataset(markSpec, dataset_interpolate);
+
 				const encoding = getMarkEncoding(markSpec);
 
 				Object.keys(encoding).forEach((k) => {
@@ -423,11 +501,28 @@ const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: st
 									return; // if the scale has a discrete output range, don't lerp with it
 							}
 
+							if (timeEncoding.rescale) {
+                // rescale: the scale updates based on the animation frame
+								const scaleNextName = scaleSpec.name + '_next';
+                if (!scaleSpecs.find(s => s.name === scaleNextName) && !scales.find(s => s.name === scaleNextName)) {
+                  // if it doesn't already exist, create a "next" scale for the current scale
+                  const scaleSpecNext = cloneDeep(scaleSpec);
+                  scaleSpecNext.name = scaleNextName;
+                  (scaleSpecNext.domain as vega.ScaleDataRef).data = dataset_next;
+                  scales = [...scales, scaleSpecNext];
+                }
+              }
+							const eq_next_lerp = `isValid(datum.next) ? lerp([scale('${scale}', datum.${field}), scale('${timeEncoding.rescale ? scale + '_next' : scale}', datum.next.${field})], anim_tween) : scale('${scale}', datum.${field})`;
+
 							const lerp_term =
 								scale === "color" // color scales map numbers to strings, so lerp before scale
 									? `datum.${timeEncoding.field} == anim_value ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})`
-									: scale // e.g. position scales map anything to numbers, so scale before lerp
-									? `datum.${timeEncoding.field} == anim_value ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})`
+									: scale // e.g. position scales map anything to numbers
+									? (
+										stackTransform.length ? eq_next_lerp : // if there's a stack transform, lerp the eq/next way because stack transform operates on keyframe instead of whole dataset
+										// if scale maps numbers to numbers, then do it the interpolateCatmullRom way. otherwise, do it the eq/next way because e.g. nominal to position will likely use scale driven by keyframe domain
+										`isNumber(datum.${timeEncoding.field}) ? (datum.${timeEncoding.field} == anim_value ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})) : (${eq_next_lerp})`
+									)
 									: // e.g. map projections have field but no scale. you can directly lerp the field
 									  `datum.${timeEncoding.field} == anim_value ? interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent) : datum.${field}`;
 
@@ -442,6 +537,8 @@ const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: st
 		});
 
 		const spec = {
+			signals,
+			data,
 			marks,
 			scales,
 		};
@@ -694,7 +791,7 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 	vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
 	vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field));
 	vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
-	vgSpec = mergeSpecs(vgSpec, compileKey(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
+	vgSpec = mergeSpecs(vgSpec, compileKey(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
 	vgSpec = mergeSpecs(vgSpec, compileEnterExit(vlaSpec, vgSpec.marks, dataset, vlaSpec.enter, vlaSpec.exit)); // TODO need examples that actually use this to verify it works
 
 	return vgSpec;
@@ -744,11 +841,10 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 						}
 					})
 					vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
+					vgSpec = mergeSpecs(vgSpec, compileKey(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
 				}
 			}
 		}
-
-		vgSpec = mergeSpecs(vgSpec, compileKey(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
 	}
 
 	vlaSpec.layer.forEach((layerSpec, idx) => {
@@ -778,13 +874,10 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 				if (layerSpec.transform) {
 					const animationFilters = getAnimationFilterTransforms(layerSpec.transform, animationSelections);
 					vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
+					vgSpec = mergeSpecs(vgSpec, compileKey(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
 				}
 
 			}
-		}
-
-		if (timeEncoding) {
-			vgSpec = mergeSpecs(vgSpec, compileKey(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
 		}
 	});
 
