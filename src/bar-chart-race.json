@@ -20,7 +20,7 @@
             "field": "date",
             "scale": {
                 "type": "band",
-                "range": [0, 5000]
+                "range": [0, 10000]
             },
             "key": {
               "field": "name"
