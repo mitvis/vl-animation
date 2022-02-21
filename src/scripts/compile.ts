@@ -392,7 +392,7 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 };
 
 const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string, markSpecs: vega.Mark[], scaleSpecs: vega.Scale[], stackTransform: vega.Transforms[]): Partial<vega.Spec> => {
-	if (timeEncoding.key !== false) {
+	if (timeEncoding.key !== false && timeEncoding.scale.type === "band") {
     const dataset_curr = `${dataset}_curr`;
     const dataset_eq = `${dataset}_eq`;
     const dataset_next = `${dataset}_next`;
