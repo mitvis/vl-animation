@@ -129,9 +129,6 @@ const mergeSpecs = (vgSpec: vega.Spec, vgPartialSpec: Partial<vega.Spec>): vega.
 	}
 	if (vgPartialSpec.signals) {
 		const newSignalNames = vgPartialSpec.signals.map((s) => s.name);
-		if (vgSpec.signals.map(s => s.name).filter(s => s === 'current_frame_tuple').length > 1) {
-			debugger;
-		}
 		vgSpec = {
 			...vgSpec,
 			signals: (vgSpec.signals ?? []).filter((s) => !newSignalNames.includes(s.name)).concat(vgPartialSpec.signals),
@@ -481,6 +478,14 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
 			{
 				name: "max_range_extent", // max value of time range
 				init: "extent(range('time'))[1]",
+			},
+			{
+				name: `time_domain`,
+				init: `domain('time')`,
+			},
+			{
+				name: "min_extent", // min value of time field domain
+				init: `extent(time_domain)[0]`,
 			},
 		];
 	} else {
