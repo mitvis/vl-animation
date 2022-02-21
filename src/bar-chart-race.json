@@ -22,6 +22,9 @@
                 "type": "band",
                 "range": [0, 5000]
             },
+            "key": {
+              "field": "name"
+            },
             "rescale": true
         }
     }
