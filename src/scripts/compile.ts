@@ -45,7 +45,7 @@ export const isParamAnimationSelection = (param: any): param is VlAnimationSelec
 };
 
 export const getAnimationSelectionFromParams = (params: (VariableParameter | SelectionParameter)[]): VlAnimationSelection[] => {
-	return params && isArray(params) ? params.filter(isParamAnimationSelection) as VlAnimationSelection[] : [];
+	return params && isArray(params) ? (params.filter(isParamAnimationSelection) as VlAnimationSelection[]) : [];
 };
 
 const getAnimationFilterTransforms = (transform: Transform[], animSelections: VlAnimationSelection[]): FilterTransform[] => {
@@ -129,7 +129,7 @@ const mergeSpecs = (vgSpec: vega.Spec, vgPartialSpec: Partial<vega.Spec>): vega.
 	}
 	if (vgPartialSpec.signals) {
 		const newSignalNames = vgPartialSpec.signals.map((s) => s.name);
-		if (vgSpec.signals.map(s => s.name).filter(s => s === 'current_frame_tuple').length > 1) {
+		if (vgSpec.signals.map((s) => s.name).filter((s) => s === "current_frame_tuple").length > 1) {
 			debugger;
 		}
 		vgSpec = {
@@ -290,6 +290,7 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 			if (animSelection.select.predicate) {
 				const predicate = animSelection.select.predicate;
 				const and = (predicate as LogicalAnd<FieldPredicate>).and;
+
 				const getPredValue = (p: FieldPredicate): string => {
 					const pred = p as any;
 					const key = Object.keys(pred).find((k) => k !== "field"); // find the value key e.g. 'eq', 'lte'
@@ -302,6 +303,8 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 					}
 					return String(value);
 				};
+				console.log("dwootton", and, predicate, getPredValue(predicate as FieldPredicate), and ? and.map(getPredValue).join(", ") : getPredValue(predicate as FieldPredicate));
+
 				// TODO: this will currently only support a non-nested "and" composition or a single pred because i do not want to deal
 				signals = [
 					...signals,
@@ -356,6 +359,7 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 						],
 					},
 				];
+				console.log("alternative tuples!", signals);
 			}
 
 			if (animSelection.bind) {
@@ -684,7 +688,6 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 	if (vlaSpec.mark === "bar") {
 		stackTransform = [...vgSpec.data.find((d) => d.name === dataset).transform];
 	}
-
 	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], timeEncoding.field)); // TODO think about what happens if there's more than one animSelection
 	vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
 	vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field));
@@ -696,54 +699,65 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 };
 
 function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
+	console.log("elaborated vla", vlaSpec);
 	let allAnimationSelections: any[] = [];
 	const animationSelections = getAnimationSelectionFromParams(vlaSpec.params) as ElaboratedVlAnimationSelection[];
 	const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
 	allAnimationSelections = allAnimationSelections.concat(animationSelections);
 	let sanitizedVlaSpec = sanitizeVlaSpec(vlaSpec, animationFilters) as ElaboratedVlAnimationLayerSpec;
-	sanitizedVlaSpec.layer = sanitizedVlaSpec.layer.map(layerSpec => {
+	sanitizedVlaSpec.layer = sanitizedVlaSpec.layer.map((layerSpec) => {
 		const animationSelections = getAnimationSelectionFromParams(layerSpec.params) as ElaboratedVlAnimationSelection[];
 		allAnimationSelections = allAnimationSelections.concat(animationSelections);
 		const animationFilters = getAnimationFilterTransforms(layerSpec.transform, animationSelections);
 		return sanitizeVlaSpec(layerSpec, animationFilters) as ElaboratedVlAnimationUnitSpec;
-	})
+	});
 
 	let vgSpec = vl.compile(sanitizedVlaSpec as vl.TopLevelSpec).spec;
 	// for some reason vl will compile duplicate signal names for the top level param in bar chart race example
-	vgSpec.signals = vgSpec.signals.map(signal => {
-		if (signal === vgSpec.signals.find(s => s.name === signal.name)) {
-			return signal;
-		}
-		return null;
-	}).filter(x => x);
+	vgSpec.signals = vgSpec.signals
+		.map((signal) => {
+			if (signal === vgSpec.signals.find((s) => s.name === signal.name)) {
+				return signal;
+			}
+			return null;
+		})
+		.filter((x) => x);
 
-	if (vlaSpec.encoding?.time) {
-		const timeEncoding = vlaSpec.encoding.time;
-		const dataset = getMarkDataset(vgSpec.marks.find((mark) => getMarkDataset(mark)));
+	const topLevelTimeEncoding = findTimeEncoding(vlaSpec);
+
+	if (topLevelTimeEncoding) {
+		const timeEncoding = topLevelTimeEncoding;
 
 		vgSpec = mergeSpecs(vgSpec, createAnimationClock(allAnimationSelections[0], timeEncoding.field));
 
-		vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
+		const datasets = vgSpec.marks.filter((mark) => getMarkDataset(mark)).map((mark) => getMarkDataset(mark));
 
-		if (vlaSpec.params) {
-			const animationSelections = getAnimationSelectionFromParams(vlaSpec.params) as ElaboratedVlAnimationSelection[];
-			if (animationSelections.length) {
-				vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field));
+		for (const dataset of datasets) {
+			vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
 
-				if (vlaSpec.transform) {
-					const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
-					let stackTransform: vega.Transforms[] = [];
-					vlaSpec.layer.forEach(layerSpec => {
-						if (layerSpec.mark === "bar") {
-							stackTransform = stackTransform.concat(vgSpec.data.find((d) => d.name === dataset).transform);
-						}
-					})
-					vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
+			if (vlaSpec.params) {
+				const animationSelections = getAnimationSelectionFromParams(vlaSpec.params) as ElaboratedVlAnimationSelection[];
+				if (animationSelections.length) {
+					console.log("vg spec before anim sel", JSON.parse(JSON.stringify(vgSpec)));
+					vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field));
+					console.log("vg spec after anim sel", JSON.parse(JSON.stringify(vgSpec)));
+
+					if (vlaSpec.transform) {
+						const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
+						let stackTransform: vega.Transforms[] = [];
+						vlaSpec.layer.forEach((layerSpec) => {
+							if (layerSpec.mark === "bar") {
+								stackTransform = stackTransform.concat(vgSpec.data.find((d) => d.name === dataset).transform);
+							}
+						});
+						vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
+					}
 				}
 			}
-		}
 
-		vgSpec = mergeSpecs(vgSpec, compileInterpolation(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
+			vgSpec = mergeSpecs(vgSpec, compileInterpolation(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
+		}
+		//const dataset = getMarkDataset(vgSpec.marks.find((mark) => getMarkDataset(mark)));// ERROR: this will only return first mark
 	}
 
 	vlaSpec.layer.forEach((layerSpec, idx) => {
@@ -760,7 +774,7 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 			const animationSelections = getAnimationSelectionFromParams(layerSpec.params) as ElaboratedVlAnimationSelection[];
 
 			if (animationSelections.length) {
-				const timeField = timeEncoding ? timeEncoding.field : vlaSpec.encoding?.time?.field;
+				const timeField = timeEncoding ? timeEncoding.field : topLevelTimeEncoding.field;
 
 				vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], timeField));
 				vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeField));
@@ -772,9 +786,9 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 
 				if (layerSpec.transform) {
 					const animationFilters = getAnimationFilterTransforms(layerSpec.transform, animationSelections);
-					vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
+					vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, [mark], stackTransform));
 				}
-
+				console.log();
 			}
 		}
 
@@ -784,6 +798,19 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	});
 
 	return vgSpec;
+}
+function findTimeEncoding(layerSpec: ElaboratedVlAnimationLayerSpec): ElaboratedVlAnimationTimeEncoding {
+	console.log("finding time", layerSpec);
+	if (layerSpec?.encoding?.time && layerSpec.encoding.time.field) {
+		return layerSpec.encoding.time;
+	} else {
+		// TODO generalize to multiple depth layers
+		const unitContainingTime = layerSpec.layer.find((layerUnitSpec) => !!layerUnitSpec?.encoding?.time);
+		console.log("in find time encoding", layerSpec, unitContainingTime);
+		if (unitContainingTime) {
+			return unitContainingTime.encoding.time;
+		}
+	}
 }
 
 const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {

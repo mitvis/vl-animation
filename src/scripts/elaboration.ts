@@ -11,9 +11,9 @@ import {
 	ElaboratedVlAnimationTimeEncoding,
 } from "./types";
 import {getAnimationSelectionFromParams, isParamAnimationSelection} from "./compile";
-import { isArray } from "vega";
-import { VariableParameter } from "vega-lite/build/src/parameter";
-import { SelectionParameter } from "vega-lite/build/src/selection";
+import {isArray} from "vega";
+import {VariableParameter} from "vega-lite/build/src/parameter";
+import {SelectionParameter} from "vega-lite/build/src/selection";
 
 const mergeVlaSpecs = (vlaSpec: ElaboratedVlAnimationSpec, vlaPartialSpec: Partial<ElaboratedVlAnimationSpec>): ElaboratedVlAnimationSpec => {
 	if (vlaPartialSpec.params) {
@@ -30,7 +30,7 @@ const mergeVlaSpecs = (vlaSpec: ElaboratedVlAnimationSpec, vlaPartialSpec: Parti
 		};
 	}
 	return vlaSpec;
-}
+};
 
 const paramsContainAnimationSelection = (params: any[]): boolean => {
 	return isArray(params) && getAnimationSelectionFromParams(params as any).length > 0;
@@ -53,11 +53,11 @@ const elaborateTimeEncoding = (timeEncoding: VlAnimationTimeEncoding): Elaborate
 			? {
 					field: timeEncoding.key.field,
 					loop: timeEncoding.key?.loop ?? false,
-				}
+			  }
 			: (false as false),
-		rescale: timeEncoding.rescale ?? false
+		rescale: timeEncoding.rescale ?? false,
 	};
-}
+};
 
 const elaborateDefaultSelection = (layerId: string = "0"): Partial<ElaboratedVlAnimationSpec> => {
 	const param: ElaboratedVlAnimationSelection = {
@@ -73,34 +73,36 @@ const elaborateDefaultSelection = (layerId: string = "0"): Partial<ElaboratedVlA
 	const filter = {filter: {param: `current_frame_${layerId}`}};
 	return {
 		params: [param],
-		transform: [filter]
-	}
-}
+		transform: [filter],
+	};
+};
 
-const elaborateParams = (params: (VariableParameter | SelectionParameter)[]):  (VariableParameter | SelectionParameter | ElaboratedVlAnimationSelection)[] => {
-	const elaboratedParams = params.map(param => {
+const elaborateParams = (params: (VariableParameter | SelectionParameter)[]): (VariableParameter | SelectionParameter | ElaboratedVlAnimationSelection)[] => {
+	const elaboratedParams = params.map((param) => {
 		if (isParamAnimationSelection(param)) {
 			const sel: ElaboratedVlAnimationSelection = {
 				...param,
 				select: {
 					...param.select,
-					on: param.select.on === "timer" ? {
-						type: "timer"
-					} : param.select.on,
+					on:
+						param.select.on === "timer"
+							? {
+									type: "timer",
+							  }
+							: param.select.on,
 					easing: param.select.easing ?? "easeLinear",
 				},
 			};
-			if (param.bind) { // if there's a slider bound, compiler will also create a pause checkbox
-				sel.select.on.filter = sel.select.on.filter ? (
-					isArray(sel.select.on.filter) ? [...sel.select.on.filter, "is_playing"] : [sel.select.on.filter, "is_playing"]
-				) : "is_playing";
+			if (param.bind) {
+				// if there's a slider bound, compiler will also create a pause checkbox
+				sel.select.on.filter = sel.select.on.filter ? (isArray(sel.select.on.filter) ? [...sel.select.on.filter, "is_playing"] : [sel.select.on.filter, "is_playing"]) : "is_playing";
 			}
 			return sel;
 		}
 		return param;
 	});
 	return elaboratedParams;
-}
+};
 
 /**
 /**
@@ -129,42 +131,46 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimati
 
 const elaborateLayerVla = (vlaLayerSpec: VlAnimationLayerSpec): ElaboratedVlAnimationLayerSpec => {
 	const elaboratedLayer: ElaboratedVlAnimationUnitSpec[] = vlaLayerSpec.layer.map((layerSpec, idx) => {
-		const elaboratedTimeEncoding: ElaboratedVlAnimationTimeEncoding =
-			(layerSpec.encoding?.time) ?
-				elaborateTimeEncoding({
+		const elaboratedTimeEncoding: ElaboratedVlAnimationTimeEncoding = layerSpec.encoding?.time
+			? elaborateTimeEncoding({
 					...vlaLayerSpec.encoding?.time,
-					...layerSpec.encoding?.time
-				}) :
-				undefined;
+					...layerSpec.encoding?.time,
+			  })
+			: undefined;
 
 		let elaboratedLayerSpec: ElaboratedVlAnimationUnitSpec = {
 			...layerSpec,
-			encoding: layerSpec.encoding ? {
-				...layerSpec.encoding,
-				time: elaboratedTimeEncoding
-			} : undefined,
-			params: layerSpec.params ? elaborateParams(layerSpec.params) : undefined
+			encoding: layerSpec.encoding
+				? {
+						...layerSpec.encoding,
+						time: elaboratedTimeEncoding,
+				  }
+				: undefined,
+			params: layerSpec.params ? elaborateParams(layerSpec.params) : undefined,
 		};
+
 		return elaboratedLayerSpec;
 	});
 
 	let elaboratedSpec: ElaboratedVlAnimationLayerSpec = {
 		...vlaLayerSpec,
 		layer: elaboratedLayer,
-		encoding: vlaLayerSpec.encoding ?  {
-			...vlaLayerSpec.encoding,
-			time: vlaLayerSpec.encoding?.time && vlaLayerSpec.layer.every(layerSpec => !layerSpec.encoding?.time) ? elaborateTimeEncoding(vlaLayerSpec.encoding?.time) : undefined,
-		} : undefined,
-		params: vlaLayerSpec.params ? elaborateParams(vlaLayerSpec.params) : undefined
-	}
+		encoding: vlaLayerSpec.encoding
+			? {
+					...vlaLayerSpec.encoding,
+					time: vlaLayerSpec.encoding?.time && vlaLayerSpec.layer.every((layerSpec) => !layerSpec.encoding?.time) ? elaborateTimeEncoding(vlaLayerSpec.encoding?.time) : undefined,
+			  }
+			: undefined,
+		params: vlaLayerSpec.params ? elaborateParams(vlaLayerSpec.params) : undefined,
+	};
 
-	if (elaboratedSpec.encoding?.time && !paramsContainAnimationSelection(vlaLayerSpec.params) && vlaLayerSpec.layer.every(layerSpec => !layerSpec.params)) {
+	if (elaboratedSpec.encoding?.time && !paramsContainAnimationSelection(vlaLayerSpec.params) && vlaLayerSpec.layer.every((layerSpec) => !layerSpec.params)) {
 		elaboratedSpec = mergeVlaSpecs(elaboratedSpec, elaborateDefaultSelection()) as ElaboratedVlAnimationLayerSpec;
 	}
 	// TODO when do you elaborate out default selections when the time encodings are inside layers?
 
 	return elaboratedSpec;
-}
+};
 
 const elaborateVla = (vlaSpec: VlAnimationSpec): ElaboratedVlAnimationSpec => {
 	// console.log("in elaborate!");
