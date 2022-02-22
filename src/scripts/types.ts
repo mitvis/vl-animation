@@ -42,7 +42,7 @@ export type VlAnimationSelection = Override<
 				pause?: {value: vega.Datum; duration: number}[];
 			}
 		>;
-		bind?: vega.BindRange;
+		bind?: vega.BindRange | "scales";
 	}
 >;
 
@@ -112,7 +112,7 @@ export type ElaboratedVlAnimationSelection = Override<
 				pause?: {value: vega.Datum; duration: number}[];
 			}
 		>;
-		bind?: vega.BindRange;
+		bind?: vega.BindRange | "scales";
 	}
 >;
 

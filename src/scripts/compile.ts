@@ -9,7 +9,7 @@ import {
 	VlAnimationSelection,
 	ElaboratedVlAnimationLayerSpec,
 } from "./types";
-import {EventStream, ExprRef, isArray, isString} from "vega";
+import {EventStream, ExprRef, isArray, isObject, isString} from "vega";
 import {VariableParameter} from "vega-lite/build/src/parameter";
 import {SelectionParameter, isSelectionParameter, PointSelectionConfig} from "vega-lite/build/src/selection";
 import {Transform, FilterTransform} from "vega-lite/build/src/transform";
@@ -120,6 +120,10 @@ const predicateToTupleType = (predicate: FieldPredicate) => {
 	return "E"; // shrug
 };
 
+export const selectionBindsSlider = (bind: vega.BindRange | 'scales'): bind is vega.BindRange =>  {
+	return bind !== 'scales' && isObject(bind) && bind.input === 'range';
+}
+
 const mergeSpecs = (vgSpec: vega.Spec, vgPartialSpec: Partial<vega.Spec>): vega.Spec => {
 	if (vgPartialSpec.scales) {
 		const newScaleNames = vgPartialSpec.scales.map((s) => s.name);
@@ -174,7 +178,7 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection, tim
 		? `${animSelection.select.easing}(anim_clock / max_range_extent)`
 		: `interpolateCatmullRom(${animSelection.select.easing}, anim_clock / max_range_extent)`; // if easing is a number[], use it to construct an easing function
 
-	const bindStream = animSelection.bind
+	const bindStream = selectionBindsSlider(animSelection.bind)
 		? [
 				{
 					events: {signal: `${animSelection.name}__vgsid_`},
@@ -275,7 +279,7 @@ const compileDatumPause = (animSelection: ElaboratedVlAnimationSelection): Parti
 	};
 };
 
-const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSelection[], field: string): Partial<vega.Spec> => {
+const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSelection[], field: string, markSpecs: vega.Mark[], scaleSpecs: vega.Scale[]): Partial<vega.Spec> => {
 	return animationSelections
 		.map((animSelection) => {
 			let signals: vega.Signal[] = [
@@ -356,7 +360,11 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 				];
 			}
 
-			if (animSelection.bind) {
+			let marks: vega.Mark[] = [];
+			let scales: vega.Scale[] = [];
+
+			if (selectionBindsSlider(animSelection.bind)) {
+				// BindRange
 				signals = [
 					...signals,
 					{
@@ -381,12 +389,41 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 					},
 				];
 			}
+			else if (animSelection.bind === 'scales') {
+				marks = markSpecs.map((markSpec) => {
+					const encoding = getMarkEncoding(markSpec);
 
-			// TODO think about what happens if there's more than one animSelection
+					Object.keys(encoding).forEach((k) => {
+						let encodingDef = encoding[k];
+						if (Array.isArray(encodingDef)) {
+							// for production rule encodings, the encoding is an array. the last entry is the default def
+							encodingDef = encodingDef[encodingDef.length - 1];
+						}
+						if ((encodingDef as ScaleFieldValueRef).field) {
+							const {scale, field: _field} = encodingDef as ScaleFieldValueRef;
+							if (_field !== field) return;
+
+							markSpec.clip = true;
+
+							if (scale) {
+								const scaleSpec = scaleSpecs.find((s) => s.name === scale);
+								scaleSpec.domainRaw = {"signal": `${animSelection.name}["${field}"]`};
+								scales = [...scales, scaleSpec];
+							}
+						}
+					});
+
+					return markSpec;
+				});
+			}
 
 			const datumPauseSpec = compileDatumPause(animSelection);
 
-			return mergeSpecs(datumPauseSpec, {signals});
+			return mergeSpecs(datumPauseSpec, {
+				signals,
+				marks,
+				scales
+			});
 		})
 		.reduce((prev, curr) => mergeSpecs(curr, prev), {});
 };
@@ -789,7 +826,7 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 
 	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], timeEncoding)); // TODO think about what happens if there's more than one animSelection
 	vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
-	vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field));
+	vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field, vgSpec.marks, vgSpec.scales));
 	vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
 	vgSpec = mergeSpecs(vgSpec, compileKey(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
 	vgSpec = mergeSpecs(vgSpec, compileEnterExit(vlaSpec, vgSpec.marks, dataset, vlaSpec.enter, vlaSpec.exit)); // TODO need examples that actually use this to verify it works
@@ -830,7 +867,7 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 		if (vlaSpec.params) {
 			const animationSelections = getAnimationSelectionFromParams(vlaSpec.params) as ElaboratedVlAnimationSelection[];
 			if (animationSelections.length) {
-				vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field));
+				vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field, vgSpec.marks, vgSpec.scales));
 
 				if (vlaSpec.transform) {
 					const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
@@ -864,7 +901,7 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 				const nearestTimeEncoding = timeEncoding ?? vlaSpec.encoding?.time;
 
 				vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], nearestTimeEncoding));
-				vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, nearestTimeEncoding.field));
+				vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, nearestTimeEncoding.field, vgSpec.marks, vgSpec.scales));
 
 				let stackTransform: vega.Transforms[] = [];
 				if (layerSpec.mark === "bar") {

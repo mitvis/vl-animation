@@ -10,7 +10,7 @@ import {
 	VlAnimationTimeEncoding,
 	ElaboratedVlAnimationTimeEncoding,
 } from "./types";
-import {getAnimationSelectionFromParams, isParamAnimationSelection} from "./compile";
+import {getAnimationSelectionFromParams, isParamAnimationSelection, selectionBindsSlider} from "./compile";
 import { isArray } from "vega";
 import { VariableParameter } from "vega-lite/build/src/parameter";
 import { SelectionParameter } from "vega-lite/build/src/selection";
@@ -90,7 +90,7 @@ const elaborateParams = (params: (VariableParameter | SelectionParameter)[]):  (
 					easing: param.select.easing ?? "easeLinear",
 				},
 			};
-			if (param.bind) { // if there's a slider bound, compiler will also create a pause checkbox
+			if (selectionBindsSlider(param.bind)) { // if there's a slider bound, compiler will also create a pause checkbox
 				sel.select.on.filter = sel.select.on.filter ? (
 					isArray(sel.select.on.filter) ? [...sel.select.on.filter, "is_playing"] : [sel.select.on.filter, "is_playing"]
 				) : "is_playing";
