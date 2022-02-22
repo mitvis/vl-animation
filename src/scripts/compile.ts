@@ -874,13 +874,12 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 				if (layerSpec.transform) {
 					const animationFilters = getAnimationFilterTransforms(layerSpec.transform, animationSelections);
 					vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
-					vgSpec = mergeSpecs(vgSpec, compileKey(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
+					vgSpec = mergeSpecs(vgSpec, compileKey(nearestTimeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
 				}
 
 			}
 		}
 	});
-
 	return vgSpec;
 }
 
