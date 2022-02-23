@@ -182,7 +182,7 @@ const elaborateVConcatVla = (vlaSpec: VlAnimationVConcatSpec): ElaboratedVlAnima
 		...vlaSpec,
 		vconcat: vlaSpec.vconcat.map((unitVla) => {
 			return elaborateUnitVla(unitVla);
-		}),
+		}), //DWOOTTO TODO: add hconcat
 	};
 };
 

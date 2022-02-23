@@ -923,17 +923,120 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	return vgSpec;
 }
 
+function findTimeEncoding(vlaSpec, propertyToSearch = "layer"): ElaboratedVlAnimationTimeEncoding {
+	if (vlaSpec?.encoding?.time && vlaSpec.encoding.time.field) {
+		return vlaSpec.encoding.time;
+	} else {
+		// TODO generalize to multiple depth layers
+		const unitContainingTime = vlaSpec[propertyToSearch].find((layerUnitSpec) => !!layerUnitSpec?.encoding?.time);
+		if (unitContainingTime) {
+			return unitContainingTime.encoding.time;
+		}
+	}
+}
+
+function getPrimitiveMarksFromGroups(marks) {
+	let allMarks = [];
+	for (const mark of marks) {
+		if (mark.type === "group") {
+			const primitives = getPrimitiveMarksFromGroups(mark.marks);
+			allMarks = allMarks.concat(primitives);
+		} else {
+			allMarks.push(mark);
+		}
+	}
+	return allMarks;
+}
+
+function compileVConcatVlaLayers(vlaSpec: ElaboratedVlAnimationVConcatSpec): vega.Spec {
+	let allAnimationSelections: any[] = [];
+	const animationSelections = [] as ElaboratedVlAnimationSelection[];
+	const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
+	allAnimationSelections = allAnimationSelections.concat(animationSelections);
+	let sanitizedVlaSpec = sanitizeVlaSpec(vlaSpec, animationFilters) as ElaboratedVlAnimationVConcatSpec;
+	sanitizedVlaSpec.vconcat = sanitizedVlaSpec.vconcat.map((unitSpec) => {
+		const animationSelections = getAnimationSelectionFromParams(unitSpec.params) as ElaboratedVlAnimationSelection[];
+		allAnimationSelections = allAnimationSelections.concat(animationSelections);
+		const animationFilters = getAnimationFilterTransforms(unitSpec.transform, animationSelections);
+		return sanitizeVlaSpec(unitSpec, animationFilters) as ElaboratedVlAnimationUnitSpec;
+	});
+
+	let vgSpec = vl.compile(sanitizedVlaSpec as vl.TopLevelSpec).spec;
+	// for some reason vl will compile duplicate signal names for the top level param in bar chart race example
+	vgSpec.signals = vgSpec.signals
+		.map((signal) => {
+			if (signal === vgSpec.signals.find((s) => s.name === signal.name)) {
+				return signal;
+			}
+			return null;
+		})
+		.filter((x) => x);
+
+	const parentTimeEncoding = findTimeEncoding(vlaSpec, "vconcat");
+
+	vlaSpec.vconcat.forEach((layerSpec, idx) => {
+		const vConcatMarkGroup = vgSpec.marks[idx]; // vega group marks
+		const dataset = getMarkDataset(vConcatMarkGroup?.marks.find((mark) => getMarkDataset(mark)));
+
+		const timeEncoding = layerSpec.encoding?.time;
+
+		if (timeEncoding) {
+			vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, getPrimitiveMarksFromGroups(vgSpec.marks), vgSpec.scales));
+		}
+
+		if (layerSpec.params) {
+			const animationSelections = getAnimationSelectionFromParams(layerSpec.params) as ElaboratedVlAnimationSelection[];
+
+			if (animationSelections.length) {
+				const nearestTimeEncoding = timeEncoding ?? parentTimeEncoding;
+
+				vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], nearestTimeEncoding));
+				vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, nearestTimeEncoding.field, getPrimitiveMarksFromGroups(vgSpec.marks), vgSpec.scales));
+
+				let stackTransform: vega.Transforms[] = [];
+				if (layerSpec.mark === "bar") {
+					stackTransform = [...vgSpec.data.find((d) => d.name === dataset).transform];
+				}
+
+				if (layerSpec.transform) {
+					const animationFilters = getAnimationFilterTransforms(layerSpec.transform, animationSelections);
+					vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, getPrimitiveMarksFromGroups(vgSpec.marks), stackTransform));
+					vgSpec = mergeSpecs(vgSpec, compileKey(nearestTimeEncoding, dataset, getPrimitiveMarksFromGroups(vgSpec.marks), vgSpec.scales, stackTransform));
+				}
+			}
+		}
+	});
+	return vgSpec;
+}
 const compileVConcatVla = (vlaSpec: ElaboratedVlAnimationVConcatSpec): vega.Spec => {
 	// TODO
-	let vgSpec = vl.compile(vlaSpec as vl.TopLevelSpec).spec;
-	return vgSpec;
+	console.log("in compile v concat", vlaSpec);
+	let {vconcat, ...toplevelSpec} = vlaSpec;
+
+	// sanitize the
+
+	let vgSpec = vl.compile(toplevelSpec as vl.TopLevelSpec)?.spec;
+	//@ts-ignore
+	//vgSpec = vgSpec?.spec;
+	const vConcatSpecs = vlaSpec.vconcat.map((unitVla) => {
+		return compileUnitVla(unitVla); //NOTE: doesn't support nested vconcats
+	});
+
+	let mergedSpec = vgSpec;
+
+	for (const vConcatSpec of vConcatSpecs) {
+		console.log("dwootto", vConcatSpec);
+		mergedSpec = mergeSpecs(mergedSpec, vConcatSpec);
+	}
+
+	return mergedSpec;
 };
 
 const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
 	if (isLayerSpec(vlaSpec)) {
 		return compileLayerVla(vlaSpec as ElaboratedVlAnimationLayerSpec);
 	} else if (isVConcatSpec(vlaSpec)) {
-		return compileVConcatVla(vlaSpec as ElaboratedVlAnimationVConcatSpec);
+		return compileVConcatVlaLayers(vlaSpec as ElaboratedVlAnimationVConcatSpec);
 	} else {
 		return compileUnitVla(vlaSpec as ElaboratedVlAnimationUnitSpec);
 	}
