@@ -757,6 +757,7 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 
 			vgSpec = mergeSpecs(vgSpec, compileInterpolation(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
 		}
+
 		//const dataset = getMarkDataset(vgSpec.marks.find((mark) => getMarkDataset(mark)));// ERROR: this will only return first mark
 	}
 
