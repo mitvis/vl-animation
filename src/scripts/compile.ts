@@ -8,6 +8,7 @@ import {
 	ElaboratedVlAnimationUnitSpec,
 	VlAnimationSelection,
 	ElaboratedVlAnimationLayerSpec,
+	ElaboratedVlAnimationVConcatSpec,
 } from "./types";
 import {EventStream, ExprRef, isArray, isObject, isString} from "vega";
 import {VariableParameter} from "vega-lite/build/src/parameter";
@@ -28,6 +29,7 @@ import {
 import {LogicalAnd} from "vega-lite/build/src/logical";
 import {Encoding} from "vega-lite/build/src/encoding";
 import { cloneDeep } from "lodash";
+import { isLayerSpec, isVConcatSpec } from "vega-lite/build/src/spec";
 
 type ScaleFieldValueRef = {scale: vega.Field; field: vega.Field}; // ScaledValueRef
 
@@ -920,9 +922,17 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	return vgSpec;
 }
 
+const compileVConcatVla = (vlaSpec: ElaboratedVlAnimationVConcatSpec): vega.Spec => {
+	// TODO
+	let vgSpec = vl.compile(vlaSpec as vl.TopLevelSpec).spec;
+	return vgSpec;
+}
+
 const compileVla = (vlaSpec: ElaboratedVlAnimationSpec): vega.Spec => {
-	if ((vlaSpec as ElaboratedVlAnimationLayerSpec).layer) {
+	if (isLayerSpec(vlaSpec)) {
 		return compileLayerVla(vlaSpec as ElaboratedVlAnimationLayerSpec);
+	} else if (isVConcatSpec(vlaSpec)) {
+		return compileVConcatVla(vlaSpec as ElaboratedVlAnimationVConcatSpec);
 	} else {
 		return compileUnitVla(vlaSpec as ElaboratedVlAnimationUnitSpec);
 	}

@@ -1,6 +1,6 @@
 import * as vega from "vega";
 import {Encoding} from "vega-lite/build/src/encoding";
-import {LayerSpec, TopLevel, UnitSpec} from "vega-lite/build/src/spec";
+import {GenericVConcatSpec, LayerSpec, TopLevel, UnitSpec} from "vega-lite/build/src/spec";
 import {PointSelectionConfig, SelectionParameter} from "vega-lite/build/src/selection";
 import {VariableParameter} from "vega-lite/build/src/parameter";
 import {FieldPredicate} from "vega-lite/build/src/predicate";
@@ -78,8 +78,10 @@ export type VlAnimationLayerSpec = Override<
 	}
 >;
 
+export type VlAnimationVConcatSpec = GenericVConcatSpec<VlAnimationUnitSpec>;
+
 // This is the type of an initial input json spec, can be either unit or have layers (written by the user)
-export type VlAnimationSpec = VlAnimationLayerSpec | VlAnimationUnitSpec;
+export type VlAnimationSpec = VlAnimationLayerSpec | VlAnimationUnitSpec | VlAnimationVConcatSpec;
 
 /////////////////////////// Elaborated Specs  ///////////////////////////
 export type ElaboratedVlAnimationTimeScale = (
@@ -149,5 +151,7 @@ export type ElaboratedVlAnimationLayerSpec = Override<
 	}
 >;
 
+export type ElaboratedVlAnimationVConcatSpec = GenericVConcatSpec<ElaboratedVlAnimationUnitSpec>;
+
 // the elaborated type we create from the input and pass to the compiler
-export type ElaboratedVlAnimationSpec = ElaboratedVlAnimationUnitSpec | TopLevel<ElaboratedVlAnimationLayerSpec>;
+export type ElaboratedVlAnimationSpec = ElaboratedVlAnimationUnitSpec | TopLevel<ElaboratedVlAnimationLayerSpec> | ElaboratedVlAnimationVConcatSpec;

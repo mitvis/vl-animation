@@ -9,13 +9,16 @@ import {
 	ElaboratedVlAnimationTimeScale,
 	VlAnimationTimeEncoding,
 	ElaboratedVlAnimationTimeEncoding,
+	VlAnimationVConcatSpec,
+	ElaboratedVlAnimationVConcatSpec,
 } from "./types";
 import {getAnimationSelectionFromParams, isParamAnimationSelection, selectionBindsSlider} from "./compile";
 import { isArray } from "vega";
 import { VariableParameter } from "vega-lite/build/src/parameter";
 import { SelectionParameter } from "vega-lite/build/src/selection";
+import { isLayerSpec, isVConcatSpec } from "vega-lite/build/src/spec";
 
-const mergeVlaSpecs = (vlaSpec: ElaboratedVlAnimationSpec, vlaPartialSpec: Partial<ElaboratedVlAnimationSpec>): ElaboratedVlAnimationSpec => {
+const mergeVlaSpecs = (vlaSpec: ElaboratedVlAnimationUnitSpec | ElaboratedVlAnimationLayerSpec, vlaPartialSpec: Partial<ElaboratedVlAnimationUnitSpec | ElaboratedVlAnimationLayerSpec>): ElaboratedVlAnimationSpec => {
 	if (vlaPartialSpec.params) {
 		const newParamNames = vlaPartialSpec.params.map((s) => s.name);
 		vlaSpec = {
@@ -166,13 +169,20 @@ const elaborateLayerVla = (vlaLayerSpec: VlAnimationLayerSpec): ElaboratedVlAnim
 	return elaboratedSpec;
 }
 
+const elaborateVConcatVla = (vlaSpec: VlAnimationVConcatSpec): ElaboratedVlAnimationVConcatSpec => {
+	return {
+		...vlaSpec,
+		vconcat: vlaSpec.vconcat.map(unitVla => {
+			return elaborateUnitVla(unitVla);
+		})
+	}
+}
+
 const elaborateVla = (vlaSpec: VlAnimationSpec): ElaboratedVlAnimationSpec => {
-	// console.log("in elaborate!");
-	if ((vlaSpec as VlAnimationLayerSpec).layer) {
-		// const elaborated = traverseTree(vlaSpec, {field: null}, 0);
-		// console.log("elaborated", elaborated);
-		// return elaborated;
+	if (isLayerSpec(vlaSpec)) {
 		return elaborateLayerVla(vlaSpec as VlAnimationLayerSpec);
+	} else if (isVConcatSpec(vlaSpec)) {
+		return elaborateVConcatVla(vlaSpec as VlAnimationVConcatSpec);
 	} else {
 		return elaborateUnitVla(vlaSpec as VlAnimationUnitSpec);
 	}
