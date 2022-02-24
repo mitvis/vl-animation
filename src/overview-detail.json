@@ -1,0 +1,48 @@
+{
+  "data": {"url": "data/sp500.csv"},
+  "vconcat": [{
+    "width": 480,
+    "mark": "area",
+    "encoding": {
+      "x": {
+        "field": "date",
+        "type": "temporal",
+        "scale": {"domain": {"param": "brush"}},
+        "axis": {"title": ""}
+      },
+      "y": {"field": "price", "type": "quantitative"}
+    }
+  }, {
+    "width": 480,
+    "height": 60,
+    "mark": "area",
+    "params": [{
+      "name": "brush",
+      "select": {
+        "type": "point",
+        "on": "timer",
+        "predicate": {
+          "and": [
+            {"field": "date", "lte": {"expr": "anim_value"}},
+            {"field": "date", "gte": {"expr": "anim_value - 1"}},
+          ]
+        },
+        "bind": "scales"
+      }
+    }],
+    "encoding": {
+      "x": {
+        "field": "date",
+        "type": "temporal"
+      },
+      "y": {
+        "field": "price",
+        "type": "quantitative",
+        "axis": {"tickCount": 3, "grid": false}
+      },
+      "time": {
+        "field": "date"
+      }
+    }
+  }]
+}

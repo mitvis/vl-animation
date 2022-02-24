@@ -127,13 +127,6 @@ export const selectionBindsSlider = (bind: vega.BindRange | "scales"): bind is v
 };
 
 const mergeSpecs = (vgSpec: vega.Spec, vgPartialSpec: Partial<vega.Spec>): vega.Spec => {
-	if (vgPartialSpec.scales) {
-		const newScaleNames = vgPartialSpec.scales.map((s) => s.name);
-		vgSpec = {
-			...vgSpec,
-			scales: (vgSpec.scales ?? []).filter((s) => !newScaleNames.includes(s.name)).concat(vgPartialSpec.scales),
-		};
-	}
 	if (vgPartialSpec.signals) {
 		const newSignalNames = vgPartialSpec.signals.map((s) => s.name);
 		vgSpec = {
@@ -165,10 +158,41 @@ const mergeSpecs = (vgSpec: vega.Spec, vgPartialSpec: Partial<vega.Spec>): vega.
 	return vgSpec;
 };
 
+const mergeVConcatSpecs = (vgSpec: vega.Spec, vgGroupSpec: vega.GroupMark, vgPartialSpec: Partial<vega.Spec>, topLevelSignals?: boolean) => {
+	let {scales, data, signals, ...vgPartialGroupSpec} = vgPartialSpec;
+	if (scales) {
+		vgSpec = mergeSpecs(vgSpec, {scales});
+	}
+	if (data) {
+		vgSpec = mergeSpecs(vgSpec, {data});
+	}
+	if (topLevelSignals) {
+		if (signals) {
+			vgSpec = mergeSpecs(vgSpec, {signals});
+		}
+		vgGroupSpec = mergeSpecs(vgGroupSpec, vgPartialGroupSpec) as vega.GroupMark;
+	}
+	else {
+		vgGroupSpec = mergeSpecs(vgGroupSpec, {...vgPartialGroupSpec, signals}) as vega.GroupMark;
+	}
+
+	vgSpec = {
+		...vgSpec,
+		marks: (vgSpec.marks ?? []).filter((s) => s.name !== vgGroupSpec.name).concat(vgGroupSpec)
+	}
+	return {
+		vgSpec,
+		vgGroupSpec
+	};
+}
+
 const throttleMs = 1000 / 60;
 
 const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection, timeEncoding: ElaboratedVlAnimationTimeEncoding): Partial<vega.Spec> => {
-	const pauseExpr = animSelection.select.on.filter ? (isArray(animSelection.select.on.filter) ? animSelection.select.on.filter.join(" && ") : animSelection.select.on.filter) : "true";
+	let pauseExpr = animSelection.select.on.filter ? (isArray(animSelection.select.on.filter) ? animSelection.select.on.filter.join(" && ") : animSelection.select.on.filter) : "true";
+	if (animSelection.select.pause) {
+		pauseExpr += " && is_playing_datum_pause"
+	}
 
 	const pauseEventStreams = animSelection.select.on.filter
 		? isArray(animSelection.select.on.filter)
@@ -196,7 +220,7 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection, tim
 			on: [
 				{
 					events: {type: "timer", throttle: throttleMs},
-					update: `${pauseExpr} && is_playing_datum_pause ? (anim_clock + (now() - last_tick_at) > max_range_extent ? 0 : anim_clock + (now() - last_tick_at)) : anim_clock`,
+					update: `${pauseExpr} ? (anim_clock + (now() - last_tick_at) > max_range_extent ? 0 : anim_clock + (now() - last_tick_at)) : anim_clock`,
 				},
 				...bindStream,
 			],
@@ -264,14 +288,6 @@ const compileDatumPause = (animSelection: ElaboratedVlAnimationSelection): Parti
 						update: "now()",
 					},
 				],
-			},
-		];
-	} else {
-		signals = [
-			...signals,
-			{
-				name: "is_playing_datum_pause",
-				init: "true",
 			},
 		];
 	}
@@ -924,8 +940,41 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 }
 
 const compileVConcatVla = (vlaSpec: ElaboratedVlAnimationVConcatSpec): vega.Spec => {
-	// TODO
 	let vgSpec = vl.compile(vlaSpec as vl.TopLevelSpec).spec;
+
+	vlaSpec.vconcat.forEach((unitVla, index) => {
+		const animationSelections = getAnimationSelectionFromParams(unitVla.params) as ElaboratedVlAnimationSelection[];
+		if (!animationSelections.length) {
+			return;
+		}
+		const animationFilters = getAnimationFilterTransforms(unitVla.transform, animationSelections);
+
+		// const sanitizedVlaSpec = sanitizeVlaSpec(unitVla, animationFilters);
+
+		let vgGroupSpec = vgSpec.marks[index] as vega.GroupMark;
+
+		const timeEncoding = unitVla.encoding.time;
+		if (timeEncoding) {
+			const dataset = getMarkDataset(vgGroupSpec.marks.find((mark) => getMarkDataset(mark)));
+
+			/*
+			* stack transform controls the layout of bar charts. if it exists, we need to copy
+			* the transform into derived animation datasets so that layout still works :(
+			*/
+			let stackTransform: vega.Transforms[] = [];
+			if (unitVla.mark === "bar") {
+				stackTransform = [...vgSpec.data.find((d) => d.name === dataset).transform];
+			}
+
+			({vgSpec, vgGroupSpec} = mergeVConcatSpecs(vgSpec, vgGroupSpec, createAnimationClock(animationSelections[0], timeEncoding), true));
+			({vgSpec, vgGroupSpec} = mergeVConcatSpecs(vgSpec, vgGroupSpec, compileTimeScale(timeEncoding, dataset, vgGroupSpec.marks, vgSpec.scales), true));
+			({vgSpec, vgGroupSpec} = mergeVConcatSpecs(vgSpec, vgGroupSpec, compileAnimationSelections(animationSelections, timeEncoding.field, vgGroupSpec.marks, vgSpec.scales)));
+			({vgSpec, vgGroupSpec} = mergeVConcatSpecs(vgSpec, vgGroupSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgGroupSpec.marks, stackTransform)));
+			({vgSpec, vgGroupSpec} = mergeVConcatSpecs(vgSpec, vgGroupSpec, compileKey(timeEncoding, dataset, vgGroupSpec.marks, vgSpec.scales, stackTransform), true));
+		}
+
+	});
+
 	return vgSpec;
 };
 
