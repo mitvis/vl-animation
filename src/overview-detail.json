@@ -19,12 +19,12 @@
     "params": [{
       "name": "brush",
       "select": {
-        "type": "point",
+        "type": "interval", "encodings": ["x"],
         "on": "timer",
         "predicate": {
           "and": [
-            {"field": "date", "lte": {"expr": "anim_value"}},
-            {"field": "date", "gte": {"expr": "anim_value - 1"}},
+            {"field": "date", "gte": {"expr": "anim_value"}},
+            {"field": "date", "lte": {"expr": "anim_value + 31536000000"}},
           ]
         },
         "bind": "scales"
@@ -41,7 +41,11 @@
         "axis": {"tickCount": 3, "grid": false}
       },
       "time": {
-        "field": "date"
+        "field": "date",
+        "scale": {
+          "type": "linear",
+          "range": [0, 60000]
+        }
       }
     }
   }]

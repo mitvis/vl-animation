@@ -12,7 +12,7 @@ import {
 } from "./types";
 import {EventStream, ExprRef, isArray, isObject, isString} from "vega";
 import {VariableParameter} from "vega-lite/build/src/parameter";
-import {SelectionParameter, isSelectionParameter, PointSelectionConfig} from "vega-lite/build/src/selection";
+import {SelectionParameter, isSelectionParameter, PointSelectionConfig, BaseSelectionConfig} from "vega-lite/build/src/selection";
 import {Transform, FilterTransform} from "vega-lite/build/src/transform";
 import {
 	FieldEqualPredicate,
@@ -37,11 +37,8 @@ export const isParamAnimationSelection = (param: any): param is VlAnimationSelec
 	if (!isSelectionParameter(param)) {
 		return false;
 	}
-	const pointSelect = param.select as PointSelectionConfig;
-	if (pointSelect.type !== "point") {
-		return false;
-	}
-	if (pointSelect.on === "timer" || (pointSelect.on as EventStream).type === "timer") {
+	const select = param.select as BaseSelectionConfig;
+	if (select.on === "timer" || (select.on as EventStream).type === "timer") {
 		return true;
 	}
 	return false;
@@ -297,7 +294,7 @@ const compileDatumPause = (animSelection: ElaboratedVlAnimationSelection): Parti
 	};
 };
 
-const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSelection[], field: string, markSpecs: vega.Mark[], scaleSpecs: vega.Scale[]): Partial<vega.Spec> => {
+const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSelection[], field: string, markSpecs: vega.Mark[], scaleSpecs: vega.Scale[], vconcatIndex?: string): Partial<vega.Spec> => {
 	return animationSelections
 		.map((animSelection) => {
 			let signals: vega.Signal[] = [
@@ -347,7 +344,7 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 						on: [
 							{
 								events: {signal: "anim_value"},
-								update: `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [${and ? and.map(getPredValue).join(", ") : getPredValue(predicate as FieldPredicate)}]}`,
+								update: `{unit: "${vconcatIndex ? `concat_${vconcatIndex}` : ''}", fields: ${animSelection.name}_tuple_fields, values: [${and ? and.map(getPredValue).join(", ") : getPredValue(predicate as FieldPredicate)}]}`,
 								force: true,
 							},
 						],
@@ -370,12 +367,23 @@ const compileAnimationSelections = (animationSelections: ElaboratedVlAnimationSe
 						on: [
 							{
 								events: [{signal: "eased_anim_clock"}, {signal: "anim_value"}],
-								update: `{unit: "", fields: ${animSelection.name}_tuple_fields, values: [anim_value ? anim_value : min_extent]}`,
+								update: `{unit: "${vconcatIndex ? `concat_${vconcatIndex}` : ''}", fields: ${animSelection.name}_tuple_fields, values: [anim_value ? anim_value : min_extent]}`,
 								force: true,
 							},
 						],
 					},
 				];
+			}
+
+			// this is for overview + detail example with a brush
+			if (animSelection.select.type === 'interval' && vconcatIndex) {
+				signals = [
+					...signals,
+					{
+						name: `${animSelection.name}_x`,
+						update: `data('${animSelection.name}_store').length ? [scale('concat_${vconcatIndex}_x', brush['${field}'][0]), scale('concat_${vconcatIndex}_x', brush['${field}'][1])] : [0, 0]`
+					}
+				]
 			}
 
 			let marks: vega.Mark[] = [];
@@ -968,7 +976,7 @@ const compileVConcatVla = (vlaSpec: ElaboratedVlAnimationVConcatSpec): vega.Spec
 
 			({vgSpec, vgGroupSpec} = mergeVConcatSpecs(vgSpec, vgGroupSpec, createAnimationClock(animationSelections[0], timeEncoding), true));
 			({vgSpec, vgGroupSpec} = mergeVConcatSpecs(vgSpec, vgGroupSpec, compileTimeScale(timeEncoding, dataset, vgGroupSpec.marks, vgSpec.scales), true));
-			({vgSpec, vgGroupSpec} = mergeVConcatSpecs(vgSpec, vgGroupSpec, compileAnimationSelections(animationSelections, timeEncoding.field, vgGroupSpec.marks, vgSpec.scales)));
+			({vgSpec, vgGroupSpec} = mergeVConcatSpecs(vgSpec, vgGroupSpec, compileAnimationSelections(animationSelections, timeEncoding.field, vgGroupSpec.marks, vgSpec.scales, String(index))));
 			({vgSpec, vgGroupSpec} = mergeVConcatSpecs(vgSpec, vgGroupSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgGroupSpec.marks, stackTransform)));
 			({vgSpec, vgGroupSpec} = mergeVConcatSpecs(vgSpec, vgGroupSpec, compileKey(timeEncoding, dataset, vgGroupSpec.marks, vgSpec.scales, stackTransform), true));
 		}
