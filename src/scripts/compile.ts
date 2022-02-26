@@ -145,6 +145,18 @@ export const selectionBindsSlider = (bind: vega.BindRange | "scales"): bind is v
 	return bind !== "scales" && isObject(bind) && bind.input === "range";
 };
 
+const scaleHasDiscreteRange = (scaleSpec: vega.Scale): boolean => {
+	switch (scaleSpec.type) {
+		case "ordinal":
+		case "bin-ordinal":
+		case "quantile":
+		case "quantize":
+		case "threshold":
+			return true; // if the scale has a discrete output range, don't lerp with it
+	}
+	return false;
+}
+
 const mergeSpecs = (vgSpec: vega.Spec, vgPartialSpec: Partial<vega.Spec>): vega.Spec => {
 	if (vgPartialSpec.scales) {
 		const newScaleNames = vgPartialSpec.scales.map((s) => s.name);
@@ -549,14 +561,7 @@ const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: st
 
 						if (scale) {
 							const scaleSpec = scaleSpecs.find((s) => s.name === scale);
-							switch (scaleSpec.type) {
-								case "ordinal":
-								case "bin-ordinal":
-								case "quantile":
-								case "quantize":
-								case "threshold":
-									return; // if the scale has a discrete output range, don't lerp with it
-							}
+							if (scaleHasDiscreteRange(scaleSpec)) return;
 
 							if (timeEncoding.rescale) {
 								// rescale: the scale updates based on the animation frame
@@ -703,6 +708,7 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
 						if (scale) {
 							// rescale: the scale updates based on the animation frame
 							let scaleSpec = scaleSpecs.find((s) => s.name === scale);
+							if (scaleHasDiscreteRange(scaleSpec)) return;
 							scaleSpec = setScaleDomainDataset(scaleSpec, `${dataset}_curr`);;
 							scales = scales.filter((s) => s.name !== scaleSpec.name).concat([scaleSpec]);
 						}
