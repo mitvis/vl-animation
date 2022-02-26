@@ -10,7 +10,7 @@ import {
 	ElaboratedVlAnimationLayerSpec,
 	ElaboratedVlAnimationVConcatSpec,
 } from "./types";
-import {EventStream, ExprRef, isArray, isObject, isString, scale} from "vega";
+import {EventStream, ExprRef, isArray, isObject, isString} from "vega";
 import {VariableParameter} from "vega-lite/build/src/parameter";
 import {SelectionParameter, isSelectionParameter, PointSelectionConfig} from "vega-lite/build/src/selection";
 import {Transform, FilterTransform} from "vega-lite/build/src/transform";
