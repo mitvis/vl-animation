@@ -101,6 +101,25 @@ const setMarkEncoding = (markSpec: vega.Mark, key: string, value: any): vega.Mar
 	return markSpec;
 };
 
+const setScaleDomainDataset = (scaleSpec: vega.Scale, dataset: string): vega.Scale => {
+	const fields = (scaleSpec.domain as vega.ScaleMultiDataRef).fields;
+	if (fields) {
+		if ((scaleSpec.domain as vega.ScaleMultiFieldsRef).data) {
+			(scaleSpec.domain as vega.ScaleMultiFieldsRef).data = dataset;
+		}
+		else {
+			(scaleSpec.domain as vega.ScaleMultiDataRef).fields = fields.map(dataRef => {
+				(dataRef as vega.ScaleDataRef).data = dataset;
+				return dataRef;
+			})
+		}
+	}
+	else {
+		(scaleSpec.domain as vega.ScaleDataRef).data = dataset;
+	}
+	return scaleSpec;
+}
+
 const predicateToTupleType = (predicate: FieldPredicate) => {
 	if ((predicate as FieldEqualPredicate).equal) {
 		return "E";
@@ -544,9 +563,9 @@ const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: st
 								const scaleNextName = scaleSpec.name + "_next";
 								if (!scaleSpecs.find((s) => s.name === scaleNextName) && !scales.find((s) => s.name === scaleNextName)) {
 									// if it doesn't already exist, create a "next" scale for the current scale
-									const scaleSpecNext = cloneDeep(scaleSpec);
+									let scaleSpecNext = cloneDeep(scaleSpec);
 									scaleSpecNext.name = scaleNextName;
-									(scaleSpecNext.domain as vega.ScaleDataRef).data = dataset_next;
+									scaleSpecNext = setScaleDomainDataset(scaleSpecNext, dataset_next) as any;
 									scales = [...scales, scaleSpecNext];
 								}
 							}
@@ -682,10 +701,9 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
 						const {scale} = encodingDef as ScaleFieldValueRef;
 
 						if (scale) {
-							const scaleSpec = scaleSpecs.find((s) => s.name === scale);
-
 							// rescale: the scale updates based on the animation frame
-							(scaleSpec.domain as vega.ScaleDataRef).data = `${dataset}_curr`;
+							let scaleSpec = scaleSpecs.find((s) => s.name === scale);
+							scaleSpec = setScaleDomainDataset(scaleSpec, `${dataset}_curr`);;
 							scales = scales.filter((s) => s.name !== scaleSpec.name).concat([scaleSpec]);
 						}
 					}
@@ -876,11 +894,29 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 				if (vlaSpec.transform) {
 					const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
 					let stackTransform: vega.Transforms[] = [];
+					let hasBar = false;
 					vlaSpec.layer.forEach((layerSpec) => {
 						if (layerSpec.mark === "bar") {
 							stackTransform = stackTransform.concat(vgSpec.data.find((d) => d.name === dataset).transform);
+							hasBar = true;
 						}
 					});
+					if (hasBar) {
+						// this is kind of a gross hardcode but needed to make text mark layer work with racing bar chart
+						vgSpec.marks = vgSpec.marks.map(markSpec => {
+							return setMarkDataset(markSpec, dataset);
+						})
+						if ((vlaSpec.encoding?.y as any)?.sort) {
+							vgSpec.scales = vgSpec.scales.map(scaleSpec => {
+								if (scaleSpec.name === 'y') {
+									if ((scaleSpec.domain as any).sort) {
+										(scaleSpec.domain as any).sort = { ...(vlaSpec.encoding.y as any).sort, "op": "sum"}
+									}
+								}
+								return scaleSpec;
+							})
+						}
+					}
 					vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
 					vgSpec = mergeSpecs(vgSpec, compileKey(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
 				}
