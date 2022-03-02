@@ -925,37 +925,37 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 			const animationSelections = getAnimationSelectionFromParams(vlaSpec.params) as ElaboratedVlAnimationSelection[];
 			if (animationSelections.length) {
 				vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field, vgSpec.marks, vgSpec.scales));
+			}
+		}
 
-				if (vlaSpec.transform) {
-					const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
-					let stackTransform: vega.Transforms[] = [];
-					let hasBar = false;
-					vlaSpec.layer.forEach((layerSpec) => {
-						if (layerSpec.mark === "bar") {
-							stackTransform = stackTransform.concat(vgSpec.data.find((d) => d.name === dataset).transform);
-							hasBar = true;
+		if (vlaSpec.transform) {
+			const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, allAnimationSelections);
+			let stackTransform: vega.Transforms[] = [];
+			let hasBar = false;
+			vlaSpec.layer.forEach((layerSpec) => {
+				if (layerSpec.mark === "bar") {
+					stackTransform = stackTransform.concat(vgSpec.data.find((d) => d.name === dataset).transform);
+					hasBar = true;
+				}
+			});
+			if (hasBar) {
+				// this is kind of a gross hardcode but needed to make text mark layer work with racing bar chart
+				vgSpec.marks = vgSpec.marks.map(markSpec => {
+					return setMarkDataset(markSpec, dataset);
+				})
+				if ((vlaSpec.encoding?.y as any)?.sort) {
+					vgSpec.scales = vgSpec.scales.map(scaleSpec => {
+						if (scaleSpec.name === 'y') {
+							if ((scaleSpec.domain as any).sort) {
+								(scaleSpec.domain as any).sort = { ...(vlaSpec.encoding.y as any).sort, "op": "sum"}
+							}
 						}
-					});
-					if (hasBar) {
-						// this is kind of a gross hardcode but needed to make text mark layer work with racing bar chart
-						vgSpec.marks = vgSpec.marks.map(markSpec => {
-							return setMarkDataset(markSpec, dataset);
-						})
-						if ((vlaSpec.encoding?.y as any)?.sort) {
-							vgSpec.scales = vgSpec.scales.map(scaleSpec => {
-								if (scaleSpec.name === 'y') {
-									if ((scaleSpec.domain as any).sort) {
-										(scaleSpec.domain as any).sort = { ...(vlaSpec.encoding.y as any).sort, "op": "sum"}
-									}
-								}
-								return scaleSpec;
-							})
-						}
-					}
-					vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
-					vgSpec = mergeSpecs(vgSpec, compileKey(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
+						return scaleSpec;
+					})
 				}
 			}
+			vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, allAnimationSelections, dataset, vgSpec.marks, stackTransform));
+			vgSpec = mergeSpecs(vgSpec, compileKey(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
 		}
 	}
 
@@ -968,6 +968,14 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 		if (timeEncoding) {
 			vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
 			vgSpec = mergeSpecs(vgSpec, createAnimationClock(allAnimationSelections[0], timeEncoding));
+
+			if (vlaSpec.params) {
+				const animationSelections = getAnimationSelectionFromParams(vlaSpec.params) as ElaboratedVlAnimationSelection[];
+
+				if (animationSelections.length) {
+					vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field, vgSpec.marks, vgSpec.scales));
+				}
+			}
 		}
 
 		if (layerSpec.params) {
@@ -976,18 +984,20 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 			if (animationSelections.length) {
 				const nearestTimeEncoding = timeEncoding ?? vlaSpec.encoding?.time;
 				vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, nearestTimeEncoding.field, vgSpec.marks, vgSpec.scales));
-
-				let stackTransform: vega.Transforms[] = [];
-				if (layerSpec.mark === "bar") {
-					stackTransform = [...vgSpec.data.find((d) => d.name === dataset).transform];
-				}
-
-				if (layerSpec.transform) {
-					const animationFilters = getAnimationFilterTransforms(layerSpec.transform, animationSelections);
-					vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
-					vgSpec = mergeSpecs(vgSpec, compileKey(nearestTimeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
-				}
 			}
+		}
+
+		if (layerSpec.transform) {
+			const nearestTimeEncoding = timeEncoding ?? vlaSpec.encoding?.time;
+
+			let stackTransform: vega.Transforms[] = [];
+			if (layerSpec.mark === "bar") {
+				stackTransform = [...vgSpec.data.find((d) => d.name === dataset).transform];
+			}
+
+			const animationFilters = getAnimationFilterTransforms(layerSpec.transform, allAnimationSelections);
+			vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, allAnimationSelections, dataset, vgSpec.marks, stackTransform));
+			vgSpec = mergeSpecs(vgSpec, compileKey(nearestTimeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
 		}
 	});
 	return vgSpec;
