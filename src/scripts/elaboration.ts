@@ -11,12 +11,14 @@ import {
 	ElaboratedVlAnimationTimeEncoding,
 	VlAnimationVConcatSpec,
 	ElaboratedVlAnimationVConcatSpec,
+	ElaboratedVlAnimationKey,
 } from "./types";
 import {getAnimationSelectionFromParams, isParamAnimationSelection, selectionBindsSlider} from "./compile";
 import {isArray} from "vega";
 import {VariableParameter} from "vega-lite/build/src/parameter";
 import {SelectionParameter} from "vega-lite/build/src/selection";
 import {isLayerSpec, isVConcatSpec} from "vega-lite/build/src/spec";
+import { ScaleFieldDef } from "vega-lite/build/src/channeldef";
 
 const mergeVlaSpecs = (
 	vlaSpec: ElaboratedVlAnimationUnitSpec | ElaboratedVlAnimationLayerSpec,
@@ -42,7 +44,7 @@ const paramsContainAnimationSelection = (params: any[]): boolean => {
 	return isArray(params) && getAnimationSelectionFromParams(params as any).length > 0;
 };
 
-const elaborateTimeEncoding = (timeEncoding: VlAnimationTimeEncoding): ElaboratedVlAnimationTimeEncoding => {
+const elaborateTimeEncoding = (timeEncoding: VlAnimationTimeEncoding, vlaSpec?: VlAnimationSpec): ElaboratedVlAnimationTimeEncoding => {
 	const scale = timeEncoding.scale ?? {};
 
 	const elaboratedScaleType = scale.type ?? ((scale.range as any)?.step ? "band" : scale.domain ? "linear" : "band");
@@ -52,18 +54,72 @@ const elaborateTimeEncoding = (timeEncoding: VlAnimationTimeEncoding): Elaborate
 		range: scale.range ?? (elaboratedScaleType === "linear" ? [0, 5000] : {step: 500}),
 	} as ElaboratedVlAnimationTimeScale;
 
+	let elaboratedKey: ElaboratedVlAnimationKey | false = timeEncoding.key
+		? {
+				field: timeEncoding.key.field,
+				loop: timeEncoding.key?.loop ?? false,
+			}
+		: (false as false);
+	if (vlaSpec) {
+		elaboratedKey = elaborateKey(elaboratedKey, vlaSpec);
+	}
+
 	return {
 		...timeEncoding,
 		scale: elaboratedScale,
-		key: timeEncoding.key
-			? {
-					field: timeEncoding.key.field,
-					loop: timeEncoding.key?.loop ?? false,
-			  }
-			: (false as false),
+		key: elaboratedKey,
 		rescale: timeEncoding.rescale ?? false,
 	};
 };
+
+const elaborateKey = (key: ElaboratedVlAnimationKey | false, vlaSpec: VlAnimationSpec) => {
+	if (!key) {
+		const vlaUnitSpec = vlaSpec as VlAnimationUnitSpec;
+		const vlaLayerSpec = vlaSpec as VlAnimationLayerSpec;
+		if (vlaUnitSpec.mark === 'bar' || vlaLayerSpec.layer && vlaLayerSpec.layer.some(x => x.mark === 'bar')) { // this is super overfitted sue me
+			const x = (vlaUnitSpec.encoding.x as ScaleFieldDef<any>);
+			const y = (vlaUnitSpec.encoding.y as ScaleFieldDef<any>);
+			if (x.type && x.field && x.type === 'nominal') {
+				return {
+					field: x.field,
+					loop: false
+				}
+			}
+			if (y.type && y.field && y.type === 'nominal') {
+				return {
+					field: y.field,
+					loop: false
+				}
+			}
+		}
+		if (vlaUnitSpec.encoding?.color) {
+			const colorSF = vlaUnitSpec.encoding.color as ScaleFieldDef<any>;
+			if (colorSF.field) {
+				return {
+					field: colorSF.field,
+					loop: false
+				}
+			}
+			const colorCond = vlaUnitSpec.encoding.color.condition;
+			if (colorCond && (colorCond as any).field) {
+				return {
+					field: (colorCond as any).field,
+					loop: false
+				}
+			}
+		}
+		if (vlaUnitSpec.encoding?.detail) {
+			const detail = vlaUnitSpec.encoding.detail as ScaleFieldDef<any>;
+			if (detail.field) {
+				return {
+					field: detail.field,
+					loop: false
+				}
+			}
+		}
+	}
+	return key;
+}
 
 const elaborateDefaultSelection = (layerId: string = "0"): Partial<ElaboratedVlAnimationSpec> => {
 	const param: ElaboratedVlAnimationSelection = {
@@ -121,7 +177,7 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimati
 		...vlaUnitSpec,
 		encoding: {
 			...vlaUnitSpec.encoding,
-			time: elaborateTimeEncoding(vlaUnitSpec.encoding.time),
+			time: elaborateTimeEncoding(vlaUnitSpec.encoding.time, vlaUnitSpec),
 		},
 	};
 
@@ -141,7 +197,7 @@ const elaborateLayerVla = (vlaLayerSpec: VlAnimationLayerSpec): ElaboratedVlAnim
 			? elaborateTimeEncoding({
 					...vlaLayerSpec.encoding?.time,
 					...layerSpec.encoding?.time,
-			  })
+			  }, layerSpec)
 			: undefined;
 
 		let elaboratedLayerSpec: ElaboratedVlAnimationUnitSpec = {
@@ -163,7 +219,7 @@ const elaborateLayerVla = (vlaLayerSpec: VlAnimationLayerSpec): ElaboratedVlAnim
 		encoding: vlaLayerSpec.encoding
 			? {
 					...vlaLayerSpec.encoding,
-					time: vlaLayerSpec.encoding?.time && vlaLayerSpec.layer.every((layerSpec) => !layerSpec.encoding?.time) ? elaborateTimeEncoding(vlaLayerSpec.encoding?.time) : undefined,
+					time: vlaLayerSpec.encoding?.time && vlaLayerSpec.layer.every((layerSpec) => !layerSpec.encoding?.time) ? elaborateTimeEncoding(vlaLayerSpec.encoding?.time, vlaLayerSpec) : undefined,
 			  }
 			: undefined,
 		params: vlaLayerSpec.params ? elaborateParams(vlaLayerSpec.params) : undefined,

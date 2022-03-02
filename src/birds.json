@@ -75,9 +75,6 @@
         "range": {
           "step": 100
         }
-      },
-      "continuity": {
-        "field": "species"
       }
     }
   }

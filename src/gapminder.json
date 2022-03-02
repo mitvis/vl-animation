@@ -16,10 +16,7 @@
       "type": "quantitative"
     },
     "time": {
-      "field": "year",
-      "key": {
-        "field": "country"
-      }
+      "field": "year"
     }
   }
 }

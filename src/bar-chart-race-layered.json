@@ -25,9 +25,6 @@
                 "type": "band",
                 "range": [0, 10000]
             },
-            "key": {
-                "field": "name"
-            },
             "rescale": true
         }
     },
@@ -39,9 +36,9 @@
           "mark": {
             "type": "text",
             "align": "left",
-            "baseline": "top",
+            "baseline": "middle",
             "dx": 3,
-            "dy": 4
+            "dy": 9
           },
           "encoding": {
               "text": {"field": "name"}

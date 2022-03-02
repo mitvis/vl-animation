@@ -38,9 +38,6 @@
             "scale": {
                 "type": "band",
                 "range": { "step": 50 }
-            },
-            "key": {
-                "field": "country"
             }
         }
     },

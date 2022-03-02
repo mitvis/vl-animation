@@ -14,16 +14,14 @@
         "y": {
             "field": "name",
             "type": "nominal",
-            "sort": { "field": "value", "order": "descending" }
+            "sort": { "field": "value", "order": "descending" },
+            "axis": false
         },
         "time": {
             "field": "date",
             "scale": {
                 "type": "band",
                 "range": [0, 10000]
-            },
-            "key": {
-              "field": "name"
             },
             "rescale": true
         }
