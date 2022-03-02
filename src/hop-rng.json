@@ -1,0 +1,24 @@
+{
+  "data": {
+    "sequence": {
+      "start": 0,
+      "stop": 100,
+      "step": 1,
+      "as": "t"
+    }
+  },
+  "transform": [
+    {
+      "calculate": "sampleNormal()",
+      "as": "normal"
+    }
+  ],
+  "mark": "tick",
+  "encoding": {
+    "y": {
+      "field": "normal",
+      "type": "quantitative"
+    },
+    "time": { "field": "t" },
+  }
+}
