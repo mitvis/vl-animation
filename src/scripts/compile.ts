@@ -49,8 +49,8 @@ export const getAnimationSelectionFromParams = (params: (VariableParameter | Sel
 };
 
 const getAnimationFilterTransforms = (transform: Transform[], animSelections: VlAnimationSelection[]): FilterTransform[] => {
-	return (transform ?? []).filter((transform) => {
-		return (transform as FilterTransform).filter && animSelections.some((s) => ((transform as FilterTransform).filter as ParameterPredicate).param?.includes(s.name));
+	return (transform ?? []).filter((t) => {
+		return (t as FilterTransform).filter && animSelections.some((s) => ((t as FilterTransform).filter as ParameterPredicate).param?.includes(s.name));
 	}) as FilterTransform[];
 };
 
@@ -887,13 +887,18 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	let allAnimationSelections: any[] = [];
 	const animationSelections = getAnimationSelectionFromParams(vlaSpec.params) as ElaboratedVlAnimationSelection[];
-	const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
 	allAnimationSelections = allAnimationSelections.concat(animationSelections);
-	let sanitizedVlaSpec = sanitizeVlaSpec(vlaSpec, animationFilters) as ElaboratedVlAnimationLayerSpec;
-	sanitizedVlaSpec.layer = sanitizedVlaSpec.layer.map((layerSpec) => {
+	vlaSpec.layer.forEach((layerSpec) => {
 		const animationSelections = getAnimationSelectionFromParams(layerSpec.params) as ElaboratedVlAnimationSelection[];
 		allAnimationSelections = allAnimationSelections.concat(animationSelections);
-		const animationFilters = getAnimationFilterTransforms(layerSpec.transform, animationSelections);
+	});
+	//
+	const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, allAnimationSelections);
+	console.log(animationFilters);
+	let sanitizedVlaSpec = sanitizeVlaSpec(vlaSpec, animationFilters) as ElaboratedVlAnimationLayerSpec;
+	sanitizedVlaSpec.layer = sanitizedVlaSpec.layer.map((layerSpec) => {
+		const animationFilters = getAnimationFilterTransforms(layerSpec.transform, allAnimationSelections);
+		console.log(animationFilters);
 		return sanitizeVlaSpec(layerSpec, animationFilters) as ElaboratedVlAnimationUnitSpec;
 	});
 
@@ -962,6 +967,7 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 
 		if (timeEncoding) {
 			vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
+			vgSpec = mergeSpecs(vgSpec, createAnimationClock(allAnimationSelections[0], timeEncoding));
 		}
 
 		if (layerSpec.params) {
@@ -969,8 +975,6 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 
 			if (animationSelections.length) {
 				const nearestTimeEncoding = timeEncoding ?? vlaSpec.encoding?.time;
-
-				vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], nearestTimeEncoding));
 				vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, nearestTimeEncoding.field, vgSpec.marks, vgSpec.scales));
 
 				let stackTransform: vega.Transforms[] = [];
