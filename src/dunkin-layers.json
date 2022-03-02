@@ -95,6 +95,9 @@
             ]
           }
         }
+      },
+      "enter": {
+        "stroke": {"value": "green"}
       }
     },
   ]
