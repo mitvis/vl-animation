@@ -789,7 +789,7 @@ const compileFilterTransforms = (
 	return {};
 };
 
-const compileEnterExit = (vlaSpec: ElaboratedVlAnimationSpec, markSpecs: vega.Mark[], dataset: string, enter: Encoding<any>, exit: Encoding<any>): Partial<vega.Spec> => {
+const compileEnterExit = (vlaSpec: ElaboratedVlAnimationUnitSpec, markSpecs: vega.Mark[], dataset: string, enter: Encoding<any>, exit: Encoding<any>): Partial<vega.Spec> => {
 	let marks = markSpecs;
 
 	if (enter) {
@@ -802,7 +802,7 @@ const compileEnterExit = (vlaSpec: ElaboratedVlAnimationSpec, markSpecs: vega.Ma
 
 		marks = markSpecs.map((markSpec) => {
 			if (markHasDataset(markSpec, dataset)) {
-				const vgUpdate = vgEnterSpec.marks.find((mark) => mark.name === markSpec.name).encode.update;
+				const vgUpdate = vgEnterSpec.marks.find((mark) => markSpec.name.includes(mark.name)).encode.update;
 				const filtered = Object.keys(vgUpdate)
 					.filter((key) => enterKeys.includes(key))
 					.reduce((obj, key) => {
@@ -825,7 +825,7 @@ const compileEnterExit = (vlaSpec: ElaboratedVlAnimationSpec, markSpecs: vega.Ma
 
 		marks = markSpecs.map((markSpec) => {
 			if (markHasDataset(markSpec, dataset)) {
-				const vgUpdate = vgExitSpec.marks.find((mark) => mark.name === markSpec.name).encode.update;
+				const vgUpdate = vgExitSpec.marks.find((mark) => markSpec.name.includes(mark.name)).encode.update;
 				const filtered = Object.keys(vgUpdate)
 					.filter((key) => exitKeys.includes(key))
 					.reduce((obj, key) => {
@@ -959,9 +959,6 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 		}
 	}
 
-	const dataset = getMarkDataset(vgSpec.marks.find((mark) => getMarkDataset(mark)));
-	vgSpec = mergeSpecs(vgSpec, compileEnterExit(vlaSpec, vgSpec.marks, dataset, vlaSpec.enter, vlaSpec.exit));
-
 	vlaSpec.layer.forEach((layerSpec, idx) => {
 		const mark = vgSpec.marks[idx];
 		const dataset = getMarkDataset(mark);
@@ -1003,7 +1000,18 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 			vgSpec = mergeSpecs(vgSpec, compileKey(nearestTimeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
 		}
 
-		vgSpec = mergeSpecs(vgSpec, compileEnterExit(layerSpec, vgSpec.marks, dataset, layerSpec.enter, layerSpec.exit));
+		if (layerSpec.enter || layerSpec.exit) {
+			const layerSpecPretendingToBeAUnitSpec = {
+				...vlaSpec,
+				...layerSpec
+			}
+			delete layerSpecPretendingToBeAUnitSpec.layer;
+			console.log(layerSpecPretendingToBeAUnitSpec)
+			console.log('before', vgSpec);
+			vgSpec = mergeSpecs(vgSpec, compileEnterExit(layerSpecPretendingToBeAUnitSpec, vgSpec.marks, dataset, layerSpec.enter, layerSpec.exit));
+			console.log('after', vgSpec);
+		}
+
 	});
 	return vgSpec;
 }

@@ -14,7 +14,7 @@ import {
 	ElaboratedVlAnimationKey,
 } from "./types";
 import {getAnimationSelectionFromParams, isParamAnimationSelection, selectionBindsSlider} from "./compile";
-import {isArray} from "vega";
+import {isArray, isObject} from "vega";
 import {VariableParameter} from "vega-lite/build/src/parameter";
 import {SelectionParameter} from "vega-lite/build/src/selection";
 import {isLayerSpec, isVConcatSpec} from "vega-lite/build/src/spec";
@@ -231,7 +231,20 @@ const elaborateLayerVla = (vlaLayerSpec: VlAnimationLayerSpec): ElaboratedVlAnim
 	}
 	// TODO when do you elaborate out default selections when the time encodings are inside layers?
 
-	return elaboratedSpec;
+	const removeEmpty = (obj: any) => {
+		Object.keys(obj).forEach(function (key) {
+			if (typeof obj[key] === 'undefined') {
+				delete obj[key];
+			}
+			else if (isObject(obj[key])) {
+				obj[key] = removeEmpty(obj[key]);
+			}
+		});
+		return obj;
+	};
+
+	console.log( removeEmpty(elaboratedSpec) );
+	return removeEmpty(elaboratedSpec);
 };
 
 const elaborateVConcatVla = (vlaSpec: VlAnimationVConcatSpec): ElaboratedVlAnimationVConcatSpec => {
