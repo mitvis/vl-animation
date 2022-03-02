@@ -46,6 +46,22 @@
   "layer": [
     {
       "mark": "circle",
+      "encoding": {
+        "longitude": {
+          "field": "longitude",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "latitude",
+          "type": "quantitative"
+        },
+        "color": {
+          "value": "grey"
+        }
+      }
+    },
+    {
+      "mark": "circle",
       "transform": [
         {
           "filter": {
@@ -81,21 +97,5 @@
         }
       }
     },
-    {
-      "mark": "circle",
-      "encoding": {
-        "longitude": {
-          "field": "longitude",
-          "type": "quantitative"
-        },
-        "latitude": {
-          "field": "latitude",
-          "type": "quantitative"
-        },
-        "color": {
-          "value": "grey"
-        }
-      }
-    }
   ]
 }

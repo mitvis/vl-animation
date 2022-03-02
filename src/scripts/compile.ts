@@ -789,7 +789,7 @@ const compileFilterTransforms = (
 	return {};
 };
 
-const compileEnterExit = (vlaSpec: ElaboratedVlAnimationUnitSpec, markSpecs: vega.Mark[], dataset: string, enter: Encoding<any>, exit: Encoding<any>): Partial<vega.Spec> => {
+const compileEnterExit = (vlaSpec: ElaboratedVlAnimationSpec, markSpecs: vega.Mark[], dataset: string, enter: Encoding<any>, exit: Encoding<any>): Partial<vega.Spec> => {
 	let marks = markSpecs;
 
 	if (enter) {
@@ -874,12 +874,12 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 		stackTransform = [...vgSpec.data.find((d) => d.name === dataset).transform];
 	}
 
-	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], timeEncoding)); // TODO think about what happens if there's more than one animSelection
+	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], timeEncoding));
 	vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
 	vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field, vgSpec.marks, vgSpec.scales));
 	vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
 	vgSpec = mergeSpecs(vgSpec, compileKey(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
-	vgSpec = mergeSpecs(vgSpec, compileEnterExit(vlaSpec, vgSpec.marks, dataset, vlaSpec.enter, vlaSpec.exit)); // TODO need examples that actually use this to verify it works
+	vgSpec = mergeSpecs(vgSpec, compileEnterExit(vlaSpec, vgSpec.marks, dataset, vlaSpec.enter, vlaSpec.exit));
 
 	return vgSpec;
 };
@@ -959,6 +959,9 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 		}
 	}
 
+	const dataset = getMarkDataset(vgSpec.marks.find((mark) => getMarkDataset(mark)));
+	vgSpec = mergeSpecs(vgSpec, compileEnterExit(vlaSpec, vgSpec.marks, dataset, vlaSpec.enter, vlaSpec.exit));
+
 	vlaSpec.layer.forEach((layerSpec, idx) => {
 		const mark = vgSpec.marks[idx];
 		const dataset = getMarkDataset(mark);
@@ -999,6 +1002,8 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 			vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, allAnimationSelections, dataset, vgSpec.marks, stackTransform));
 			vgSpec = mergeSpecs(vgSpec, compileKey(nearestTimeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
 		}
+
+		vgSpec = mergeSpecs(vgSpec, compileEnterExit(layerSpec, vgSpec.marks, dataset, layerSpec.enter, layerSpec.exit));
 	});
 	return vgSpec;
 }
