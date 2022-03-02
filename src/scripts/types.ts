@@ -1,7 +1,7 @@
 import * as vega from "vega";
 import {Encoding} from "vega-lite/build/src/encoding";
 import {GenericVConcatSpec, LayerSpec, TopLevel, UnitSpec} from "vega-lite/build/src/spec";
-import {PointSelectionConfig, SelectionParameter} from "vega-lite/build/src/selection";
+import {BaseSelectionConfig, PointSelectionConfig, SelectionParameter} from "vega-lite/build/src/selection";
 import {VariableParameter} from "vega-lite/build/src/parameter";
 import {FieldPredicate} from "vega-lite/build/src/predicate";
 import {LogicalAnd} from "vega-lite/build/src/logical";
@@ -28,7 +28,7 @@ export type VlAnimationSelection = Override<
 	SelectionParameter,
 	{
 		select: Override<
-			PointSelectionConfig,
+			BaseSelectionConfig,
 			{
 				on:
 					| "timer"
@@ -102,7 +102,7 @@ export type ElaboratedVlAnimationSelection = Override<
 	SelectionParameter,
 	{
 		select: Override<
-			PointSelectionConfig,
+			BaseSelectionConfig,
 			{
 				on: {
 					type: "timer";

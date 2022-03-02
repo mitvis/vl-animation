@@ -172,7 +172,8 @@ const elaborateParams = (params: (VariableParameter | SelectionParameter)[]): (V
 * @param vlaSpec
 * @returns
 */
-const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimationUnitSpec => {
+const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec, vconcatIndex: string = "0"): ElaboratedVlAnimationUnitSpec => {
+	if (!vlaUnitSpec.encoding.time) return vlaUnitSpec as ElaboratedVlAnimationUnitSpec;
 	let elaboratedSpec: ElaboratedVlAnimationUnitSpec = {
 		...vlaUnitSpec,
 		encoding: {
@@ -183,7 +184,7 @@ const elaborateUnitVla = (vlaUnitSpec: VlAnimationUnitSpec): ElaboratedVlAnimati
 
 	// elaborate encoding into a default selection
 	if (!paramsContainAnimationSelection(vlaUnitSpec.params)) {
-		elaboratedSpec = mergeVlaSpecs(elaboratedSpec, elaborateDefaultSelection()) as ElaboratedVlAnimationUnitSpec;
+		elaboratedSpec = mergeVlaSpecs(elaboratedSpec, elaborateDefaultSelection(vconcatIndex)) as ElaboratedVlAnimationUnitSpec;
 	} else {
 		elaboratedSpec.params = elaborateParams(vlaUnitSpec.params);
 	}
@@ -236,8 +237,8 @@ const elaborateLayerVla = (vlaLayerSpec: VlAnimationLayerSpec): ElaboratedVlAnim
 const elaborateVConcatVla = (vlaSpec: VlAnimationVConcatSpec): ElaboratedVlAnimationVConcatSpec => {
 	return {
 		...vlaSpec,
-		vconcat: vlaSpec.vconcat.map((unitVla) => {
-			return elaborateUnitVla(unitVla);
+		vconcat: vlaSpec.vconcat.map((unitVla, index) => {
+			return elaborateUnitVla(unitVla, String(index));
 		}),
 	};
 };
