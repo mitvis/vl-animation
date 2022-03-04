@@ -98,6 +98,9 @@
       },
       "enter": {
         "stroke": {"value": "green"}
+      },
+      "exit": {
+        "stroke": {"value": "red"}
       }
     },
   ]
