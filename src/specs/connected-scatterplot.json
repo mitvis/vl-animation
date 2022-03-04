@@ -18,7 +18,7 @@
             "predicate": { "field": "year", "lte": { "expr": "anim_value" } }
         }
     }],
-    "mark": "circle",
+    "mark": "line",
     "encoding": {
         "x": {
             "field": "miles",
