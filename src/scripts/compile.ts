@@ -49,8 +49,8 @@ export const getAnimationSelectionFromParams = (params: (VariableParameter | Sel
 };
 
 const getAnimationFilterTransforms = (transform: Transform[], animSelections: VlAnimationSelection[]): FilterTransform[] => {
-	return (transform ?? []).filter((transform) => {
-		return (transform as FilterTransform).filter && animSelections.some((s) => ((transform as FilterTransform).filter as ParameterPredicate).param?.includes(s.name));
+	return (transform ?? []).filter((t) => {
+		return (t as FilterTransform).filter && animSelections.some((s) => ((t as FilterTransform).filter as ParameterPredicate).param?.includes(s.name));
 	}) as FilterTransform[];
 };
 
@@ -866,7 +866,7 @@ const compileEnterExit = (vlaSpec: ElaboratedVlAnimationUnitSpec, markSpecs: veg
 
 		marks = markSpecs.map((markSpec) => {
 			if (markHasDataset(markSpec, dataset)) {
-				const vgUpdate = vgEnterSpec.marks.find((mark) => mark.name === markSpec.name).encode.update;
+				const vgUpdate = vgEnterSpec.marks.find((mark) => markSpec.name.includes(mark.name)).encode.update;
 				const filtered = Object.keys(vgUpdate)
 					.filter((key) => enterKeys.includes(key))
 					.reduce((obj, key) => {
@@ -889,7 +889,7 @@ const compileEnterExit = (vlaSpec: ElaboratedVlAnimationUnitSpec, markSpecs: veg
 
 		marks = markSpecs.map((markSpec) => {
 			if (markHasDataset(markSpec, dataset)) {
-				const vgUpdate = vgExitSpec.marks.find((mark) => mark.name === markSpec.name).encode.update;
+				const vgUpdate = vgExitSpec.marks.find((mark) => markSpec.name.includes(mark.name)).encode.update;
 				const filtered = Object.keys(vgUpdate)
 					.filter((key) => exitKeys.includes(key))
 					.reduce((obj, key) => {
@@ -938,12 +938,12 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 		stackTransform = [...vgSpec.data.find((d) => d.name === dataset).transform];
 	}
 
-	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], timeEncoding)); // TODO think about what happens if there's more than one animSelection
+	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], timeEncoding));
 	vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
 	vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field, vgSpec.marks, vgSpec.scales));
 	vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
 	vgSpec = mergeSpecs(vgSpec, compileKey(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
-	vgSpec = mergeSpecs(vgSpec, compileEnterExit(vlaSpec, vgSpec.marks, dataset, vlaSpec.enter, vlaSpec.exit)); // TODO need examples that actually use this to verify it works
+	vgSpec = mergeSpecs(vgSpec, compileEnterExit(vlaSpec, vgSpec.marks, dataset, vlaSpec.enter, vlaSpec.exit));
 
 	return vgSpec;
 };
@@ -951,13 +951,18 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 	let allAnimationSelections: any[] = [];
 	const animationSelections = getAnimationSelectionFromParams(vlaSpec.params) as ElaboratedVlAnimationSelection[];
-	const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
 	allAnimationSelections = allAnimationSelections.concat(animationSelections);
-	let sanitizedVlaSpec = sanitizeVlaSpec(vlaSpec, animationFilters) as ElaboratedVlAnimationLayerSpec;
-	sanitizedVlaSpec.layer = sanitizedVlaSpec.layer.map((layerSpec) => {
+	vlaSpec.layer.forEach((layerSpec) => {
 		const animationSelections = getAnimationSelectionFromParams(layerSpec.params) as ElaboratedVlAnimationSelection[];
 		allAnimationSelections = allAnimationSelections.concat(animationSelections);
-		const animationFilters = getAnimationFilterTransforms(layerSpec.transform, animationSelections);
+	});
+	//
+	const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, allAnimationSelections);
+	console.log(animationFilters);
+	let sanitizedVlaSpec = sanitizeVlaSpec(vlaSpec, animationFilters) as ElaboratedVlAnimationLayerSpec;
+	sanitizedVlaSpec.layer = sanitizedVlaSpec.layer.map((layerSpec) => {
+		const animationFilters = getAnimationFilterTransforms(layerSpec.transform, allAnimationSelections);
+		console.log(animationFilters);
 		return sanitizeVlaSpec(layerSpec, animationFilters) as ElaboratedVlAnimationUnitSpec;
 	});
 
@@ -984,37 +989,37 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 			const animationSelections = getAnimationSelectionFromParams(vlaSpec.params) as ElaboratedVlAnimationSelection[];
 			if (animationSelections.length) {
 				vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field, vgSpec.marks, vgSpec.scales));
+			}
+		}
 
-				if (vlaSpec.transform) {
-					const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, animationSelections);
-					let stackTransform: vega.Transforms[] = [];
-					let hasBar = false;
-					vlaSpec.layer.forEach((layerSpec) => {
-						if (layerSpec.mark === "bar") {
-							stackTransform = stackTransform.concat(vgSpec.data.find((d) => d.name === dataset).transform);
-							hasBar = true;
+		if (vlaSpec.transform) {
+			const animationFilters = getAnimationFilterTransforms(vlaSpec.transform, allAnimationSelections);
+			let stackTransform: vega.Transforms[] = [];
+			let hasBar = false;
+			vlaSpec.layer.forEach((layerSpec) => {
+				if (layerSpec.mark === "bar") {
+					stackTransform = stackTransform.concat(vgSpec.data.find((d) => d.name === dataset).transform);
+					hasBar = true;
+				}
+			});
+			if (hasBar) {
+				// this is kind of a gross hardcode but needed to make text mark layer work with racing bar chart
+				vgSpec.marks = vgSpec.marks.map(markSpec => {
+					return setMarkDataset(markSpec, dataset);
+				})
+				if ((vlaSpec.encoding?.y as any)?.sort) {
+					vgSpec.scales = vgSpec.scales.map(scaleSpec => {
+						if (scaleSpec.name === 'y') {
+							if ((scaleSpec.domain as any).sort) {
+								(scaleSpec.domain as any).sort = { ...(vlaSpec.encoding.y as any).sort, "op": "sum"}
+							}
 						}
-					});
-					if (hasBar) {
-						// this is kind of a gross hardcode but needed to make text mark layer work with racing bar chart
-						vgSpec.marks = vgSpec.marks.map(markSpec => {
-							return setMarkDataset(markSpec, dataset);
-						})
-						if ((vlaSpec.encoding?.y as any)?.sort) {
-							vgSpec.scales = vgSpec.scales.map(scaleSpec => {
-								if (scaleSpec.name === 'y') {
-									if ((scaleSpec.domain as any).sort) {
-										(scaleSpec.domain as any).sort = { ...(vlaSpec.encoding.y as any).sort, "op": "sum"}
-									}
-								}
-								return scaleSpec;
-							})
-						}
-					}
-					vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
-					vgSpec = mergeSpecs(vgSpec, compileKey(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
+						return scaleSpec;
+					})
 				}
 			}
+			vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, allAnimationSelections, dataset, vgSpec.marks, stackTransform));
+			vgSpec = mergeSpecs(vgSpec, compileKey(timeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
 		}
 	}
 
@@ -1026,6 +1031,15 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 
 		if (timeEncoding) {
 			vgSpec = mergeSpecs(vgSpec, compileTimeScale(timeEncoding, dataset, vgSpec.marks, vgSpec.scales));
+			vgSpec = mergeSpecs(vgSpec, createAnimationClock(allAnimationSelections[0], timeEncoding));
+
+			if (vlaSpec.params) {
+				const animationSelections = getAnimationSelectionFromParams(vlaSpec.params) as ElaboratedVlAnimationSelection[];
+
+				if (animationSelections.length) {
+					vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, timeEncoding.field, vgSpec.marks, vgSpec.scales));
+				}
+			}
 		}
 
 		if (layerSpec.params) {
@@ -1033,22 +1047,35 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 
 			if (animationSelections.length) {
 				const nearestTimeEncoding = timeEncoding ?? vlaSpec.encoding?.time;
-
-				vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], nearestTimeEncoding));
 				vgSpec = mergeSpecs(vgSpec, compileAnimationSelections(animationSelections, nearestTimeEncoding.field, vgSpec.marks, vgSpec.scales));
-
-				let stackTransform: vega.Transforms[] = [];
-				if (layerSpec.mark === "bar") {
-					stackTransform = [...vgSpec.data.find((d) => d.name === dataset).transform];
-				}
-
-				if (layerSpec.transform) {
-					const animationFilters = getAnimationFilterTransforms(layerSpec.transform, animationSelections);
-					vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, animationSelections, dataset, vgSpec.marks, stackTransform));
-					vgSpec = mergeSpecs(vgSpec, compileKey(nearestTimeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
-				}
 			}
 		}
+
+		if (layerSpec.transform) {
+			const nearestTimeEncoding = timeEncoding ?? vlaSpec.encoding?.time;
+
+			let stackTransform: vega.Transforms[] = [];
+			if (layerSpec.mark === "bar") {
+				stackTransform = [...vgSpec.data.find((d) => d.name === dataset).transform];
+			}
+
+			const animationFilters = getAnimationFilterTransforms(layerSpec.transform, allAnimationSelections);
+			vgSpec = mergeSpecs(vgSpec, compileFilterTransforms(animationFilters, allAnimationSelections, dataset, vgSpec.marks, stackTransform));
+			vgSpec = mergeSpecs(vgSpec, compileKey(nearestTimeEncoding, dataset, vgSpec.marks, vgSpec.scales, stackTransform));
+		}
+
+		if (layerSpec.enter || layerSpec.exit) {
+			const layerSpecPretendingToBeAUnitSpec = {
+				...vlaSpec,
+				...layerSpec
+			}
+			delete layerSpecPretendingToBeAUnitSpec.layer;
+			console.log(layerSpecPretendingToBeAUnitSpec)
+			console.log('before', vgSpec);
+			vgSpec = mergeSpecs(vgSpec, compileEnterExit(layerSpecPretendingToBeAUnitSpec, vgSpec.marks, dataset, layerSpec.enter, layerSpec.exit));
+			console.log('after', vgSpec);
+		}
+
 	});
 	return vgSpec;
 }
