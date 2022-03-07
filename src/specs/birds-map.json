@@ -1,98 +1,67 @@
 {
-  "width": 1000,
-  "height": 600,
-  "projection": {
-    "type": "mercator"
-  },
-  "encoding": {
-    "longitude": {
-      "field": "lon"
+    "width": 1000,
+    "height": 600,
+    "projection": {
+        "type": "equalEarth",
+        "clipExtent": [
+            [0, 0],
+            [400, 800]
+        ]
     },
-    "latitude": {
-      "field": "lat"
-    },
-    "color": {
-      "field": "species"
-    }
-  },
-  "layer": [
-    {
-      "data": {
-        "url": "https://raw.githubusercontent.com/deldersveld/topojson/master/continents/north-america.json",
-        "format": {"type": "topojson", "feature": "continent_North_America_subunits"}
-      },
-      "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "gray"}
-    },
-    {
-      "data": {
-        "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/6cb2070b6ffdd2d4bc1a91fdd635737048414881/bird_data.csv"
-      },
-      "transform": [
-        {
-          "calculate": "toNumber(datum.day)",
-          "as": "n_day"
+    "layer": [{
+            "data": {
+                "url": "data/world-110m.json",
+                "format": { "type": "topojson", "feature": "countries" }
+            },
+            "mark": { "type": "geoshape", "fill": "#f7f7f7", "stroke": "#aaa" }
         },
         {
-          "filter": {
-            "param": "trails"
-          }
-        }
-      ],
-      "mark": "circle",
-      "params": [
-        {
-          "name": "birds",
-          "select": {
-            "type": "point",
-            "on": {
-              "type": "timer"
+            "data": {
+                "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/6cb2070b6ffdd2d4bc1a91fdd635737048414881/bird_data.csv"
             },
-            "predicate": {
-              "field": "n_day",
-              "eq": "anim_value"
-            }
-          }
-        },
-        {
-          "name": "trails",
-          "select": {
-            "type": "point",
-            "on": {
-              "type": "timer"
-            },
-            "predicate": {
-              "and": [
-                {
-                  "field": "n_day",
-                  "lte": "anim_value"
+            "params": [{
+                    "name": "window_frame",
+                    "select": {
+                        "type": "point",
+                        "on": "timer",
+                        "predicate": {
+                            "and": [
+                                { "field": "n_day", "lte": { "expr": "anim_value" } },
+                                { "field": "n_day", "gt": { "expr": "anim_value - 20" } }
+                            ]
+                        }
+                    }
                 },
+
                 {
-                  "field": "n_day",
-                  "gte": "anim_value - 10"
+                    "name": "current_frame",
+                    "select": {
+                        "type": "point",
+                        "on": "timer",
+                        "predicate": {
+                            "and": [
+                                { "field": "n_day", "lte": { "expr": "anim_value" } },
+                                { "field": "n_day", "gt": { "expr": "anim_value - 1" } }
+                            ]
+                        }
+                    }
                 }
-              ]
+            ],
+            "transform": [{ "calculate": "toNumber(datum.day)", "as": "n_day" }, { "filter": { "param": "window_frame" } }],
+            "mark": "circle",
+            "encoding": {
+                "longitude": { "field": "lon" },
+                "latitude": { "field": "lat" },
+                "color": { "field": "species" },
+                "opacity": {
+                    "condition": { "param": "current_frame", "value": 1 },
+                    "value": 0.1
+                },
+                "time": {
+                    "field": "n_day",
+                    "scale": { "type": "linear", "range": [0, 10000] }
+                }
             }
-          }
         }
-      ],
-      "encoding": {
-        "opacity": {
-          "condition": {
-            "param": "birds",
-            "value": 1
-          },
-          "value": 0.2
-        },
-        "time": {
-          "field": "n_day",
-          "scale": {
-            "type": "band",
-            "range": {
-              "step": 100
-            }
-          }
-        }
-      }
-    }
-  ]
+    ]
 }
