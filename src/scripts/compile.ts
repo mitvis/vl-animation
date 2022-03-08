@@ -38,7 +38,7 @@ export const isParamAnimationSelection = (param: any): param is VlAnimationSelec
 		return false;
 	}
 	const select = param.select as BaseSelectionConfig;
-	if (select.on === "timer" || (select.on as EventStream).type === "timer") {
+	if (select.on === "timer" || (select.on as EventStream)?.type === "timer") {
 		return true;
 	}
 	return false;
