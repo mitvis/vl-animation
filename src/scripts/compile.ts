@@ -54,6 +54,11 @@ const getAnimationFilterTransforms = (transform: Transform[], animSelections: Vl
 	}) as FilterTransform[];
 };
 
+const isMarkLine = (markSpec: vega.Mark): boolean => {
+	if (markSpec.type === 'line') return true;
+	return "facet" in markSpec.from && markSpec.type === 'group' && markSpec.marks.length && markSpec.marks[0].type === 'line';
+}
+
 const getMarkDataset = (markSpec: vega.Mark): string => {
 	if (!markSpec.from) return null;
 	if ("facet" in markSpec.from) {
@@ -491,6 +496,7 @@ const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: st
 		const dataset_next = `${dataset}_next`;
 		const dataset_eq_next = `${dataset}_eq_next`;
 		const dataset_interpolate = `${dataset}_interpolate`;
+		const dataset_line_interpolate = `${dataset}_line_interpolate`;
 
 		const key = timeEncoding.key as ElaboratedVlAnimationKey;
 
@@ -516,7 +522,7 @@ const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: st
 		let scales: vega.Scale[] = [];
 		let marks: vega.Mark[] = [];
 
-		if (markSpecs.some(mark => mark.type === 'line')) {
+		if (markSpecs.some(mark => isMarkLine(mark))) {
 			// one of the marks is a line. sucks to be you!
 			const interpolateTransforms: vega.Transforms[] = [
 				{
@@ -540,9 +546,9 @@ const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: st
 			];
 
 			markSpecs.forEach((markSpec) => {
-				if (getMarkDataset(markSpec) == dataset_curr && markSpec.type === 'line') {
+				if (getMarkDataset(markSpec) == dataset_curr && isMarkLine(markSpec)) {
 					const encoding = getMarkEncoding(markSpec);
-					markSpec = setMarkDataset(markSpec, dataset_interpolate);
+					markSpec = setMarkDataset(markSpec, dataset_line_interpolate);
 
 					Object.keys(encoding).forEach((k) => {
 						let encodingDef = encoding[k];
@@ -551,13 +557,20 @@ const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: st
 							encodingDef = encodingDef[encodingDef.length - 1];
 						}
 						if ((encodingDef as ScaleFieldValueRef).field) {
-							const {field} = encodingDef as ScaleFieldValueRef;
-							if (isString(field)) {
+							const {scale, field} = encodingDef as ScaleFieldValueRef;
+							if ((scale === 'x' || scale === 'y') && isString(field)) {
 								interpolateTransforms.push({
 									"type": "formula",
 									"as": field,
 									"expr": `interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), datum.interpolateFraction)`
-								})
+								});
+								const scaleSpec = scaleSpecs.find((s) => s.name === scale);
+								// set scale to linear if it's not already linear
+								if (scaleSpec.type !== 'linear') {
+									(scaleSpec as any).type = 'linear';
+									(scaleSpec as any).zero = false;
+									scales = [...scales, scaleSpec];
+								}
 							}
 						}
 					});
@@ -565,8 +578,9 @@ const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: st
 			});
 
 			data = [
+				...data,
 				{
-					name: dataset_interpolate,
+					name: dataset_line_interpolate,
 					source: dataset,
 					transform: [
 						...interpolateTransforms,
@@ -578,114 +592,114 @@ const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: st
 				}
 			]
 		}
-		else {
-			data = [
-				{
-					name: dataset_eq,
-					source: dataset,
-					transform: [
-						{
-							type: "filter",
-							expr: `datum.${timeEncoding.field} == anim_value`,
-						},
-						...stackTransform,
-					],
-				},
-				{
-					name: dataset_next,
-					source: dataset,
-					transform: [
-						{
-							type: "filter",
-							expr: `datum.${timeEncoding.field} == anim_val_next`,
-						},
-						...stackTransform,
-					],
-				},
-				{
-					name: dataset_eq_next,
-					source: dataset_eq,
-					transform: [
-						{
-							type: "lookup",
-							from: dataset_next,
-							key: key.field,
-							fields: [key.field],
-							as: ["next"],
-						},
-						{
-							type: "filter",
-							expr: "isValid(datum.next)",
-						},
-					],
-				},
-				{
-					name: dataset_interpolate,
-					source: [dataset_curr, dataset_eq_next],
-					transform: [
-						{
-							type: "filter",
-							expr: `datum.${timeEncoding.field} == anim_value && isValid(datum.next) || datum.${timeEncoding.field} != anim_value`,
-						},
-					],
-				},
-			];
 
-			marks = markSpecs.map((markSpec) => {
-				if (getMarkDataset(markSpec) == dataset_curr) {
-					markSpec = setMarkDataset(markSpec, dataset_interpolate);
+		data = [
+			...data,
+			{
+				name: dataset_eq,
+				source: dataset,
+				transform: [
+					{
+						type: "filter",
+						expr: `datum.${timeEncoding.field} == anim_value`,
+					},
+					...stackTransform,
+				],
+			},
+			{
+				name: dataset_next,
+				source: dataset,
+				transform: [
+					{
+						type: "filter",
+						expr: `datum.${timeEncoding.field} == anim_val_next`,
+					},
+					...stackTransform,
+				],
+			},
+			{
+				name: dataset_eq_next,
+				source: dataset_eq,
+				transform: [
+					{
+						type: "lookup",
+						from: dataset_next,
+						key: key.field,
+						fields: [key.field],
+						as: ["next"],
+					},
+					{
+						type: "filter",
+						expr: "isValid(datum.next)",
+					},
+				],
+			},
+			{
+				name: dataset_interpolate,
+				source: [dataset_curr, dataset_eq_next],
+				transform: [
+					{
+						type: "filter",
+						expr: `datum.${timeEncoding.field} == anim_value && isValid(datum.next) || datum.${timeEncoding.field} != anim_value`,
+					},
+				],
+			},
+		];
 
-					const encoding = getMarkEncoding(markSpec);
+		marks = markSpecs.map((markSpec) => {
+			if (getMarkDataset(markSpec) == dataset_curr && !isMarkLine(markSpec)) {
+				markSpec = setMarkDataset(markSpec, dataset_interpolate);
 
-					Object.keys(encoding).forEach((k) => {
-						let encodingDef = encoding[k];
-						if (Array.isArray(encodingDef)) {
-							// for production rule encodings, the encoding is an array. the last entry is the default def
-							encodingDef = encodingDef[encodingDef.length - 1];
-						}
-						if ((encodingDef as ScaleFieldValueRef).field) {
-							const {scale, field} = encodingDef as ScaleFieldValueRef;
+				const encoding = getMarkEncoding(markSpec);
 
-							if (scale) {
-								const scaleSpec = scaleSpecs.find((s) => s.name === scale);
-								if (scaleHasDiscreteRange(scaleSpec)) return;
+				Object.keys(encoding).forEach((k) => {
+					let encodingDef = encoding[k];
+					if (Array.isArray(encodingDef)) {
+						// for production rule encodings, the encoding is an array. the last entry is the default def
+						encodingDef = encodingDef[encodingDef.length - 1];
+					}
+					if ((encodingDef as ScaleFieldValueRef).field) {
+						const {scale, field} = encodingDef as ScaleFieldValueRef;
 
-								if (timeEncoding.rescale) {
-									// rescale: the scale updates based on the animation frame
-									const scaleNextName = scaleSpec.name + "_next";
-									if (!scaleSpecs.find((s) => s.name === scaleNextName) && !scales.find((s) => s.name === scaleNextName)) {
-										// if it doesn't already exist, create a "next" scale for the current scale
-										let scaleSpecNext = cloneDeep(scaleSpec);
-										scaleSpecNext.name = scaleNextName;
-										scaleSpecNext = setScaleDomainDataset(scaleSpecNext, dataset_next) as any;
-										scales = [...scales, scaleSpecNext];
-									}
+						if (scale) {
+							const scaleSpec = scaleSpecs.find((s) => s.name === scale);
+							if (scaleHasDiscreteRange(scaleSpec)) return;
+
+							if (timeEncoding.rescale) {
+								// rescale: the scale updates based on the animation frame
+								const scaleNextName = scaleSpec.name + "_next";
+								if (!scaleSpecs.find((s) => s.name === scaleNextName) && !scales.find((s) => s.name === scaleNextName)) {
+									// if it doesn't already exist, create a "next" scale for the current scale
+									let scaleSpecNext = cloneDeep(scaleSpec);
+									scaleSpecNext.name = scaleNextName;
+									scaleSpecNext = setScaleDomainDataset(scaleSpecNext, dataset_next) as any;
+									scales = [...scales, scaleSpecNext];
 								}
-								const eq_next_lerp = `isValid(datum.next) ? lerp([scale('${scale}', datum.${field}), scale('${
-									timeEncoding.rescale ? scale + "_next" : scale
-								}', datum.next.${field})], anim_tween) : scale('${scale}', datum.${field})`;
-
-								const lerp_term =
-									scale === "color" // color scales map numbers to strings, so lerp before scale
-										? `datum.${timeEncoding.field} == anim_value ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})`
-										: scale // e.g. position scales map anything to numbers
-										? stackTransform.length
-											? eq_next_lerp // if there's a stack transform, lerp the eq/next way because stack transform operates on keyframe instead of whole dataset
-											: // if scale maps numbers to numbers, then do it the interpolateCatmullRom way. otherwise, do it the eq/next way because e.g. nominal to position will likely use scale driven by keyframe domain
-												`isNumber(datum.${timeEncoding.field}) ? (datum.${timeEncoding.field} == anim_value ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})) : (${eq_next_lerp})`
-										: // e.g. map projections have field but no scale. you can directly lerp the field
-											`datum.${timeEncoding.field} == anim_value ? interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent) : datum.${field}`;
-
-								markSpec = setMarkEncoding(markSpec, k, {
-									signal: lerp_term,
-								});
 							}
+							const eq_next_lerp = `isValid(datum.next) ? lerp([scale('${scale}', datum.${field}), scale('${
+								timeEncoding.rescale ? scale + "_next" : scale
+							}', datum.next.${field})], anim_tween) : scale('${scale}', datum.${field})`;
+
+							const lerp_term =
+								scale === "color" // color scales map numbers to strings, so lerp before scale
+									? `datum.${timeEncoding.field} == anim_value ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})`
+									: scale // e.g. position scales map anything to numbers
+									? stackTransform.length
+										? eq_next_lerp // if there's a stack transform, lerp the eq/next way because stack transform operates on keyframe instead of whole dataset
+										: // if scale maps numbers to numbers, then do it the interpolateCatmullRom way. otherwise, do it the eq/next way because e.g. nominal to position will likely use scale driven by keyframe domain
+											`isNumber(datum.${timeEncoding.field}) ? (datum.${timeEncoding.field} == anim_value ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})) : (${eq_next_lerp})`
+									: // e.g. map projections have field but no scale. you can directly lerp the field
+										`datum.${timeEncoding.field} == anim_value ? interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent) : datum.${field}`;
+
+							markSpec = setMarkEncoding(markSpec, k, {
+								signal: lerp_term,
+							});
 						}
-					});
-				}
-				return markSpec;
-			});
-		}
+					}
+				});
+			}
+			return markSpec;
+		});
 
 		const spec = {
 			signals,
