@@ -31,6 +31,8 @@ import {Encoding} from "vega-lite/build/src/encoding";
 import {cloneDeep} from "lodash";
 import {isLayerSpec, isVConcatSpec} from "vega-lite/build/src/spec";
 
+const interpolateFunc = "interpolateLinear";
+
 type ScaleFieldValueRef = {scale: vega.Field; field: vega.Field}; // ScaledValueRef
 
 export const isParamAnimationSelection = (param: any): param is VlAnimationSelection => {
@@ -235,7 +237,7 @@ const createAnimationClock = (animSelection: ElaboratedVlAnimationSelection, tim
 
 	const easeExpr = isString(animSelection.select.easing)
 		? `${animSelection.select.easing}(anim_clock / max_range_extent)`
-		: `interpolateCatmullRom(${animSelection.select.easing}, anim_clock / max_range_extent)`; // if easing is a number[], use it to construct an easing function
+		: `${interpolateFunc}(${animSelection.select.easing}, anim_clock / max_range_extent)`; // if easing is a number[], use it to construct an easing function
 
 	const bindStream = selectionBindsSlider(animSelection.bind)
 		? [
@@ -562,7 +564,7 @@ const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: st
 								interpolateTransforms.push({
 									"type": "formula",
 									"as": field,
-									"expr": `interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), datum.interpolateFraction)`
+									"expr": `${interpolateFunc}(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), datum.interpolateFraction)`
 								});
 								const scaleSpec = scaleSpecs.find((s) => s.name === scale);
 								// set scale to linear if it's not already linear
@@ -682,14 +684,14 @@ const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: st
 
 							const lerp_term =
 								scale === "color" // color scales map numbers to strings, so lerp before scale
-									? `datum.${timeEncoding.field} == anim_value ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})`
+									? `datum.${timeEncoding.field} == anim_value ? scale('${scale}', ${interpolateFunc}(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})`
 									: scale // e.g. position scales map anything to numbers
 									? stackTransform.length
 										? eq_next_lerp // if there's a stack transform, lerp the eq/next way because stack transform operates on keyframe instead of whole dataset
 										: // if scale maps numbers to numbers, then do it the interpolateCatmullRom way. otherwise, do it the eq/next way because e.g. nominal to position will likely use scale driven by keyframe domain
-											`isNumber(datum.${timeEncoding.field}) ? (datum.${timeEncoding.field} == anim_value ? scale('${scale}', interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})) : (${eq_next_lerp})`
+											`isNumber(datum.${timeEncoding.field}) ? (datum.${timeEncoding.field} == anim_value ? scale('${scale}', ${interpolateFunc}(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent)) : scale('${scale}', datum.${field})) : (${eq_next_lerp})`
 									: // e.g. map projections have field but no scale. you can directly lerp the field
-										`datum.${timeEncoding.field} == anim_value ? interpolateCatmullRom(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent) : datum.${field}`;
+										`datum.${timeEncoding.field} == anim_value ? ${interpolateFunc}(fieldvaluesforkey('${dataset}', '${field}', '${key.field}', datum.${key.field}), eased_anim_clock / max_range_extent) : datum.${field}`;
 
 							markSpec = setMarkEncoding(markSpec, k, {
 								signal: lerp_term,
