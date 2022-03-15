@@ -58,7 +58,7 @@ const getAnimationFilterTransforms = (transform: Transform[], animSelections: Vl
 
 const isMarkLine = (markSpec: vega.Mark): boolean => {
 	if (markSpec.type === 'line') return true;
-	return "facet" in markSpec.from && markSpec.type === 'group' && markSpec.marks.length && markSpec.marks[0].type === 'line';
+	return markSpec.from && "facet" in markSpec.from && markSpec.type === 'group' && markSpec.marks.length && markSpec.marks[0].type === 'line';
 }
 
 const getMarkDataset = (markSpec: vega.Mark): string => {
