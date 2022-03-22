@@ -1099,7 +1099,16 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 }
 
 const compileVConcatVla = (vlaSpec: ElaboratedVlAnimationVConcatSpec): vega.Spec => {
-	let vgSpec = vl.compile(vlaSpec as vl.TopLevelSpec).spec;
+	const sanitizedVlaSpec = {
+		...vlaSpec,
+		vconcat: vlaSpec.vconcat.map(unitVla => {
+			const animationSelections = getAnimationSelectionFromParams(unitVla.params) as ElaboratedVlAnimationSelection[];
+			const animationFilters = getAnimationFilterTransforms(unitVla.transform, animationSelections);
+			return sanitizeVlaSpec(unitVla, animationFilters);
+		})
+	};
+
+	let vgSpec = vl.compile(sanitizedVlaSpec as any).spec;
 
 	vlaSpec.vconcat.forEach((unitVla, index) => {
 		const animationSelections = getAnimationSelectionFromParams(unitVla.params) as ElaboratedVlAnimationSelection[];
@@ -1124,7 +1133,6 @@ const compileVConcatVla = (vlaSpec: ElaboratedVlAnimationVConcatSpec): vega.Spec
 			if (unitVla.mark === "bar") {
 				stackTransform = [...vgSpec.data.find((d) => d.name === dataset).transform];
 			}
-
 			({vgSpec, vgGroupSpec} = mergeVConcatSpecs(vgSpec, vgGroupSpec, createAnimationClock(animationSelections[0], timeEncoding), true));
 			({vgSpec, vgGroupSpec} = mergeVConcatSpecs(vgSpec, vgGroupSpec, compileTimeScale(timeEncoding, dataset, vgGroupSpec.marks, vgSpec.scales), true));
 			({vgSpec, vgGroupSpec} = mergeVConcatSpecs(vgSpec, vgGroupSpec, compileAnimationSelections(animationSelections, timeEncoding.field, vgGroupSpec.marks, vgSpec.scales, String(index))));
