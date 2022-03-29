@@ -1041,9 +1041,14 @@ function compileLayerVla(vlaSpec: ElaboratedVlAnimationLayerSpec): vega.Spec {
 		}
 	}
 
-	vlaSpec.layer.forEach((layerSpec, idx) => {
-		const mark = vgSpec.marks[idx];
+	vgSpec.marks.forEach((mark) => {
+		var r = /\d+/;
+		const layerSpec = vlaSpec.layer[parseInt(mark.name.match(r).toString(), 10)];
+	// });
+	// vlaSpec.layer.forEach((layerSpec, idx) => {
+		// const mark = vgSpec.marks[idx];
 		const dataset = getMarkDataset(mark);
+		console.log(dataset);
 
 		const timeEncoding = layerSpec.encoding?.time;
 
