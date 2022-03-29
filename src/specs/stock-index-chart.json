@@ -8,7 +8,10 @@
   "height": 300,
   "encoding": {
     "time": {
-          "field": "date"
+          "field": "date",
+          "scale": {
+            "range": {"step": 200}
+          }
         }
     },
   "layer": [
