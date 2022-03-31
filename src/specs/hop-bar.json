@@ -1,0 +1,49 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "A simple bar chart with embedded data.",
+  "height": 100,
+  "data": {"sequence": {"start": 0, "stop": 100, "step": 1, "as": "t"}},
+  "transform": [
+    {"calculate": "random()", "as": "a"},
+    {"calculate": "random()", "as": "b"},
+    {"calculate": "random()", "as": "c"},
+    {"calculate": "random()", "as": "d"},
+    {"calculate": "random()", "as": "e"},
+    {"calculate": "random()", "as": "f"},
+    {"calculate": "random()", "as": "g"},
+    {"calculate": "random()", "as": "h"},
+    {"calculate": "random()", "as": "i"},
+    {"fold": ["a", "b", "c", "d", "e", "f", "g", "h", "i"]},
+    {"filter": {"param": "current_frame_0"}}
+  ],
+  "mark": "bar",
+  "encoding": {
+    "color": {"value": "#9D4B6C"}
+    "x": {
+      "field": "key",
+      "type": "nominal",
+      "axis": {"labelAngle": 0},
+      "title": null
+    },
+    "y": {
+      "field": "value",
+      "type": "quantitative",
+      "scale": {"domain": [0, 1]},
+      "title": null
+    },
+    "time": {
+      "field": "t",
+      "scale": {"type": "band", "range": {"step": 1000}}
+    }
+  },
+  "params": [
+    {
+      "name": "current_frame_0",
+      "select": {
+        "type": "point",
+        "on": {"type": "timer"}
+      },
+      "bind": {"input": "range", "min": 0, "max": 100, "step": 1}
+    }
+  ]
+}

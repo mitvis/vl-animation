@@ -956,7 +956,7 @@ const compileUnitVla = (vlaSpec: ElaboratedVlAnimationUnitSpec): vega.Spec => {
 	 */
 	let stackTransform: vega.Transforms[] = [];
 	if (vlaSpec.mark === "bar") {
-		stackTransform = [...vgSpec.data.find((d) => d.name === dataset).transform];
+		stackTransform = [...vgSpec.data.find((d) => d.name === dataset).transform.filter(t => t.type === 'stack')];
 	}
 
 	vgSpec = mergeSpecs(vgSpec, createAnimationClock(animationSelections[0], timeEncoding));
