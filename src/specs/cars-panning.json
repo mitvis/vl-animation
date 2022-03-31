@@ -1,0 +1,38 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {"url": "data/cars.json"},
+  "params": [
+    {
+      "name": "grid",
+      "select": {
+        "type": "point",
+        "on": "timer",
+        "predicate": {
+          "and": [
+            {"field": "Horsepower", "gte": "anim_value - 20"},
+            {"field": "Horsepower", "lte": "anim_value"}
+          ]
+        }
+      },
+      "bind": "scales"
+    }
+  ],
+  "mark": "circle",
+  "encoding": {
+    "x": {
+      "field": "Horsepower",
+      "type": "quantitative",
+      "scale": {"domain": [75, 150]}
+    },
+    "y": {
+      "field": "Miles_per_Gallon",
+      "type": "quantitative",
+      "scale": {"domain": [20, 40]}
+    },
+    "size": {"field": "Cylinders", "type": "quantitative"},
+    "time": {
+      "field": "Horsepower",
+      "scale": {"type": "linear", "range": [0, 20000]}
+    }
+  }
+}
