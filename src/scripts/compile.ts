@@ -596,62 +596,12 @@ const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: st
 		}
 
 		if (markSpecs.some(mark => !isMarkLine(mark))) {
-			data = [
-				...data,
-				{
-					name: dataset_eq,
-					source: dataset,
-					transform: [
-						{
-							type: "filter",
-							expr: `datum.${timeEncoding.field} == anim_value`,
-						},
-						...stackTransform,
-					],
-				},
-				{
-					name: dataset_next,
-					source: dataset,
-					transform: [
-						{
-							type: "filter",
-							expr: `datum.${timeEncoding.field} == anim_val_next`,
-						},
-						...stackTransform,
-					],
-				},
-				{
-					name: dataset_eq_next,
-					source: dataset_eq,
-					transform: [
-						{
-							type: "lookup",
-							from: dataset_next,
-							key: key.field,
-							fields: [key.field],
-							as: ["next"],
-						},
-						{
-							type: "filter",
-							expr: "isValid(datum.next)",
-						},
-					],
-				},
-				{
-					name: dataset_interpolate,
-					source: [dataset_curr, dataset_eq_next],
-					transform: [
-						{
-							type: "filter",
-							expr: `datum.${timeEncoding.field} == anim_value && isValid(datum.next) || datum.${timeEncoding.field} != anim_value`,
-						},
-					],
-				},
-			];
+			let didUseInterpolate = false;
 
 			marks = markSpecs.map((markSpec) => {
 				if (getMarkDataset(markSpec) == dataset_curr && !isMarkLine(markSpec)) {
 					markSpec = setMarkDataset(markSpec, dataset_interpolate);
+					didUseInterpolate = true;
 
 					const encoding = getMarkEncoding(markSpec);
 
@@ -703,6 +653,61 @@ const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: st
 				}
 				return markSpec;
 			});
+
+			if (didUseInterpolate) {
+				data = [
+					...data,
+					{
+						name: dataset_eq,
+						source: dataset,
+						transform: [
+							{
+								type: "filter",
+								expr: `datum.${timeEncoding.field} == anim_value`,
+							},
+							...stackTransform,
+						],
+					},
+					{
+						name: dataset_next,
+						source: dataset,
+						transform: [
+							{
+								type: "filter",
+								expr: `datum.${timeEncoding.field} == anim_val_next`,
+							},
+							...stackTransform,
+						],
+					},
+					{
+						name: dataset_eq_next,
+						source: dataset_eq,
+						transform: [
+							{
+								type: "lookup",
+								from: dataset_next,
+								key: key.field,
+								fields: [key.field],
+								as: ["next"],
+							},
+							{
+								type: "filter",
+								expr: "isValid(datum.next)",
+							},
+						],
+					},
+					{
+						name: dataset_interpolate,
+						source: [dataset_curr, dataset_eq_next],
+						transform: [
+							{
+								type: "filter",
+								expr: `datum.${timeEncoding.field} == anim_value && isValid(datum.next) || datum.${timeEncoding.field} != anim_value`,
+							},
+						],
+					},
+				];
+			}
 		}
 
 		const spec = {
