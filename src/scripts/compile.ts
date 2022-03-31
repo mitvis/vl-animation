@@ -720,7 +720,6 @@ const compileKey = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: st
 
 const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, dataset: string, markSpecs: vega.Mark[], scaleSpecs: vega.Scale[]): Partial<vega.Spec> => {
 	let scales: vega.Scale[] = [];
-	let data: vega.Data[] = [];
 	let signals: vega.Signal[] = [];
 
 	if (timeEncoding.scale.type === "linear") {
@@ -825,7 +824,6 @@ const compileTimeScale = (timeEncoding: ElaboratedVlAnimationTimeEncoding, datas
 	}
 
 	return {
-		data,
 		scales,
 		signals,
 	};
