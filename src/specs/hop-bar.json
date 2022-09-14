@@ -18,7 +18,7 @@
   ],
   "mark": "bar",
   "encoding": {
-    "color": {"value": "#9D4B6C"}
+    "color": {"value": "#9D4B6C"},
     "x": {
       "field": "key",
       "type": "nominal",

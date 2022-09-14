@@ -37,13 +37,7 @@
                     "name": "current_frame",
                     "select": {
                         "type": "point",
-                        "on": "timer",
-                        "predicate": {
-                            "and": [
-                                { "field": "n_day", "lte": { "expr": "anim_value" } },
-                                { "field": "n_day", "gt": { "expr": "anim_value - 1" } }
-                            ]
-                        }
+                        "on": "timer"
                     }
                 }
             ],
@@ -59,7 +53,7 @@
                 },
                 "time": {
                     "field": "n_day",
-                    "scale": { "type": "linear", "range": [0, 10000] }
+                    "scale": { "type": "band", "range": [0, 10000] }
                 }
             }
         }

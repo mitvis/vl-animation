@@ -1,0 +1,76 @@
+{
+  "width": 1000,
+  "height": 600,
+  "projection": {
+      "type": "equalEarth",
+      "clipExtent": [
+          [0, 0],
+          [400, 800]
+      ]
+  },
+  "layer": [{
+          "data": {
+              "url": "data/world-110m.json",
+              "format": { "type": "topojson", "feature": "countries" }
+          },
+          "mark": { "type": "geoshape", "fill": "#f7f7f7", "stroke": "#aaa" }
+      },
+      {
+          "data": {
+              "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/6cb2070b6ffdd2d4bc1a91fdd635737048414881/bird_data.csv"
+          },
+          "params": [
+
+              {
+                  "name": "current_frame",
+                  "select": {
+                      "type": "point",
+                      "on": "timer"
+                  },
+                  "bind": {"input": "range", "min": 1, "max": 365, "step": 1, "name": "day"}
+              },
+              {
+                  "name": "window_frame",
+                  "select": {
+                      "type": "point",
+                      "on": "timer",
+                      "predicate": {
+                          "and": [
+                              { "field": "n_day", "lte": { "expr": "anim_value" } },
+                              { "field": "n_day", "gt": { "expr": "anim_value - 20" } }
+                          ]
+                      }
+                  }
+              },
+
+              {
+                "name": "pts",
+                "select": {
+                  "type": "point",
+                  "fields": ["species"]
+                }
+              }
+
+          ],
+          "transform": [{ "calculate": "toNumber(datum.day)", "as": "n_day" }, { "filter": { "param": "window_frame" } }],
+          "mark": "circle",
+          "encoding": {
+              "longitude": { "field": "lon" },
+              "latitude": { "field": "lat" },
+              "color": { "field": "species" },
+              "size": {
+                  "condition": { "param": "pts", "value": 200 },
+                  "value": 20
+              },
+              "opacity": {
+                  "condition": { "param": "current_frame", "value": 1 },
+                  "value": 0.1
+              },
+              "time": {
+                  "field": "n_day",
+                  "scale": { "type": "band", "range": [0, 10000] }
+              }
+          }
+      }
+  ]
+}
