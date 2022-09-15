@@ -1,0 +1,51 @@
+{
+  "data": {
+      "url": "https://gist.githubusercontent.com/jonathanzong/5f4fa36e8c2cd04639bc550540264dc6/raw/fcc1e69167289e4e3c78b8a86ae258b14cc83a2d/category-brands.csv"
+  },
+  "encoding": {
+      "color": {
+          "field": "category",
+          "legend": {
+              "offset": 80
+          }
+      },
+      "x": {
+          "field": "value",
+          "type": "quantitative"
+      },
+      "y": {
+          "field": "name",
+          "type": "nominal",
+          "sort": { "field": "value", "order": "descending" },
+          "axis": false
+      }
+  },
+  "params": [
+      {
+          "name": "year",
+          "value": 2000,
+          "bind": {"input": "range", "min": 2000, "max": 2019, "step": 1}
+      }
+  ],
+      "transform": [
+          {"calculate": "toNumber(datum.value)", "as": "value"},
+          {"filter": "datum.date == (year + '-01-01')"}
+      ],
+  "layer": [
+    {
+      "mark": "bar"
+    },
+    {
+        "mark": {
+          "type": "text",
+          "align": "left",
+          "baseline": "middle",
+          "dx": 3,
+          "dy": 9
+        },
+        "encoding": {
+            "text": {"field": "name"}
+        }
+    }
+  ]
+}
