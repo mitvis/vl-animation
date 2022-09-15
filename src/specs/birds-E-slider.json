@@ -29,6 +29,8 @@
                   },
                   "bind": {"input": "range", "min": 1, "max": 365, "step": 1, "name": "day"}
               },
+
+
               {
                   "name": "window_frame",
                   "select": {
@@ -47,6 +49,7 @@
                 "name": "pts",
                 "select": {
                   "type": "point",
+                  "on": "mouseover",
                   "fields": ["species"]
                 }
               }
@@ -59,7 +62,7 @@
               "latitude": { "field": "lat" },
               "color": { "field": "species" },
               "size": {
-                  "condition": { "param": "pts", "value": 200 },
+                  "condition": { "param": "pts", "value": 200, "empty": false},
                   "value": 20
               },
               "opacity": {
@@ -69,6 +72,9 @@
               "time": {
                   "field": "n_day",
                   "scale": { "type": "band", "range": [0, 10000] }
+              },
+              "tooltip": {
+                  "field": "species"
               }
           }
       }
