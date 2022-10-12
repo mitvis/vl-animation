@@ -1,9 +1,10 @@
 {
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "data": {"url": "data/seattle-weather.csv"},
-  "mark": "tick",
-  "encoding": {
-    "y": {"field": "precipitation", "type": "quantitative"},
-    "time": {"field": "date", "scale": {"range": {"step": 250}}}
-  }
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "data": { "url": "data/seattle-weather.csv" },
+    "mark": "tick",
+    "config": { "tick": { "thickness": 3 } },
+    "encoding": {
+        "y": { "field": "precipitation", "type": "quantitative" },
+        "time": { "field": "date", "scale": { "range": { "step": 250 } } }
+    }
 }
