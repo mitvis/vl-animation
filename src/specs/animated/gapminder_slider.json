@@ -1,39 +1,22 @@
 {
-  "data": {
-    "url": "https://raw.githubusercontent.com/vega/vega-datasets/master/data/gapminder.json"
-  },
-  "mark": "point",
-  "params": [
-    {
-      "name": "current_frame",
-      "select": {
-        "type": "point",
-        "on": "timer"
-      },
-      "bind": {"input": "range", "min": 1955, "max": 2005, "step": 5}
+    "data": {
+        "url": "https://raw.githubusercontent.com/vega/vega-datasets/master/data/gapminder.json"
+    },
+    "mark": "point",
+    "params": [{
+        "name": "year",
+        "select": { "type": "point", "on": "timer" },
+        "bind": { "input": "range", "min": 1955, "max": 2005, "step": 5 }
+    }],
+    "transform": [{ "filter": { "param": "year" } }],
+    "encoding": {
+        "color": { "field": "country", "legend": null },
+        "x": { "field": "fertility", "type": "quantitative" },
+        "y": { "field": "life_expect", "type": "quantitative" },
+        "time": {
+            "field": "year",
+            "scale": { "range": [0, 5000] },
+            "key": { "field": "country" }
+        }
     }
-  ],
-  "transform": [{"filter": {"param": "current_frame"}}],
-  "encoding": {
-    "color": {
-      "field": "country"
-    },
-    "x": {
-      "field": "fertility",
-      "type": "quantitative"
-    },
-    "y": {
-      "field": "life_expect",
-      "type": "quantitative"
-    },
-    "time": {
-      "field": "year",
-      "scale": {
-        "range": [
-          0,
-          5000
-        ]
-      }
-    }
-  }
 }
