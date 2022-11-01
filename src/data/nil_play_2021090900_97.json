@@ -1,0 +1,9892 @@
+[
+  {
+    "frameId": 1,
+    "team": "TB",
+    "x": 37.77,
+    "y": 24.22,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 2,
+    "team": "TB",
+    "x": 37.78,
+    "y": 24.22,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 3,
+    "team": "TB",
+    "x": 37.78,
+    "y": 24.24,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 4,
+    "team": "TB",
+    "x": 37.73,
+    "y": 24.25,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 5,
+    "team": "TB",
+    "x": 37.69,
+    "y": 24.26,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 6,
+    "team": "TB",
+    "x": 37.64,
+    "y": 24.26,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 7,
+    "team": "TB",
+    "x": 37.56,
+    "y": 24.26,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 8,
+    "team": "TB",
+    "x": 37.47,
+    "y": 24.25,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 9,
+    "team": "TB",
+    "x": 37.38,
+    "y": 24.24,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 10,
+    "team": "TB",
+    "x": 37.27,
+    "y": 24.23,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 11,
+    "team": "TB",
+    "x": 37.14,
+    "y": 24.22,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 12,
+    "team": "TB",
+    "x": 36.99,
+    "y": 24.19,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 13,
+    "team": "TB",
+    "x": 36.8,
+    "y": 24.16,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 14,
+    "team": "TB",
+    "x": 36.56,
+    "y": 24.15,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 15,
+    "team": "TB",
+    "x": 36.34,
+    "y": 24.12,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 16,
+    "team": "TB",
+    "x": 36.1,
+    "y": 24.1,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 17,
+    "team": "TB",
+    "x": 35.86,
+    "y": 24.08,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 18,
+    "team": "TB",
+    "x": 35.63,
+    "y": 24.05,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 19,
+    "team": "TB",
+    "x": 35.42,
+    "y": 24.02,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 20,
+    "team": "TB",
+    "x": 35.22,
+    "y": 23.98,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 21,
+    "team": "TB",
+    "x": 35.04,
+    "y": 23.96,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 22,
+    "team": "TB",
+    "x": 34.86,
+    "y": 23.94,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 23,
+    "team": "TB",
+    "x": 34.68,
+    "y": 23.94,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 24,
+    "team": "TB",
+    "x": 34.51,
+    "y": 23.92,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 25,
+    "team": "TB",
+    "x": 34.36,
+    "y": 23.89,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 26,
+    "team": "TB",
+    "x": 34.21,
+    "y": 23.85,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 27,
+    "team": "TB",
+    "x": 34.08,
+    "y": 23.79,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 28,
+    "team": "TB",
+    "x": 33.97,
+    "y": 23.7,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 29,
+    "team": "TB",
+    "x": 33.86,
+    "y": 23.6,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 30,
+    "team": "TB",
+    "x": 33.77,
+    "y": 23.43,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 31,
+    "team": "TB",
+    "x": 33.68,
+    "y": 23.28,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 32,
+    "team": "TB",
+    "x": 33.6,
+    "y": 23.09,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 33,
+    "team": "TB",
+    "x": 33.53,
+    "y": 22.85,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 34,
+    "team": "TB",
+    "x": 33.44,
+    "y": 22.58,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 35,
+    "team": "TB",
+    "x": 33.33,
+    "y": 22.25,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 36,
+    "team": "TB",
+    "x": 33.21,
+    "y": 21.92,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 37,
+    "team": "TB",
+    "x": 33.1,
+    "y": 21.56,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 38,
+    "team": "TB",
+    "x": 32.99,
+    "y": 21.21,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 39,
+    "team": "TB",
+    "x": 32.85,
+    "y": 20.85,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 40,
+    "team": "TB",
+    "x": 32.69,
+    "y": 20.5,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 41,
+    "team": "TB",
+    "x": 32.53,
+    "y": 20.17,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 42,
+    "team": "TB",
+    "x": 32.3,
+    "y": 19.85,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 43,
+    "team": "TB",
+    "x": 32.07,
+    "y": 19.54,
+    "nflId": 25511,
+    "displayName": "Tom Brady",
+    "officialPosition": "QB",
+    "pff_role": "Pass"
+  },
+  {
+    "frameId": 1,
+    "team": "TB",
+    "x": 41.08,
+    "y": 29.15,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 2,
+    "team": "TB",
+    "x": 41.34,
+    "y": 29.45,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 3,
+    "team": "TB",
+    "x": 41.53,
+    "y": 29.39,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 4,
+    "team": "TB",
+    "x": 41.53,
+    "y": 29.38,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 5,
+    "team": "TB",
+    "x": 41.54,
+    "y": 29.36,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 6,
+    "team": "TB",
+    "x": 41.65,
+    "y": 29.34,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 7,
+    "team": "TB",
+    "x": 41.75,
+    "y": 29.36,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 8,
+    "team": "TB",
+    "x": 41.87,
+    "y": 29.42,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 9,
+    "team": "TB",
+    "x": 42.04,
+    "y": 29.55,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 10,
+    "team": "TB",
+    "x": 42.21,
+    "y": 29.71,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 11,
+    "team": "TB",
+    "x": 42.39,
+    "y": 29.89,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 12,
+    "team": "TB",
+    "x": 42.57,
+    "y": 30.13,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 13,
+    "team": "TB",
+    "x": 42.74,
+    "y": 30.4,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 14,
+    "team": "TB",
+    "x": 42.9,
+    "y": 30.69,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 15,
+    "team": "TB",
+    "x": 43.04,
+    "y": 31.01,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 16,
+    "team": "TB",
+    "x": 43.16,
+    "y": 31.35,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 17,
+    "team": "TB",
+    "x": 43.29,
+    "y": 31.71,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 18,
+    "team": "TB",
+    "x": 43.42,
+    "y": 32.1,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 19,
+    "team": "TB",
+    "x": 43.54,
+    "y": 32.51,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 20,
+    "team": "TB",
+    "x": 43.64,
+    "y": 32.95,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 21,
+    "team": "TB",
+    "x": 43.74,
+    "y": 33.41,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 22,
+    "team": "TB",
+    "x": 43.84,
+    "y": 33.89,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 23,
+    "team": "TB",
+    "x": 43.96,
+    "y": 34.39,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 24,
+    "team": "TB",
+    "x": 44.07,
+    "y": 34.91,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 25,
+    "team": "TB",
+    "x": 44.2,
+    "y": 35.47,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 26,
+    "team": "TB",
+    "x": 44.35,
+    "y": 36.06,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 27,
+    "team": "TB",
+    "x": 44.5,
+    "y": 36.65,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 28,
+    "team": "TB",
+    "x": 44.63,
+    "y": 37.25,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 29,
+    "team": "TB",
+    "x": 44.77,
+    "y": 37.87,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 30,
+    "team": "TB",
+    "x": 44.9,
+    "y": 38.5,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 31,
+    "team": "TB",
+    "x": 45.04,
+    "y": 39.15,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 32,
+    "team": "TB",
+    "x": 45.2,
+    "y": 39.79,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 33,
+    "team": "TB",
+    "x": 45.35,
+    "y": 40.43,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 34,
+    "team": "TB",
+    "x": 45.52,
+    "y": 41.07,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 35,
+    "team": "TB",
+    "x": 45.71,
+    "y": 41.68,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 36,
+    "team": "TB",
+    "x": 45.92,
+    "y": 42.3,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 37,
+    "team": "TB",
+    "x": 46.13,
+    "y": 42.9,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 38,
+    "team": "TB",
+    "x": 46.36,
+    "y": 43.5,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 39,
+    "team": "TB",
+    "x": 46.6,
+    "y": 44.1,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 40,
+    "team": "TB",
+    "x": 46.88,
+    "y": 44.67,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 41,
+    "team": "TB",
+    "x": 47.17,
+    "y": 45.2,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 42,
+    "team": "TB",
+    "x": 47.49,
+    "y": 45.71,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 43,
+    "team": "TB",
+    "x": 47.82,
+    "y": 46.17,
+    "nflId": 35481,
+    "displayName": "Rob Gronkowski",
+    "officialPosition": "TE",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 1,
+    "team": "TB",
+    "x": 40.99,
+    "y": 36.74,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 2,
+    "team": "TB",
+    "x": 40.99,
+    "y": 36.73,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 3,
+    "team": "TB",
+    "x": 40.99,
+    "y": 36.74,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 4,
+    "team": "TB",
+    "x": 40.99,
+    "y": 36.74,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 5,
+    "team": "TB",
+    "x": 41.01,
+    "y": 36.75,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 6,
+    "team": "TB",
+    "x": 41.04,
+    "y": 36.77,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 7,
+    "team": "TB",
+    "x": 41.1,
+    "y": 36.82,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 8,
+    "team": "TB",
+    "x": 41.2,
+    "y": 36.9,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 9,
+    "team": "TB",
+    "x": 41.36,
+    "y": 37.02,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 10,
+    "team": "TB",
+    "x": 41.54,
+    "y": 37.18,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 11,
+    "team": "TB",
+    "x": 41.77,
+    "y": 37.38,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 12,
+    "team": "TB",
+    "x": 42.02,
+    "y": 37.59,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 13,
+    "team": "TB",
+    "x": 42.34,
+    "y": 37.87,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 14,
+    "team": "TB",
+    "x": 42.65,
+    "y": 38.16,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 15,
+    "team": "TB",
+    "x": 43.02,
+    "y": 38.47,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 16,
+    "team": "TB",
+    "x": 43.45,
+    "y": 38.8,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 17,
+    "team": "TB",
+    "x": 43.89,
+    "y": 39.14,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 18,
+    "team": "TB",
+    "x": 44.35,
+    "y": 39.5,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 19,
+    "team": "TB",
+    "x": 44.85,
+    "y": 39.86,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 20,
+    "team": "TB",
+    "x": 45.41,
+    "y": 40.21,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 21,
+    "team": "TB",
+    "x": 46.0,
+    "y": 40.55,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 22,
+    "team": "TB",
+    "x": 46.63,
+    "y": 40.87,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 23,
+    "team": "TB",
+    "x": 47.29,
+    "y": 41.14,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 24,
+    "team": "TB",
+    "x": 47.95,
+    "y": 41.39,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 25,
+    "team": "TB",
+    "x": 48.63,
+    "y": 41.62,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 26,
+    "team": "TB",
+    "x": 49.26,
+    "y": 41.82,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 27,
+    "team": "TB",
+    "x": 49.84,
+    "y": 41.96,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 28,
+    "team": "TB",
+    "x": 50.47,
+    "y": 42.13,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 29,
+    "team": "TB",
+    "x": 51.02,
+    "y": 42.27,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 30,
+    "team": "TB",
+    "x": 51.54,
+    "y": 42.4,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 31,
+    "team": "TB",
+    "x": 52.04,
+    "y": 42.5,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 32,
+    "team": "TB",
+    "x": 52.5,
+    "y": 42.55,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 33,
+    "team": "TB",
+    "x": 52.92,
+    "y": 42.56,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 34,
+    "team": "TB",
+    "x": 53.29,
+    "y": 42.53,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 35,
+    "team": "TB",
+    "x": 53.6,
+    "y": 42.45,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 36,
+    "team": "TB",
+    "x": 53.88,
+    "y": 42.29,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 37,
+    "team": "TB",
+    "x": 54.12,
+    "y": 42.07,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 38,
+    "team": "TB",
+    "x": 54.32,
+    "y": 41.83,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 39,
+    "team": "TB",
+    "x": 54.53,
+    "y": 41.53,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 40,
+    "team": "TB",
+    "x": 54.72,
+    "y": 41.19,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 41,
+    "team": "TB",
+    "x": 54.89,
+    "y": 40.81,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 42,
+    "team": "TB",
+    "x": 55.05,
+    "y": 40.4,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 43,
+    "team": "TB",
+    "x": 55.21,
+    "y": 39.97,
+    "nflId": 35634,
+    "displayName": "Antonio Brown",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 1,
+    "team": "TB",
+    "x": 37.54,
+    "y": 22.26,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 2,
+    "team": "TB",
+    "x": 37.55,
+    "y": 22.25,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 3,
+    "team": "TB",
+    "x": 37.53,
+    "y": 22.22,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 4,
+    "team": "TB",
+    "x": 37.54,
+    "y": 22.24,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 5,
+    "team": "TB",
+    "x": 37.56,
+    "y": 22.26,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 6,
+    "team": "TB",
+    "x": 37.55,
+    "y": 22.27,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 7,
+    "team": "TB",
+    "x": 37.59,
+    "y": 22.31,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 8,
+    "team": "TB",
+    "x": 37.6,
+    "y": 22.33,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 9,
+    "team": "TB",
+    "x": 37.61,
+    "y": 22.35,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 10,
+    "team": "TB",
+    "x": 37.65,
+    "y": 22.38,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 11,
+    "team": "TB",
+    "x": 37.67,
+    "y": 22.41,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 12,
+    "team": "TB",
+    "x": 37.69,
+    "y": 22.44,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 13,
+    "team": "TB",
+    "x": 37.71,
+    "y": 22.47,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 14,
+    "team": "TB",
+    "x": 37.73,
+    "y": 22.49,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 15,
+    "team": "TB",
+    "x": 37.75,
+    "y": 22.52,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 16,
+    "team": "TB",
+    "x": 37.78,
+    "y": 22.54,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 17,
+    "team": "TB",
+    "x": 37.79,
+    "y": 22.55,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 18,
+    "team": "TB",
+    "x": 37.8,
+    "y": 22.56,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 19,
+    "team": "TB",
+    "x": 37.79,
+    "y": 22.53,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 20,
+    "team": "TB",
+    "x": 37.75,
+    "y": 22.49,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 21,
+    "team": "TB",
+    "x": 37.68,
+    "y": 22.4,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 22,
+    "team": "TB",
+    "x": 37.6,
+    "y": 22.3,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 23,
+    "team": "TB",
+    "x": 37.52,
+    "y": 22.17,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 24,
+    "team": "TB",
+    "x": 37.42,
+    "y": 22.0,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 25,
+    "team": "TB",
+    "x": 37.29,
+    "y": 21.8,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 26,
+    "team": "TB",
+    "x": 37.17,
+    "y": 21.56,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 27,
+    "team": "TB",
+    "x": 37.04,
+    "y": 21.26,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 28,
+    "team": "TB",
+    "x": 36.91,
+    "y": 20.94,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 29,
+    "team": "TB",
+    "x": 36.81,
+    "y": 20.56,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 30,
+    "team": "TB",
+    "x": 36.73,
+    "y": 20.16,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 31,
+    "team": "TB",
+    "x": 36.67,
+    "y": 19.72,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 32,
+    "team": "TB",
+    "x": 36.65,
+    "y": 19.27,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 33,
+    "team": "TB",
+    "x": 36.69,
+    "y": 18.79,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 34,
+    "team": "TB",
+    "x": 36.74,
+    "y": 18.29,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 35,
+    "team": "TB",
+    "x": 36.82,
+    "y": 17.78,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 36,
+    "team": "TB",
+    "x": 36.95,
+    "y": 17.27,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 37,
+    "team": "TB",
+    "x": 37.1,
+    "y": 16.75,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 38,
+    "team": "TB",
+    "x": 37.28,
+    "y": 16.22,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 39,
+    "team": "TB",
+    "x": 37.47,
+    "y": 15.69,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 40,
+    "team": "TB",
+    "x": 37.69,
+    "y": 15.17,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 41,
+    "team": "TB",
+    "x": 37.95,
+    "y": 14.66,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 42,
+    "team": "TB",
+    "x": 38.26,
+    "y": 14.15,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 43,
+    "team": "TB",
+    "x": 38.58,
+    "y": 13.66,
+    "nflId": 39985,
+    "displayName": "Giovani Bernard",
+    "officialPosition": "RB",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 1,
+    "team": "TB",
+    "x": 42.18,
+    "y": 23.97,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 2,
+    "team": "TB",
+    "x": 42.16,
+    "y": 23.97,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 3,
+    "team": "TB",
+    "x": 42.15,
+    "y": 23.97,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 4,
+    "team": "TB",
+    "x": 42.15,
+    "y": 23.98,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 5,
+    "team": "TB",
+    "x": 42.14,
+    "y": 23.99,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 6,
+    "team": "TB",
+    "x": 42.1,
+    "y": 24.02,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 7,
+    "team": "TB",
+    "x": 42.03,
+    "y": 24.06,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 8,
+    "team": "TB",
+    "x": 41.95,
+    "y": 24.1,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 9,
+    "team": "TB",
+    "x": 41.86,
+    "y": 24.16,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 10,
+    "team": "TB",
+    "x": 41.74,
+    "y": 24.24,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 11,
+    "team": "TB",
+    "x": 41.58,
+    "y": 24.31,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 12,
+    "team": "TB",
+    "x": 41.42,
+    "y": 24.37,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 13,
+    "team": "TB",
+    "x": 41.23,
+    "y": 24.43,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 14,
+    "team": "TB",
+    "x": 41.01,
+    "y": 24.49,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 15,
+    "team": "TB",
+    "x": 40.82,
+    "y": 24.55,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 16,
+    "team": "TB",
+    "x": 40.62,
+    "y": 24.6,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 17,
+    "team": "TB",
+    "x": 40.43,
+    "y": 24.66,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 18,
+    "team": "TB",
+    "x": 40.25,
+    "y": 24.66,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 19,
+    "team": "TB",
+    "x": 40.05,
+    "y": 24.65,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 20,
+    "team": "TB",
+    "x": 39.88,
+    "y": 24.63,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 21,
+    "team": "TB",
+    "x": 39.72,
+    "y": 24.61,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 22,
+    "team": "TB",
+    "x": 39.57,
+    "y": 24.57,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 23,
+    "team": "TB",
+    "x": 39.45,
+    "y": 24.53,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 24,
+    "team": "TB",
+    "x": 39.33,
+    "y": 24.47,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 25,
+    "team": "TB",
+    "x": 39.22,
+    "y": 24.39,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 26,
+    "team": "TB",
+    "x": 39.12,
+    "y": 24.3,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 27,
+    "team": "TB",
+    "x": 39.06,
+    "y": 24.13,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 28,
+    "team": "TB",
+    "x": 38.95,
+    "y": 23.99,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 29,
+    "team": "TB",
+    "x": 38.85,
+    "y": 23.84,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 30,
+    "team": "TB",
+    "x": 38.74,
+    "y": 23.67,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 31,
+    "team": "TB",
+    "x": 38.6,
+    "y": 23.5,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 32,
+    "team": "TB",
+    "x": 38.45,
+    "y": 23.28,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 33,
+    "team": "TB",
+    "x": 38.28,
+    "y": 23.07,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 34,
+    "team": "TB",
+    "x": 38.07,
+    "y": 22.86,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 35,
+    "team": "TB",
+    "x": 37.84,
+    "y": 22.66,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 36,
+    "team": "TB",
+    "x": 37.56,
+    "y": 22.43,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 37,
+    "team": "TB",
+    "x": 37.27,
+    "y": 22.18,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 38,
+    "team": "TB",
+    "x": 36.96,
+    "y": 21.93,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 39,
+    "team": "TB",
+    "x": 36.64,
+    "y": 21.69,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 40,
+    "team": "TB",
+    "x": 36.31,
+    "y": 21.42,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 41,
+    "team": "TB",
+    "x": 36.0,
+    "y": 21.13,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 42,
+    "team": "TB",
+    "x": 35.71,
+    "y": 20.85,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 43,
+    "team": "TB",
+    "x": 35.43,
+    "y": 20.54,
+    "nflId": 40151,
+    "displayName": "Ryan Jensen",
+    "officialPosition": "C",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 1,
+    "team": "TB",
+    "x": 42.01,
+    "y": 16.19,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 2,
+    "team": "TB",
+    "x": 42.02,
+    "y": 16.19,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 3,
+    "team": "TB",
+    "x": 42.01,
+    "y": 16.19,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 4,
+    "team": "TB",
+    "x": 42.01,
+    "y": 16.2,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 5,
+    "team": "TB",
+    "x": 42.01,
+    "y": 16.2,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 6,
+    "team": "TB",
+    "x": 42.01,
+    "y": 16.2,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 7,
+    "team": "TB",
+    "x": 42.02,
+    "y": 16.21,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 8,
+    "team": "TB",
+    "x": 42.03,
+    "y": 16.22,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 9,
+    "team": "TB",
+    "x": 42.05,
+    "y": 16.23,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 10,
+    "team": "TB",
+    "x": 42.09,
+    "y": 16.25,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 11,
+    "team": "TB",
+    "x": 42.17,
+    "y": 16.29,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 12,
+    "team": "TB",
+    "x": 42.3,
+    "y": 16.36,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 13,
+    "team": "TB",
+    "x": 42.49,
+    "y": 16.46,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 14,
+    "team": "TB",
+    "x": 42.73,
+    "y": 16.61,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 15,
+    "team": "TB",
+    "x": 43.01,
+    "y": 16.8,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 16,
+    "team": "TB",
+    "x": 43.33,
+    "y": 17.03,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 17,
+    "team": "TB",
+    "x": 43.62,
+    "y": 17.37,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 18,
+    "team": "TB",
+    "x": 43.93,
+    "y": 17.72,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 19,
+    "team": "TB",
+    "x": 44.24,
+    "y": 18.13,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 20,
+    "team": "TB",
+    "x": 44.53,
+    "y": 18.58,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 21,
+    "team": "TB",
+    "x": 44.78,
+    "y": 19.07,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 22,
+    "team": "TB",
+    "x": 44.99,
+    "y": 19.58,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 23,
+    "team": "TB",
+    "x": 45.16,
+    "y": 20.16,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 24,
+    "team": "TB",
+    "x": 45.29,
+    "y": 20.75,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 25,
+    "team": "TB",
+    "x": 45.41,
+    "y": 21.39,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 26,
+    "team": "TB",
+    "x": 45.47,
+    "y": 22.04,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 27,
+    "team": "TB",
+    "x": 45.53,
+    "y": 22.74,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 28,
+    "team": "TB",
+    "x": 45.54,
+    "y": 23.44,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 29,
+    "team": "TB",
+    "x": 45.58,
+    "y": 24.16,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 30,
+    "team": "TB",
+    "x": 45.61,
+    "y": 24.88,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 31,
+    "team": "TB",
+    "x": 45.64,
+    "y": 25.62,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 32,
+    "team": "TB",
+    "x": 45.7,
+    "y": 26.36,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 33,
+    "team": "TB",
+    "x": 45.77,
+    "y": 27.09,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 34,
+    "team": "TB",
+    "x": 45.85,
+    "y": 27.82,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 35,
+    "team": "TB",
+    "x": 45.94,
+    "y": 28.54,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 36,
+    "team": "TB",
+    "x": 46.07,
+    "y": 29.24,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 37,
+    "team": "TB",
+    "x": 46.2,
+    "y": 29.93,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 38,
+    "team": "TB",
+    "x": 46.32,
+    "y": 30.59,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 39,
+    "team": "TB",
+    "x": 46.46,
+    "y": 31.25,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 40,
+    "team": "TB",
+    "x": 46.61,
+    "y": 31.87,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 41,
+    "team": "TB",
+    "x": 46.76,
+    "y": 32.45,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 42,
+    "team": "TB",
+    "x": 46.92,
+    "y": 32.99,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 43,
+    "team": "TB",
+    "x": 47.07,
+    "y": 33.47,
+    "nflId": 41233,
+    "displayName": "Mike Evans",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 1,
+    "team": "DAL",
+    "x": 43.66,
+    "y": 18.7,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 2,
+    "team": "DAL",
+    "x": 43.62,
+    "y": 18.75,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 3,
+    "team": "DAL",
+    "x": 43.59,
+    "y": 18.8,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 4,
+    "team": "DAL",
+    "x": 43.52,
+    "y": 18.83,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 5,
+    "team": "DAL",
+    "x": 43.41,
+    "y": 18.87,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 6,
+    "team": "DAL",
+    "x": 43.3,
+    "y": 18.89,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 7,
+    "team": "DAL",
+    "x": 43.19,
+    "y": 18.91,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 8,
+    "team": "DAL",
+    "x": 43.03,
+    "y": 18.93,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 9,
+    "team": "DAL",
+    "x": 42.87,
+    "y": 18.98,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 10,
+    "team": "DAL",
+    "x": 42.6,
+    "y": 19.09,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 11,
+    "team": "DAL",
+    "x": 42.34,
+    "y": 19.2,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 12,
+    "team": "DAL",
+    "x": 42.12,
+    "y": 19.29,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 13,
+    "team": "DAL",
+    "x": 41.9,
+    "y": 19.5,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 14,
+    "team": "DAL",
+    "x": 41.66,
+    "y": 19.69,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 15,
+    "team": "DAL",
+    "x": 41.42,
+    "y": 19.9,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 16,
+    "team": "DAL",
+    "x": 41.18,
+    "y": 20.13,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 17,
+    "team": "DAL",
+    "x": 40.96,
+    "y": 20.38,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 18,
+    "team": "DAL",
+    "x": 40.72,
+    "y": 20.75,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 19,
+    "team": "DAL",
+    "x": 40.51,
+    "y": 21.04,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 20,
+    "team": "DAL",
+    "x": 40.22,
+    "y": 21.48,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 21,
+    "team": "DAL",
+    "x": 39.97,
+    "y": 21.85,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 22,
+    "team": "DAL",
+    "x": 39.69,
+    "y": 22.2,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 23,
+    "team": "DAL",
+    "x": 39.4,
+    "y": 22.54,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 24,
+    "team": "DAL",
+    "x": 39.06,
+    "y": 22.85,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 25,
+    "team": "DAL",
+    "x": 38.73,
+    "y": 23.15,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 26,
+    "team": "DAL",
+    "x": 38.39,
+    "y": 23.44,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 27,
+    "team": "DAL",
+    "x": 38.04,
+    "y": 23.69,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 28,
+    "team": "DAL",
+    "x": 37.69,
+    "y": 23.93,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 29,
+    "team": "DAL",
+    "x": 37.34,
+    "y": 24.13,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 30,
+    "team": "DAL",
+    "x": 36.98,
+    "y": 24.29,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 31,
+    "team": "DAL",
+    "x": 36.62,
+    "y": 24.42,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 32,
+    "team": "DAL",
+    "x": 36.26,
+    "y": 24.51,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 33,
+    "team": "DAL",
+    "x": 35.91,
+    "y": 24.58,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 34,
+    "team": "DAL",
+    "x": 35.51,
+    "y": 24.53,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 35,
+    "team": "DAL",
+    "x": 35.14,
+    "y": 24.52,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 36,
+    "team": "DAL",
+    "x": 34.79,
+    "y": 24.49,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 37,
+    "team": "DAL",
+    "x": 34.38,
+    "y": 24.42,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 38,
+    "team": "DAL",
+    "x": 33.96,
+    "y": 24.3,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 39,
+    "team": "DAL",
+    "x": 33.59,
+    "y": 24.17,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 40,
+    "team": "DAL",
+    "x": 33.21,
+    "y": 24.06,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 41,
+    "team": "DAL",
+    "x": 32.85,
+    "y": 23.95,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 42,
+    "team": "DAL",
+    "x": 32.49,
+    "y": 23.86,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 43,
+    "team": "DAL",
+    "x": 32.13,
+    "y": 23.79,
+    "nflId": 41263,
+    "displayName": "Demarcus Lawrence",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 1,
+    "team": "TB",
+    "x": 41.55,
+    "y": 26.89,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 2,
+    "team": "TB",
+    "x": 41.54,
+    "y": 26.88,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 3,
+    "team": "TB",
+    "x": 41.53,
+    "y": 26.89,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 4,
+    "team": "TB",
+    "x": 41.5,
+    "y": 26.89,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 5,
+    "team": "TB",
+    "x": 41.46,
+    "y": 26.91,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 6,
+    "team": "TB",
+    "x": 41.38,
+    "y": 26.92,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 7,
+    "team": "TB",
+    "x": 41.28,
+    "y": 26.95,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 8,
+    "team": "TB",
+    "x": 41.14,
+    "y": 27.01,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 9,
+    "team": "TB",
+    "x": 40.94,
+    "y": 27.11,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 10,
+    "team": "TB",
+    "x": 40.72,
+    "y": 27.2,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 11,
+    "team": "TB",
+    "x": 40.46,
+    "y": 27.3,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 12,
+    "team": "TB",
+    "x": 40.2,
+    "y": 27.39,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 13,
+    "team": "TB",
+    "x": 39.95,
+    "y": 27.49,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 14,
+    "team": "TB",
+    "x": 39.67,
+    "y": 27.59,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 15,
+    "team": "TB",
+    "x": 39.39,
+    "y": 27.67,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 16,
+    "team": "TB",
+    "x": 39.1,
+    "y": 27.73,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 17,
+    "team": "TB",
+    "x": 38.78,
+    "y": 27.77,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 18,
+    "team": "TB",
+    "x": 38.46,
+    "y": 27.8,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 19,
+    "team": "TB",
+    "x": 38.14,
+    "y": 27.79,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 20,
+    "team": "TB",
+    "x": 37.83,
+    "y": 27.74,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 21,
+    "team": "TB",
+    "x": 37.54,
+    "y": 27.7,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 22,
+    "team": "TB",
+    "x": 37.21,
+    "y": 27.5,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 23,
+    "team": "TB",
+    "x": 36.9,
+    "y": 27.34,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 24,
+    "team": "TB",
+    "x": 36.62,
+    "y": 27.19,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 25,
+    "team": "TB",
+    "x": 36.34,
+    "y": 26.96,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 26,
+    "team": "TB",
+    "x": 36.08,
+    "y": 26.7,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 27,
+    "team": "TB",
+    "x": 35.81,
+    "y": 26.47,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 28,
+    "team": "TB",
+    "x": 35.58,
+    "y": 26.23,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 29,
+    "team": "TB",
+    "x": 35.28,
+    "y": 25.97,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 30,
+    "team": "TB",
+    "x": 35.03,
+    "y": 25.73,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 31,
+    "team": "TB",
+    "x": 34.81,
+    "y": 25.49,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 32,
+    "team": "TB",
+    "x": 34.65,
+    "y": 25.26,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 33,
+    "team": "TB",
+    "x": 34.51,
+    "y": 25.05,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 34,
+    "team": "TB",
+    "x": 34.39,
+    "y": 24.85,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 35,
+    "team": "TB",
+    "x": 34.29,
+    "y": 24.66,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 36,
+    "team": "TB",
+    "x": 34.2,
+    "y": 24.49,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 37,
+    "team": "TB",
+    "x": 34.13,
+    "y": 24.35,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 38,
+    "team": "TB",
+    "x": 34.07,
+    "y": 24.22,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 39,
+    "team": "TB",
+    "x": 33.98,
+    "y": 24.15,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 40,
+    "team": "TB",
+    "x": 33.9,
+    "y": 24.09,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 41,
+    "team": "TB",
+    "x": 33.83,
+    "y": 24.03,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 42,
+    "team": "TB",
+    "x": 33.74,
+    "y": 23.99,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 43,
+    "team": "TB",
+    "x": 33.64,
+    "y": 23.95,
+    "nflId": 42377,
+    "displayName": "Donovan Smith",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 1,
+    "team": "DAL",
+    "x": 44.03,
+    "y": 32.69,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 2,
+    "team": "DAL",
+    "x": 44.02,
+    "y": 32.68,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 3,
+    "team": "DAL",
+    "x": 43.99,
+    "y": 32.67,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 4,
+    "team": "DAL",
+    "x": 43.98,
+    "y": 32.66,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 5,
+    "team": "DAL",
+    "x": 43.96,
+    "y": 32.65,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 6,
+    "team": "DAL",
+    "x": 43.9,
+    "y": 32.63,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 7,
+    "team": "DAL",
+    "x": 43.83,
+    "y": 32.62,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 8,
+    "team": "DAL",
+    "x": 43.68,
+    "y": 32.54,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 9,
+    "team": "DAL",
+    "x": 43.49,
+    "y": 32.46,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 10,
+    "team": "DAL",
+    "x": 43.11,
+    "y": 32.24,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 11,
+    "team": "DAL",
+    "x": 42.71,
+    "y": 32.07,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 12,
+    "team": "DAL",
+    "x": 42.31,
+    "y": 31.86,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 13,
+    "team": "DAL",
+    "x": 41.87,
+    "y": 31.65,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 14,
+    "team": "DAL",
+    "x": 41.36,
+    "y": 31.38,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 15,
+    "team": "DAL",
+    "x": 40.89,
+    "y": 31.09,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 16,
+    "team": "DAL",
+    "x": 40.41,
+    "y": 30.82,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 17,
+    "team": "DAL",
+    "x": 39.9,
+    "y": 30.54,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 18,
+    "team": "DAL",
+    "x": 39.41,
+    "y": 30.25,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 19,
+    "team": "DAL",
+    "x": 38.94,
+    "y": 29.92,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 20,
+    "team": "DAL",
+    "x": 38.5,
+    "y": 29.58,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 21,
+    "team": "DAL",
+    "x": 38.06,
+    "y": 29.23,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 22,
+    "team": "DAL",
+    "x": 37.64,
+    "y": 28.9,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 23,
+    "team": "DAL",
+    "x": 37.24,
+    "y": 28.56,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 24,
+    "team": "DAL",
+    "x": 36.88,
+    "y": 28.25,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 25,
+    "team": "DAL",
+    "x": 36.56,
+    "y": 27.95,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 26,
+    "team": "DAL",
+    "x": 36.25,
+    "y": 27.65,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 27,
+    "team": "DAL",
+    "x": 35.95,
+    "y": 27.36,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 28,
+    "team": "DAL",
+    "x": 35.64,
+    "y": 27.1,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 29,
+    "team": "DAL",
+    "x": 35.38,
+    "y": 26.86,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 30,
+    "team": "DAL",
+    "x": 35.14,
+    "y": 26.64,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 31,
+    "team": "DAL",
+    "x": 34.96,
+    "y": 26.38,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 32,
+    "team": "DAL",
+    "x": 34.78,
+    "y": 26.2,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 33,
+    "team": "DAL",
+    "x": 34.68,
+    "y": 25.87,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 34,
+    "team": "DAL",
+    "x": 34.63,
+    "y": 25.5,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 35,
+    "team": "DAL",
+    "x": 34.57,
+    "y": 25.31,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 36,
+    "team": "DAL",
+    "x": 34.51,
+    "y": 25.15,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 37,
+    "team": "DAL",
+    "x": 34.49,
+    "y": 24.93,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 38,
+    "team": "DAL",
+    "x": 34.46,
+    "y": 24.72,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 39,
+    "team": "DAL",
+    "x": 34.42,
+    "y": 24.58,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 40,
+    "team": "DAL",
+    "x": 34.39,
+    "y": 24.48,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 41,
+    "team": "DAL",
+    "x": 34.38,
+    "y": 24.38,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 42,
+    "team": "DAL",
+    "x": 34.37,
+    "y": 24.3,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 43,
+    "team": "DAL",
+    "x": 34.37,
+    "y": 24.25,
+    "nflId": 42403,
+    "displayName": "Randy Gregory",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 1,
+    "team": "TB",
+    "x": 41.95,
+    "y": 25.66,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 2,
+    "team": "TB",
+    "x": 41.95,
+    "y": 25.66,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 3,
+    "team": "TB",
+    "x": 41.94,
+    "y": 25.66,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 4,
+    "team": "TB",
+    "x": 41.94,
+    "y": 25.66,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 5,
+    "team": "TB",
+    "x": 41.94,
+    "y": 25.65,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 6,
+    "team": "TB",
+    "x": 41.93,
+    "y": 25.65,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 7,
+    "team": "TB",
+    "x": 41.92,
+    "y": 25.65,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 8,
+    "team": "TB",
+    "x": 41.89,
+    "y": 25.65,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 9,
+    "team": "TB",
+    "x": 41.84,
+    "y": 25.65,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 10,
+    "team": "TB",
+    "x": 41.73,
+    "y": 25.66,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 11,
+    "team": "TB",
+    "x": 41.59,
+    "y": 25.67,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 12,
+    "team": "TB",
+    "x": 41.43,
+    "y": 25.67,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 13,
+    "team": "TB",
+    "x": 41.23,
+    "y": 25.68,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 14,
+    "team": "TB",
+    "x": 41.05,
+    "y": 25.68,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 15,
+    "team": "TB",
+    "x": 40.88,
+    "y": 25.67,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 16,
+    "team": "TB",
+    "x": 40.7,
+    "y": 25.66,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 17,
+    "team": "TB",
+    "x": 40.5,
+    "y": 25.68,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 18,
+    "team": "TB",
+    "x": 40.32,
+    "y": 25.69,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 19,
+    "team": "TB",
+    "x": 40.15,
+    "y": 25.7,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 20,
+    "team": "TB",
+    "x": 39.99,
+    "y": 25.71,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 21,
+    "team": "TB",
+    "x": 39.82,
+    "y": 25.72,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 22,
+    "team": "TB",
+    "x": 39.66,
+    "y": 25.73,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 23,
+    "team": "TB",
+    "x": 39.51,
+    "y": 25.73,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 24,
+    "team": "TB",
+    "x": 39.39,
+    "y": 25.76,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 25,
+    "team": "TB",
+    "x": 39.28,
+    "y": 25.79,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 26,
+    "team": "TB",
+    "x": 39.18,
+    "y": 25.85,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 27,
+    "team": "TB",
+    "x": 39.09,
+    "y": 25.94,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 28,
+    "team": "TB",
+    "x": 39.01,
+    "y": 26.11,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 29,
+    "team": "TB",
+    "x": 38.96,
+    "y": 26.23,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 30,
+    "team": "TB",
+    "x": 38.89,
+    "y": 26.41,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 31,
+    "team": "TB",
+    "x": 38.84,
+    "y": 26.57,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 32,
+    "team": "TB",
+    "x": 38.81,
+    "y": 26.76,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 33,
+    "team": "TB",
+    "x": 38.8,
+    "y": 26.94,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 34,
+    "team": "TB",
+    "x": 38.85,
+    "y": 27.11,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 35,
+    "team": "TB",
+    "x": 38.89,
+    "y": 27.27,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 36,
+    "team": "TB",
+    "x": 38.95,
+    "y": 27.44,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 37,
+    "team": "TB",
+    "x": 39.01,
+    "y": 27.57,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 38,
+    "team": "TB",
+    "x": 39.1,
+    "y": 27.73,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 39,
+    "team": "TB",
+    "x": 39.23,
+    "y": 27.84,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 40,
+    "team": "TB",
+    "x": 39.43,
+    "y": 27.87,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 41,
+    "team": "TB",
+    "x": 39.57,
+    "y": 27.88,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 42,
+    "team": "TB",
+    "x": 39.73,
+    "y": 27.88,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 43,
+    "team": "TB",
+    "x": 39.95,
+    "y": 27.86,
+    "nflId": 42404,
+    "displayName": "Ali Marpet",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 1,
+    "team": "DAL",
+    "x": 44.59,
+    "y": 29.62,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 2,
+    "team": "DAL",
+    "x": 44.58,
+    "y": 29.56,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 3,
+    "team": "DAL",
+    "x": 44.6,
+    "y": 29.52,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 4,
+    "team": "DAL",
+    "x": 44.63,
+    "y": 29.43,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 5,
+    "team": "DAL",
+    "x": 44.65,
+    "y": 29.41,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 6,
+    "team": "DAL",
+    "x": 44.68,
+    "y": 29.35,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 7,
+    "team": "DAL",
+    "x": 44.71,
+    "y": 29.26,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 8,
+    "team": "DAL",
+    "x": 44.72,
+    "y": 29.19,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 9,
+    "team": "DAL",
+    "x": 44.73,
+    "y": 29.15,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 10,
+    "team": "DAL",
+    "x": 44.77,
+    "y": 29.19,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 11,
+    "team": "DAL",
+    "x": 44.78,
+    "y": 29.24,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 12,
+    "team": "DAL",
+    "x": 44.83,
+    "y": 29.3,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 13,
+    "team": "DAL",
+    "x": 44.86,
+    "y": 29.4,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 14,
+    "team": "DAL",
+    "x": 44.93,
+    "y": 29.6,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 15,
+    "team": "DAL",
+    "x": 44.99,
+    "y": 29.82,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 16,
+    "team": "DAL",
+    "x": 45.02,
+    "y": 30.12,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 17,
+    "team": "DAL",
+    "x": 45.07,
+    "y": 30.46,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 18,
+    "team": "DAL",
+    "x": 45.11,
+    "y": 30.85,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 19,
+    "team": "DAL",
+    "x": 45.15,
+    "y": 31.3,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 20,
+    "team": "DAL",
+    "x": 45.19,
+    "y": 31.81,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 21,
+    "team": "DAL",
+    "x": 45.23,
+    "y": 32.35,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 22,
+    "team": "DAL",
+    "x": 45.27,
+    "y": 32.95,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 23,
+    "team": "DAL",
+    "x": 45.31,
+    "y": 33.59,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 24,
+    "team": "DAL",
+    "x": 45.36,
+    "y": 34.29,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 25,
+    "team": "DAL",
+    "x": 45.41,
+    "y": 35.02,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 26,
+    "team": "DAL",
+    "x": 45.47,
+    "y": 35.74,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 27,
+    "team": "DAL",
+    "x": 45.53,
+    "y": 36.47,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 28,
+    "team": "DAL",
+    "x": 45.59,
+    "y": 37.21,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 29,
+    "team": "DAL",
+    "x": 45.66,
+    "y": 37.92,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 30,
+    "team": "DAL",
+    "x": 45.77,
+    "y": 38.59,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 31,
+    "team": "DAL",
+    "x": 45.88,
+    "y": 39.26,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 32,
+    "team": "DAL",
+    "x": 46.01,
+    "y": 39.89,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 33,
+    "team": "DAL",
+    "x": 46.22,
+    "y": 40.47,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 34,
+    "team": "DAL",
+    "x": 46.44,
+    "y": 41.05,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 35,
+    "team": "DAL",
+    "x": 46.71,
+    "y": 41.58,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 36,
+    "team": "DAL",
+    "x": 46.97,
+    "y": 42.08,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 37,
+    "team": "DAL",
+    "x": 47.19,
+    "y": 42.46,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 38,
+    "team": "DAL",
+    "x": 47.46,
+    "y": 42.75,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 39,
+    "team": "DAL",
+    "x": 47.75,
+    "y": 42.97,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 40,
+    "team": "DAL",
+    "x": 48.03,
+    "y": 43.14,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 41,
+    "team": "DAL",
+    "x": 48.3,
+    "y": 43.22,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 42,
+    "team": "DAL",
+    "x": 48.57,
+    "y": 43.25,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 43,
+    "team": "DAL",
+    "x": 48.85,
+    "y": 43.21,
+    "nflId": 43306,
+    "displayName": "Keanu Neal",
+    "officialPosition": "MLB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 1,
+    "team": "DAL",
+    "x": 43.49,
+    "y": 37.55,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 2,
+    "team": "DAL",
+    "x": 43.53,
+    "y": 37.58,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 3,
+    "team": "DAL",
+    "x": 43.54,
+    "y": 37.6,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 4,
+    "team": "DAL",
+    "x": 43.59,
+    "y": 37.65,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 5,
+    "team": "DAL",
+    "x": 43.61,
+    "y": 37.61,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 6,
+    "team": "DAL",
+    "x": 43.61,
+    "y": 37.62,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 7,
+    "team": "DAL",
+    "x": 43.63,
+    "y": 37.64,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 8,
+    "team": "DAL",
+    "x": 43.7,
+    "y": 37.64,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 9,
+    "team": "DAL",
+    "x": 43.73,
+    "y": 37.65,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 10,
+    "team": "DAL",
+    "x": 43.78,
+    "y": 37.69,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 11,
+    "team": "DAL",
+    "x": 43.87,
+    "y": 37.74,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 12,
+    "team": "DAL",
+    "x": 43.98,
+    "y": 37.83,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 13,
+    "team": "DAL",
+    "x": 44.13,
+    "y": 37.94,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 14,
+    "team": "DAL",
+    "x": 44.31,
+    "y": 38.1,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 15,
+    "team": "DAL",
+    "x": 44.54,
+    "y": 38.32,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 16,
+    "team": "DAL",
+    "x": 44.79,
+    "y": 38.55,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 17,
+    "team": "DAL",
+    "x": 45.1,
+    "y": 38.81,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 18,
+    "team": "DAL",
+    "x": 45.45,
+    "y": 39.08,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 19,
+    "team": "DAL",
+    "x": 45.87,
+    "y": 39.38,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 20,
+    "team": "DAL",
+    "x": 46.29,
+    "y": 39.68,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 21,
+    "team": "DAL",
+    "x": 46.79,
+    "y": 39.98,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 22,
+    "team": "DAL",
+    "x": 47.34,
+    "y": 40.28,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 23,
+    "team": "DAL",
+    "x": 47.92,
+    "y": 40.58,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 24,
+    "team": "DAL",
+    "x": 48.54,
+    "y": 40.86,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 25,
+    "team": "DAL",
+    "x": 49.18,
+    "y": 41.13,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 26,
+    "team": "DAL",
+    "x": 49.84,
+    "y": 41.39,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 27,
+    "team": "DAL",
+    "x": 50.49,
+    "y": 41.63,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 28,
+    "team": "DAL",
+    "x": 51.14,
+    "y": 41.83,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 29,
+    "team": "DAL",
+    "x": 51.75,
+    "y": 42.02,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 30,
+    "team": "DAL",
+    "x": 52.34,
+    "y": 42.2,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 31,
+    "team": "DAL",
+    "x": 52.85,
+    "y": 42.4,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 32,
+    "team": "DAL",
+    "x": 53.33,
+    "y": 42.59,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 33,
+    "team": "DAL",
+    "x": 53.75,
+    "y": 42.78,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 34,
+    "team": "DAL",
+    "x": 54.11,
+    "y": 42.89,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 35,
+    "team": "DAL",
+    "x": 54.43,
+    "y": 43.02,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 36,
+    "team": "DAL",
+    "x": 54.66,
+    "y": 43.06,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 37,
+    "team": "DAL",
+    "x": 54.86,
+    "y": 43.1,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 38,
+    "team": "DAL",
+    "x": 55.04,
+    "y": 42.98,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 39,
+    "team": "DAL",
+    "x": 55.18,
+    "y": 42.91,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 40,
+    "team": "DAL",
+    "x": 55.34,
+    "y": 42.82,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 41,
+    "team": "DAL",
+    "x": 55.44,
+    "y": 42.7,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 42,
+    "team": "DAL",
+    "x": 55.57,
+    "y": 42.28,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 43,
+    "team": "DAL",
+    "x": 55.68,
+    "y": 41.96,
+    "nflId": 43478,
+    "displayName": "Anthony Brown",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 1,
+    "team": "TB",
+    "x": 40.09,
+    "y": 36.72,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 2,
+    "team": "TB",
+    "x": 40.08,
+    "y": 36.37,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 3,
+    "team": "TB",
+    "x": 40.07,
+    "y": 36.03,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 4,
+    "team": "TB",
+    "x": 40.07,
+    "y": 35.71,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 5,
+    "team": "TB",
+    "x": 40.11,
+    "y": 35.39,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 6,
+    "team": "TB",
+    "x": 40.16,
+    "y": 35.09,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 7,
+    "team": "TB",
+    "x": 40.22,
+    "y": 34.81,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 8,
+    "team": "TB",
+    "x": 40.34,
+    "y": 34.55,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 9,
+    "team": "TB",
+    "x": 40.5,
+    "y": 34.31,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 10,
+    "team": "TB",
+    "x": 40.69,
+    "y": 34.08,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 11,
+    "team": "TB",
+    "x": 40.9,
+    "y": 33.89,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 12,
+    "team": "TB",
+    "x": 41.16,
+    "y": 33.72,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 13,
+    "team": "TB",
+    "x": 41.47,
+    "y": 33.54,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 14,
+    "team": "TB",
+    "x": 41.8,
+    "y": 33.38,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 15,
+    "team": "TB",
+    "x": 42.17,
+    "y": 33.19,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 16,
+    "team": "TB",
+    "x": 42.6,
+    "y": 32.98,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 17,
+    "team": "TB",
+    "x": 43.03,
+    "y": 32.77,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 18,
+    "team": "TB",
+    "x": 43.49,
+    "y": 32.57,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 19,
+    "team": "TB",
+    "x": 43.96,
+    "y": 32.32,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 20,
+    "team": "TB",
+    "x": 44.44,
+    "y": 32.05,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 21,
+    "team": "TB",
+    "x": 44.91,
+    "y": 31.76,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 22,
+    "team": "TB",
+    "x": 45.39,
+    "y": 31.44,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 23,
+    "team": "TB",
+    "x": 45.88,
+    "y": 31.1,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 24,
+    "team": "TB",
+    "x": 46.37,
+    "y": 30.72,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 25,
+    "team": "TB",
+    "x": 46.85,
+    "y": 30.34,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 26,
+    "team": "TB",
+    "x": 47.34,
+    "y": 29.95,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 27,
+    "team": "TB",
+    "x": 47.83,
+    "y": 29.53,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 28,
+    "team": "TB",
+    "x": 48.34,
+    "y": 29.09,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 29,
+    "team": "TB",
+    "x": 48.86,
+    "y": 28.65,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 30,
+    "team": "TB",
+    "x": 49.38,
+    "y": 28.18,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 31,
+    "team": "TB",
+    "x": 49.91,
+    "y": 27.67,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 32,
+    "team": "TB",
+    "x": 50.43,
+    "y": 27.15,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 33,
+    "team": "TB",
+    "x": 50.94,
+    "y": 26.62,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 34,
+    "team": "TB",
+    "x": 51.43,
+    "y": 26.06,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 35,
+    "team": "TB",
+    "x": 51.86,
+    "y": 25.44,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 36,
+    "team": "TB",
+    "x": 52.29,
+    "y": 24.8,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 37,
+    "team": "TB",
+    "x": 52.68,
+    "y": 24.14,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 38,
+    "team": "TB",
+    "x": 53.01,
+    "y": 23.44,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 39,
+    "team": "TB",
+    "x": 53.34,
+    "y": 22.75,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 40,
+    "team": "TB",
+    "x": 53.64,
+    "y": 22.02,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 41,
+    "team": "TB",
+    "x": 53.91,
+    "y": 21.27,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 42,
+    "team": "TB",
+    "x": 54.15,
+    "y": 20.49,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 43,
+    "team": "TB",
+    "x": 54.37,
+    "y": 19.68,
+    "nflId": 44896,
+    "displayName": "Chris Godwin",
+    "officialPosition": "WR",
+    "pff_role": "Pass Route"
+  },
+  {
+    "frameId": 1,
+    "team": "DAL",
+    "x": 44.5,
+    "y": 37.78,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 2,
+    "team": "DAL",
+    "x": 44.54,
+    "y": 37.48,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 3,
+    "team": "DAL",
+    "x": 44.57,
+    "y": 37.18,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 4,
+    "team": "DAL",
+    "x": 44.58,
+    "y": 36.9,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 5,
+    "team": "DAL",
+    "x": 44.6,
+    "y": 36.62,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 6,
+    "team": "DAL",
+    "x": 44.61,
+    "y": 36.36,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 7,
+    "team": "DAL",
+    "x": 44.61,
+    "y": 36.12,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 8,
+    "team": "DAL",
+    "x": 44.62,
+    "y": 35.89,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 9,
+    "team": "DAL",
+    "x": 44.62,
+    "y": 35.68,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 10,
+    "team": "DAL",
+    "x": 44.61,
+    "y": 35.47,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 11,
+    "team": "DAL",
+    "x": 44.68,
+    "y": 35.27,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 12,
+    "team": "DAL",
+    "x": 44.75,
+    "y": 35.08,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 13,
+    "team": "DAL",
+    "x": 44.83,
+    "y": 34.88,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 14,
+    "team": "DAL",
+    "x": 44.93,
+    "y": 34.67,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 15,
+    "team": "DAL",
+    "x": 45.07,
+    "y": 34.46,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 16,
+    "team": "DAL",
+    "x": 45.24,
+    "y": 34.23,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 17,
+    "team": "DAL",
+    "x": 45.43,
+    "y": 33.98,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 18,
+    "team": "DAL",
+    "x": 45.63,
+    "y": 33.72,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 19,
+    "team": "DAL",
+    "x": 45.83,
+    "y": 33.43,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 20,
+    "team": "DAL",
+    "x": 46.03,
+    "y": 33.1,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 21,
+    "team": "DAL",
+    "x": 46.3,
+    "y": 32.74,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 22,
+    "team": "DAL",
+    "x": 46.56,
+    "y": 32.37,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 23,
+    "team": "DAL",
+    "x": 46.86,
+    "y": 31.99,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 24,
+    "team": "DAL",
+    "x": 47.19,
+    "y": 31.59,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 25,
+    "team": "DAL",
+    "x": 47.53,
+    "y": 31.19,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 26,
+    "team": "DAL",
+    "x": 47.89,
+    "y": 30.77,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 27,
+    "team": "DAL",
+    "x": 48.27,
+    "y": 30.37,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 28,
+    "team": "DAL",
+    "x": 48.67,
+    "y": 29.94,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 29,
+    "team": "DAL",
+    "x": 49.09,
+    "y": 29.5,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 30,
+    "team": "DAL",
+    "x": 49.53,
+    "y": 29.06,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 31,
+    "team": "DAL",
+    "x": 49.99,
+    "y": 28.6,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 32,
+    "team": "DAL",
+    "x": 50.47,
+    "y": 28.14,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 33,
+    "team": "DAL",
+    "x": 50.97,
+    "y": 27.64,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 34,
+    "team": "DAL",
+    "x": 51.49,
+    "y": 27.11,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 35,
+    "team": "DAL",
+    "x": 52.01,
+    "y": 26.56,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 36,
+    "team": "DAL",
+    "x": 52.53,
+    "y": 25.97,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 37,
+    "team": "DAL",
+    "x": 53.04,
+    "y": 25.34,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 38,
+    "team": "DAL",
+    "x": 53.52,
+    "y": 24.7,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 39,
+    "team": "DAL",
+    "x": 53.96,
+    "y": 24.02,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 40,
+    "team": "DAL",
+    "x": 54.39,
+    "y": 23.31,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 41,
+    "team": "DAL",
+    "x": 54.75,
+    "y": 22.58,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 42,
+    "team": "DAL",
+    "x": 55.1,
+    "y": 21.83,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 43,
+    "team": "DAL",
+    "x": 55.4,
+    "y": 21.06,
+    "nflId": 44904,
+    "displayName": "Jourdan Lewis",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 1,
+    "team": "DAL",
+    "x": 43.47,
+    "y": 25.14,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 2,
+    "team": "DAL",
+    "x": 43.46,
+    "y": 25.14,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 3,
+    "team": "DAL",
+    "x": 43.46,
+    "y": 25.15,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 4,
+    "team": "DAL",
+    "x": 43.44,
+    "y": 25.14,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 5,
+    "team": "DAL",
+    "x": 43.41,
+    "y": 25.16,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 6,
+    "team": "DAL",
+    "x": 43.35,
+    "y": 25.18,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 7,
+    "team": "DAL",
+    "x": 43.28,
+    "y": 25.2,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 8,
+    "team": "DAL",
+    "x": 43.13,
+    "y": 25.25,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 9,
+    "team": "DAL",
+    "x": 42.96,
+    "y": 25.28,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 10,
+    "team": "DAL",
+    "x": 42.76,
+    "y": 25.31,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 11,
+    "team": "DAL",
+    "x": 42.55,
+    "y": 25.37,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 12,
+    "team": "DAL",
+    "x": 42.35,
+    "y": 25.4,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 13,
+    "team": "DAL",
+    "x": 42.15,
+    "y": 25.44,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 14,
+    "team": "DAL",
+    "x": 41.89,
+    "y": 25.51,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 15,
+    "team": "DAL",
+    "x": 41.68,
+    "y": 25.58,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 16,
+    "team": "DAL",
+    "x": 41.48,
+    "y": 25.64,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 17,
+    "team": "DAL",
+    "x": 41.27,
+    "y": 25.68,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 18,
+    "team": "DAL",
+    "x": 41.07,
+    "y": 25.72,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 19,
+    "team": "DAL",
+    "x": 40.87,
+    "y": 25.76,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 20,
+    "team": "DAL",
+    "x": 40.65,
+    "y": 25.8,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 21,
+    "team": "DAL",
+    "x": 40.45,
+    "y": 25.82,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 22,
+    "team": "DAL",
+    "x": 40.26,
+    "y": 25.88,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 23,
+    "team": "DAL",
+    "x": 40.12,
+    "y": 25.97,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 24,
+    "team": "DAL",
+    "x": 39.99,
+    "y": 26.06,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 25,
+    "team": "DAL",
+    "x": 39.9,
+    "y": 26.14,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 26,
+    "team": "DAL",
+    "x": 39.79,
+    "y": 26.28,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 27,
+    "team": "DAL",
+    "x": 39.68,
+    "y": 26.43,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 28,
+    "team": "DAL",
+    "x": 39.56,
+    "y": 26.6,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 29,
+    "team": "DAL",
+    "x": 39.53,
+    "y": 26.75,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 30,
+    "team": "DAL",
+    "x": 39.5,
+    "y": 26.91,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 31,
+    "team": "DAL",
+    "x": 39.49,
+    "y": 27.21,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 32,
+    "team": "DAL",
+    "x": 39.52,
+    "y": 27.44,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 33,
+    "team": "DAL",
+    "x": 39.57,
+    "y": 27.66,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 34,
+    "team": "DAL",
+    "x": 39.61,
+    "y": 27.88,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 35,
+    "team": "DAL",
+    "x": 39.66,
+    "y": 28.1,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 36,
+    "team": "DAL",
+    "x": 39.77,
+    "y": 28.31,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 37,
+    "team": "DAL",
+    "x": 39.95,
+    "y": 28.51,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 38,
+    "team": "DAL",
+    "x": 40.28,
+    "y": 28.68,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 39,
+    "team": "DAL",
+    "x": 40.35,
+    "y": 28.71,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 40,
+    "team": "DAL",
+    "x": 40.47,
+    "y": 28.73,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 41,
+    "team": "DAL",
+    "x": 40.6,
+    "y": 28.72,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 42,
+    "team": "DAL",
+    "x": 40.77,
+    "y": 28.67,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 43,
+    "team": "DAL",
+    "x": 40.95,
+    "y": 28.53,
+    "nflId": 44955,
+    "displayName": "Carlos Watkins",
+    "officialPosition": "DE",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 1,
+    "team": "DAL",
+    "x": 58.6,
+    "y": 27.33,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 2,
+    "team": "DAL",
+    "x": 58.65,
+    "y": 27.29,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 3,
+    "team": "DAL",
+    "x": 58.71,
+    "y": 27.26,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 4,
+    "team": "DAL",
+    "x": 58.78,
+    "y": 27.23,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 5,
+    "team": "DAL",
+    "x": 58.88,
+    "y": 27.2,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 6,
+    "team": "DAL",
+    "x": 58.99,
+    "y": 27.18,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 7,
+    "team": "DAL",
+    "x": 59.12,
+    "y": 27.17,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 8,
+    "team": "DAL",
+    "x": 59.28,
+    "y": 27.16,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 9,
+    "team": "DAL",
+    "x": 59.44,
+    "y": 27.16,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 10,
+    "team": "DAL",
+    "x": 59.62,
+    "y": 27.14,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 11,
+    "team": "DAL",
+    "x": 59.81,
+    "y": 27.12,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 12,
+    "team": "DAL",
+    "x": 60.02,
+    "y": 27.11,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 13,
+    "team": "DAL",
+    "x": 60.24,
+    "y": 27.09,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 14,
+    "team": "DAL",
+    "x": 60.47,
+    "y": 27.06,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 15,
+    "team": "DAL",
+    "x": 60.71,
+    "y": 27.04,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 16,
+    "team": "DAL",
+    "x": 60.96,
+    "y": 27.04,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 17,
+    "team": "DAL",
+    "x": 61.23,
+    "y": 27.05,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 18,
+    "team": "DAL",
+    "x": 61.51,
+    "y": 27.07,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 19,
+    "team": "DAL",
+    "x": 61.8,
+    "y": 27.09,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 20,
+    "team": "DAL",
+    "x": 62.1,
+    "y": 27.14,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 21,
+    "team": "DAL",
+    "x": 62.4,
+    "y": 27.21,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 22,
+    "team": "DAL",
+    "x": 62.68,
+    "y": 27.33,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 23,
+    "team": "DAL",
+    "x": 62.98,
+    "y": 27.49,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 24,
+    "team": "DAL",
+    "x": 63.27,
+    "y": 27.68,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 25,
+    "team": "DAL",
+    "x": 63.59,
+    "y": 27.89,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 26,
+    "team": "DAL",
+    "x": 63.9,
+    "y": 28.13,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 27,
+    "team": "DAL",
+    "x": 64.24,
+    "y": 28.4,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 28,
+    "team": "DAL",
+    "x": 64.58,
+    "y": 28.68,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 29,
+    "team": "DAL",
+    "x": 64.92,
+    "y": 28.97,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 30,
+    "team": "DAL",
+    "x": 65.28,
+    "y": 29.26,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 31,
+    "team": "DAL",
+    "x": 65.65,
+    "y": 29.55,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 32,
+    "team": "DAL",
+    "x": 66.03,
+    "y": 29.84,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 33,
+    "team": "DAL",
+    "x": 66.42,
+    "y": 30.09,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 34,
+    "team": "DAL",
+    "x": 66.84,
+    "y": 30.3,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 35,
+    "team": "DAL",
+    "x": 67.28,
+    "y": 30.46,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 36,
+    "team": "DAL",
+    "x": 67.7,
+    "y": 30.58,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 37,
+    "team": "DAL",
+    "x": 68.11,
+    "y": 30.6,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 38,
+    "team": "DAL",
+    "x": 68.52,
+    "y": 30.6,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 39,
+    "team": "DAL",
+    "x": 68.93,
+    "y": 30.55,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 40,
+    "team": "DAL",
+    "x": 69.32,
+    "y": 30.43,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 41,
+    "team": "DAL",
+    "x": 69.7,
+    "y": 30.19,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 42,
+    "team": "DAL",
+    "x": 70.1,
+    "y": 29.93,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 43,
+    "team": "DAL",
+    "x": 70.47,
+    "y": 29.6,
+    "nflId": 44962,
+    "displayName": "Damontae Kazee",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 1,
+    "team": "TB",
+    "x": 41.42,
+    "y": 22.63,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 2,
+    "team": "TB",
+    "x": 41.42,
+    "y": 22.62,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 3,
+    "team": "TB",
+    "x": 41.42,
+    "y": 22.63,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 4,
+    "team": "TB",
+    "x": 41.42,
+    "y": 22.63,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 5,
+    "team": "TB",
+    "x": 41.42,
+    "y": 22.63,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 6,
+    "team": "TB",
+    "x": 41.41,
+    "y": 22.63,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 7,
+    "team": "TB",
+    "x": 41.4,
+    "y": 22.64,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 8,
+    "team": "TB",
+    "x": 41.37,
+    "y": 22.66,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 9,
+    "team": "TB",
+    "x": 41.32,
+    "y": 22.68,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 10,
+    "team": "TB",
+    "x": 41.25,
+    "y": 22.69,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 11,
+    "team": "TB",
+    "x": 41.15,
+    "y": 22.7,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 12,
+    "team": "TB",
+    "x": 41.05,
+    "y": 22.71,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 13,
+    "team": "TB",
+    "x": 40.92,
+    "y": 22.69,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 14,
+    "team": "TB",
+    "x": 40.79,
+    "y": 22.66,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 15,
+    "team": "TB",
+    "x": 40.63,
+    "y": 22.62,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 16,
+    "team": "TB",
+    "x": 40.45,
+    "y": 22.57,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 17,
+    "team": "TB",
+    "x": 40.22,
+    "y": 22.51,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 18,
+    "team": "TB",
+    "x": 40.01,
+    "y": 22.51,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 19,
+    "team": "TB",
+    "x": 39.75,
+    "y": 22.5,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 20,
+    "team": "TB",
+    "x": 39.52,
+    "y": 22.52,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 21,
+    "team": "TB",
+    "x": 39.28,
+    "y": 22.53,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 22,
+    "team": "TB",
+    "x": 39.04,
+    "y": 22.59,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 23,
+    "team": "TB",
+    "x": 38.82,
+    "y": 22.69,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 24,
+    "team": "TB",
+    "x": 38.58,
+    "y": 22.79,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 25,
+    "team": "TB",
+    "x": 38.36,
+    "y": 22.9,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 26,
+    "team": "TB",
+    "x": 38.12,
+    "y": 23.04,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 27,
+    "team": "TB",
+    "x": 37.92,
+    "y": 23.23,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 28,
+    "team": "TB",
+    "x": 37.74,
+    "y": 23.41,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 29,
+    "team": "TB",
+    "x": 37.56,
+    "y": 23.61,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 30,
+    "team": "TB",
+    "x": 37.38,
+    "y": 23.84,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 31,
+    "team": "TB",
+    "x": 37.22,
+    "y": 24.06,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 32,
+    "team": "TB",
+    "x": 37.05,
+    "y": 24.33,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 33,
+    "team": "TB",
+    "x": 36.9,
+    "y": 24.56,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 34,
+    "team": "TB",
+    "x": 36.71,
+    "y": 24.85,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 35,
+    "team": "TB",
+    "x": 36.53,
+    "y": 25.1,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 36,
+    "team": "TB",
+    "x": 36.34,
+    "y": 25.35,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 37,
+    "team": "TB",
+    "x": 36.14,
+    "y": 25.59,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 38,
+    "team": "TB",
+    "x": 35.92,
+    "y": 25.8,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 39,
+    "team": "TB",
+    "x": 35.73,
+    "y": 25.98,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 40,
+    "team": "TB",
+    "x": 35.54,
+    "y": 26.09,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 41,
+    "team": "TB",
+    "x": 35.33,
+    "y": 26.17,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 42,
+    "team": "TB",
+    "x": 35.15,
+    "y": 26.19,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 43,
+    "team": "TB",
+    "x": 35.0,
+    "y": 26.16,
+    "nflId": 46163,
+    "displayName": "Alex Cappa",
+    "officialPosition": "G",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 1,
+    "team": "DAL",
+    "x": 48.36,
+    "y": 22.8,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 2,
+    "team": "DAL",
+    "x": 48.29,
+    "y": 22.75,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 3,
+    "team": "DAL",
+    "x": 48.23,
+    "y": 22.67,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 4,
+    "team": "DAL",
+    "x": 48.19,
+    "y": 22.6,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 5,
+    "team": "DAL",
+    "x": 48.13,
+    "y": 22.53,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 6,
+    "team": "DAL",
+    "x": 48.07,
+    "y": 22.41,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 7,
+    "team": "DAL",
+    "x": 48.01,
+    "y": 22.29,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 8,
+    "team": "DAL",
+    "x": 47.96,
+    "y": 22.17,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 9,
+    "team": "DAL",
+    "x": 47.91,
+    "y": 22.06,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 10,
+    "team": "DAL",
+    "x": 47.85,
+    "y": 21.92,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 11,
+    "team": "DAL",
+    "x": 47.8,
+    "y": 21.77,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 12,
+    "team": "DAL",
+    "x": 47.74,
+    "y": 21.58,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 13,
+    "team": "DAL",
+    "x": 47.67,
+    "y": 21.4,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 14,
+    "team": "DAL",
+    "x": 47.6,
+    "y": 21.25,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 15,
+    "team": "DAL",
+    "x": 47.54,
+    "y": 21.17,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 16,
+    "team": "DAL",
+    "x": 47.49,
+    "y": 21.11,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 17,
+    "team": "DAL",
+    "x": 47.44,
+    "y": 21.05,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 18,
+    "team": "DAL",
+    "x": 47.4,
+    "y": 21.05,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 19,
+    "team": "DAL",
+    "x": 47.35,
+    "y": 21.1,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 20,
+    "team": "DAL",
+    "x": 47.29,
+    "y": 21.18,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 21,
+    "team": "DAL",
+    "x": 47.23,
+    "y": 21.32,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 22,
+    "team": "DAL",
+    "x": 47.17,
+    "y": 21.5,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 23,
+    "team": "DAL",
+    "x": 47.11,
+    "y": 21.74,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 24,
+    "team": "DAL",
+    "x": 47.06,
+    "y": 22.04,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 25,
+    "team": "DAL",
+    "x": 46.99,
+    "y": 22.31,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 26,
+    "team": "DAL",
+    "x": 46.95,
+    "y": 22.56,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 27,
+    "team": "DAL",
+    "x": 46.92,
+    "y": 22.77,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 28,
+    "team": "DAL",
+    "x": 46.91,
+    "y": 22.91,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 29,
+    "team": "DAL",
+    "x": 46.9,
+    "y": 23.02,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 30,
+    "team": "DAL",
+    "x": 46.9,
+    "y": 23.08,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 31,
+    "team": "DAL",
+    "x": 46.91,
+    "y": 23.1,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 32,
+    "team": "DAL",
+    "x": 46.93,
+    "y": 22.89,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 33,
+    "team": "DAL",
+    "x": 46.91,
+    "y": 22.58,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 34,
+    "team": "DAL",
+    "x": 46.9,
+    "y": 22.19,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 35,
+    "team": "DAL",
+    "x": 46.9,
+    "y": 21.79,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 36,
+    "team": "DAL",
+    "x": 46.89,
+    "y": 21.34,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 37,
+    "team": "DAL",
+    "x": 46.82,
+    "y": 20.81,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 38,
+    "team": "DAL",
+    "x": 46.77,
+    "y": 20.27,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 39,
+    "team": "DAL",
+    "x": 46.72,
+    "y": 19.68,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 40,
+    "team": "DAL",
+    "x": 46.7,
+    "y": 19.09,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 41,
+    "team": "DAL",
+    "x": 46.62,
+    "y": 18.41,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 42,
+    "team": "DAL",
+    "x": 46.55,
+    "y": 17.73,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 43,
+    "team": "DAL",
+    "x": 46.47,
+    "y": 17.04,
+    "nflId": 47996,
+    "displayName": "Donovan Wilson",
+    "officialPosition": "SS",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 1,
+    "team": "TB",
+    "x": 41.15,
+    "y": 21.36,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 2,
+    "team": "TB",
+    "x": 41.14,
+    "y": 21.36,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 3,
+    "team": "TB",
+    "x": 41.14,
+    "y": 21.36,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 4,
+    "team": "TB",
+    "x": 41.14,
+    "y": 21.35,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 5,
+    "team": "TB",
+    "x": 41.13,
+    "y": 21.34,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 6,
+    "team": "TB",
+    "x": 41.11,
+    "y": 21.31,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 7,
+    "team": "TB",
+    "x": 41.07,
+    "y": 21.27,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 8,
+    "team": "TB",
+    "x": 40.99,
+    "y": 21.21,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 9,
+    "team": "TB",
+    "x": 40.87,
+    "y": 21.14,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 10,
+    "team": "TB",
+    "x": 40.75,
+    "y": 21.05,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 11,
+    "team": "TB",
+    "x": 40.6,
+    "y": 20.98,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 12,
+    "team": "TB",
+    "x": 40.42,
+    "y": 20.92,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 13,
+    "team": "TB",
+    "x": 40.27,
+    "y": 20.89,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 14,
+    "team": "TB",
+    "x": 40.1,
+    "y": 20.86,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 15,
+    "team": "TB",
+    "x": 39.93,
+    "y": 20.85,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 16,
+    "team": "TB",
+    "x": 39.8,
+    "y": 20.85,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 17,
+    "team": "TB",
+    "x": 39.67,
+    "y": 20.89,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 18,
+    "team": "TB",
+    "x": 39.55,
+    "y": 20.92,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 19,
+    "team": "TB",
+    "x": 39.43,
+    "y": 20.97,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 20,
+    "team": "TB",
+    "x": 39.27,
+    "y": 21.06,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 21,
+    "team": "TB",
+    "x": 39.11,
+    "y": 21.13,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 22,
+    "team": "TB",
+    "x": 38.95,
+    "y": 21.2,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 23,
+    "team": "TB",
+    "x": 38.83,
+    "y": 21.28,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 24,
+    "team": "TB",
+    "x": 38.62,
+    "y": 21.4,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 25,
+    "team": "TB",
+    "x": 38.42,
+    "y": 21.5,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 26,
+    "team": "TB",
+    "x": 38.19,
+    "y": 21.6,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 27,
+    "team": "TB",
+    "x": 37.96,
+    "y": 21.74,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 28,
+    "team": "TB",
+    "x": 37.72,
+    "y": 21.88,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 29,
+    "team": "TB",
+    "x": 37.46,
+    "y": 22.03,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 30,
+    "team": "TB",
+    "x": 37.2,
+    "y": 22.18,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 31,
+    "team": "TB",
+    "x": 36.89,
+    "y": 22.33,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 32,
+    "team": "TB",
+    "x": 36.58,
+    "y": 22.49,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 33,
+    "team": "TB",
+    "x": 36.26,
+    "y": 22.68,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 34,
+    "team": "TB",
+    "x": 35.96,
+    "y": 22.86,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 35,
+    "team": "TB",
+    "x": 35.67,
+    "y": 23.01,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 36,
+    "team": "TB",
+    "x": 35.41,
+    "y": 23.11,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 37,
+    "team": "TB",
+    "x": 35.13,
+    "y": 23.21,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 38,
+    "team": "TB",
+    "x": 34.85,
+    "y": 23.3,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 39,
+    "team": "TB",
+    "x": 34.55,
+    "y": 23.36,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 40,
+    "team": "TB",
+    "x": 34.29,
+    "y": 23.41,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 41,
+    "team": "TB",
+    "x": 34.01,
+    "y": 23.44,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 42,
+    "team": "TB",
+    "x": 33.72,
+    "y": 23.45,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 43,
+    "team": "TB",
+    "x": 33.46,
+    "y": 23.48,
+    "nflId": 52421,
+    "displayName": "Tristan Wirfs",
+    "officialPosition": "T",
+    "pff_role": "Pass Block"
+  },
+  {
+    "frameId": 1,
+    "team": "DAL",
+    "x": 43.5,
+    "y": 16.27,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 2,
+    "team": "DAL",
+    "x": 43.47,
+    "y": 16.19,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 3,
+    "team": "DAL",
+    "x": 43.44,
+    "y": 16.13,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 4,
+    "team": "DAL",
+    "x": 43.41,
+    "y": 16.06,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 5,
+    "team": "DAL",
+    "x": 43.38,
+    "y": 15.98,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 6,
+    "team": "DAL",
+    "x": 43.35,
+    "y": 15.88,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 7,
+    "team": "DAL",
+    "x": 43.33,
+    "y": 15.81,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 8,
+    "team": "DAL",
+    "x": 43.34,
+    "y": 15.76,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 9,
+    "team": "DAL",
+    "x": 43.38,
+    "y": 15.72,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 10,
+    "team": "DAL",
+    "x": 43.46,
+    "y": 15.69,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 11,
+    "team": "DAL",
+    "x": 43.6,
+    "y": 15.67,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 12,
+    "team": "DAL",
+    "x": 43.76,
+    "y": 15.65,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 13,
+    "team": "DAL",
+    "x": 44.01,
+    "y": 15.66,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 14,
+    "team": "DAL",
+    "x": 44.29,
+    "y": 15.67,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 15,
+    "team": "DAL",
+    "x": 44.62,
+    "y": 15.7,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 16,
+    "team": "DAL",
+    "x": 44.98,
+    "y": 15.75,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 17,
+    "team": "DAL",
+    "x": 45.36,
+    "y": 15.82,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 18,
+    "team": "DAL",
+    "x": 45.76,
+    "y": 15.9,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 19,
+    "team": "DAL",
+    "x": 46.16,
+    "y": 16.02,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 20,
+    "team": "DAL",
+    "x": 46.57,
+    "y": 16.17,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 21,
+    "team": "DAL",
+    "x": 46.95,
+    "y": 16.36,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 22,
+    "team": "DAL",
+    "x": 47.32,
+    "y": 16.59,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 23,
+    "team": "DAL",
+    "x": 47.66,
+    "y": 16.88,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 24,
+    "team": "DAL",
+    "x": 47.97,
+    "y": 17.23,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 25,
+    "team": "DAL",
+    "x": 48.25,
+    "y": 17.61,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 26,
+    "team": "DAL",
+    "x": 48.51,
+    "y": 18.02,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 27,
+    "team": "DAL",
+    "x": 48.71,
+    "y": 18.46,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 28,
+    "team": "DAL",
+    "x": 48.9,
+    "y": 18.94,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 29,
+    "team": "DAL",
+    "x": 49.08,
+    "y": 19.44,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 30,
+    "team": "DAL",
+    "x": 49.24,
+    "y": 19.97,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 31,
+    "team": "DAL",
+    "x": 49.39,
+    "y": 20.53,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 32,
+    "team": "DAL",
+    "x": 49.55,
+    "y": 21.1,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 33,
+    "team": "DAL",
+    "x": 49.67,
+    "y": 21.67,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 34,
+    "team": "DAL",
+    "x": 49.76,
+    "y": 22.23,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 35,
+    "team": "DAL",
+    "x": 49.87,
+    "y": 22.84,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 36,
+    "team": "DAL",
+    "x": 49.97,
+    "y": 23.45,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 37,
+    "team": "DAL",
+    "x": 50.05,
+    "y": 24.06,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 38,
+    "team": "DAL",
+    "x": 50.13,
+    "y": 24.69,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 39,
+    "team": "DAL",
+    "x": 50.2,
+    "y": 25.35,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 40,
+    "team": "DAL",
+    "x": 50.26,
+    "y": 26.02,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 41,
+    "team": "DAL",
+    "x": 50.31,
+    "y": 26.7,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 42,
+    "team": "DAL",
+    "x": 50.36,
+    "y": 27.4,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 43,
+    "team": "DAL",
+    "x": 50.39,
+    "y": 28.09,
+    "nflId": 52459,
+    "displayName": "Trevon Diggs",
+    "officialPosition": "CB",
+    "pff_role": "Coverage"
+  },
+  {
+    "frameId": 1,
+    "team": "DAL",
+    "x": 43.71,
+    "y": 21.88,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 2,
+    "team": "DAL",
+    "x": 43.71,
+    "y": 21.88,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 3,
+    "team": "DAL",
+    "x": 43.71,
+    "y": 21.89,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 4,
+    "team": "DAL",
+    "x": 43.7,
+    "y": 21.91,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 5,
+    "team": "DAL",
+    "x": 43.69,
+    "y": 21.92,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 6,
+    "team": "DAL",
+    "x": 43.68,
+    "y": 21.93,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 7,
+    "team": "DAL",
+    "x": 43.62,
+    "y": 21.96,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 8,
+    "team": "DAL",
+    "x": 43.52,
+    "y": 22.01,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 9,
+    "team": "DAL",
+    "x": 43.36,
+    "y": 22.07,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 10,
+    "team": "DAL",
+    "x": 43.12,
+    "y": 22.2,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 11,
+    "team": "DAL",
+    "x": 42.81,
+    "y": 22.24,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 12,
+    "team": "DAL",
+    "x": 42.48,
+    "y": 22.32,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 13,
+    "team": "DAL",
+    "x": 42.12,
+    "y": 22.41,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 14,
+    "team": "DAL",
+    "x": 41.73,
+    "y": 22.5,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 15,
+    "team": "DAL",
+    "x": 41.33,
+    "y": 22.52,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 16,
+    "team": "DAL",
+    "x": 40.94,
+    "y": 22.53,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 17,
+    "team": "DAL",
+    "x": 40.58,
+    "y": 22.52,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 18,
+    "team": "DAL",
+    "x": 40.24,
+    "y": 22.48,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 19,
+    "team": "DAL",
+    "x": 39.94,
+    "y": 22.41,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 20,
+    "team": "DAL",
+    "x": 39.65,
+    "y": 22.37,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 21,
+    "team": "DAL",
+    "x": 39.38,
+    "y": 22.32,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 22,
+    "team": "DAL",
+    "x": 39.13,
+    "y": 22.29,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 23,
+    "team": "DAL",
+    "x": 38.9,
+    "y": 22.24,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 24,
+    "team": "DAL",
+    "x": 38.68,
+    "y": 22.21,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 25,
+    "team": "DAL",
+    "x": 38.46,
+    "y": 22.21,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 26,
+    "team": "DAL",
+    "x": 38.19,
+    "y": 22.34,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 27,
+    "team": "DAL",
+    "x": 37.94,
+    "y": 22.45,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 28,
+    "team": "DAL",
+    "x": 37.67,
+    "y": 22.57,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 29,
+    "team": "DAL",
+    "x": 37.41,
+    "y": 22.71,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 30,
+    "team": "DAL",
+    "x": 37.09,
+    "y": 22.84,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 31,
+    "team": "DAL",
+    "x": 36.81,
+    "y": 22.99,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 32,
+    "team": "DAL",
+    "x": 36.52,
+    "y": 23.15,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 33,
+    "team": "DAL",
+    "x": 36.11,
+    "y": 23.22,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 34,
+    "team": "DAL",
+    "x": 35.78,
+    "y": 23.36,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 35,
+    "team": "DAL",
+    "x": 35.41,
+    "y": 23.23,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 36,
+    "team": "DAL",
+    "x": 35.05,
+    "y": 23.24,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 37,
+    "team": "DAL",
+    "x": 34.69,
+    "y": 23.19,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 38,
+    "team": "DAL",
+    "x": 34.33,
+    "y": 23.09,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 39,
+    "team": "DAL",
+    "x": 34.02,
+    "y": 22.94,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 40,
+    "team": "DAL",
+    "x": 33.77,
+    "y": 22.7,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 41,
+    "team": "DAL",
+    "x": 33.58,
+    "y": 22.38,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 42,
+    "team": "DAL",
+    "x": 33.44,
+    "y": 21.98,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 43,
+    "team": "DAL",
+    "x": 33.35,
+    "y": 21.52,
+    "nflId": 53441,
+    "displayName": "Micah Parsons",
+    "officialPosition": "OLB",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 1,
+    "team": "DAL",
+    "x": 43.69,
+    "y": 26.67,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 2,
+    "team": "DAL",
+    "x": 43.69,
+    "y": 26.66,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 3,
+    "team": "DAL",
+    "x": 43.69,
+    "y": 26.66,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 4,
+    "team": "DAL",
+    "x": 43.7,
+    "y": 26.66,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 5,
+    "team": "DAL",
+    "x": 43.7,
+    "y": 26.66,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 6,
+    "team": "DAL",
+    "x": 43.7,
+    "y": 26.67,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 7,
+    "team": "DAL",
+    "x": 43.67,
+    "y": 26.67,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 8,
+    "team": "DAL",
+    "x": 43.62,
+    "y": 26.69,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 9,
+    "team": "DAL",
+    "x": 43.55,
+    "y": 26.73,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 10,
+    "team": "DAL",
+    "x": 43.46,
+    "y": 26.77,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 11,
+    "team": "DAL",
+    "x": 43.25,
+    "y": 26.78,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 12,
+    "team": "DAL",
+    "x": 42.99,
+    "y": 26.7,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 13,
+    "team": "DAL",
+    "x": 42.78,
+    "y": 26.62,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 14,
+    "team": "DAL",
+    "x": 42.57,
+    "y": 26.55,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 15,
+    "team": "DAL",
+    "x": 42.37,
+    "y": 26.42,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 16,
+    "team": "DAL",
+    "x": 42.17,
+    "y": 26.33,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 17,
+    "team": "DAL",
+    "x": 41.95,
+    "y": 26.2,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 18,
+    "team": "DAL",
+    "x": 41.75,
+    "y": 26.07,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 19,
+    "team": "DAL",
+    "x": 41.56,
+    "y": 25.92,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 20,
+    "team": "DAL",
+    "x": 41.33,
+    "y": 25.6,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 21,
+    "team": "DAL",
+    "x": 41.12,
+    "y": 25.34,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 22,
+    "team": "DAL",
+    "x": 40.9,
+    "y": 25.11,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 23,
+    "team": "DAL",
+    "x": 40.7,
+    "y": 24.86,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 24,
+    "team": "DAL",
+    "x": 40.52,
+    "y": 24.63,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 25,
+    "team": "DAL",
+    "x": 40.29,
+    "y": 24.33,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 26,
+    "team": "DAL",
+    "x": 39.95,
+    "y": 23.96,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 27,
+    "team": "DAL",
+    "x": 39.66,
+    "y": 23.6,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 28,
+    "team": "DAL",
+    "x": 39.37,
+    "y": 23.23,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 29,
+    "team": "DAL",
+    "x": 39.08,
+    "y": 22.88,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 30,
+    "team": "DAL",
+    "x": 38.78,
+    "y": 22.48,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 31,
+    "team": "DAL",
+    "x": 38.42,
+    "y": 22.17,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 32,
+    "team": "DAL",
+    "x": 38.07,
+    "y": 21.86,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 33,
+    "team": "DAL",
+    "x": 37.68,
+    "y": 21.55,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 34,
+    "team": "DAL",
+    "x": 37.25,
+    "y": 21.28,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 35,
+    "team": "DAL",
+    "x": 36.76,
+    "y": 20.98,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 36,
+    "team": "DAL",
+    "x": 36.3,
+    "y": 20.75,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 37,
+    "team": "DAL",
+    "x": 35.83,
+    "y": 20.53,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 38,
+    "team": "DAL",
+    "x": 35.33,
+    "y": 20.34,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 39,
+    "team": "DAL",
+    "x": 34.85,
+    "y": 20.16,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 40,
+    "team": "DAL",
+    "x": 34.42,
+    "y": 20.06,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 41,
+    "team": "DAL",
+    "x": 33.97,
+    "y": 19.95,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 42,
+    "team": "DAL",
+    "x": 33.57,
+    "y": 19.81,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 43,
+    "team": "DAL",
+    "x": 33.17,
+    "y": 19.71,
+    "nflId": 53504,
+    "displayName": "Osa Odighizuwa",
+    "officialPosition": "DT",
+    "pff_role": "Pass Rush"
+  },
+  {
+    "frameId": 1,
+    "team": "football",
+    "x": 42.92,
+    "y": 24.04,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 2,
+    "team": "football",
+    "x": 42.23,
+    "y": 23.91,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 3,
+    "team": "football",
+    "x": 42.17,
+    "y": 23.89,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 4,
+    "team": "football",
+    "x": 42.1,
+    "y": 23.89,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 5,
+    "team": "football",
+    "x": 41.82,
+    "y": 23.91,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 6,
+    "team": "football",
+    "x": 41.56,
+    "y": 23.92,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 7,
+    "team": "football",
+    "x": 41.07,
+    "y": 23.94,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 8,
+    "team": "football",
+    "x": 40.71,
+    "y": 23.95,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 9,
+    "team": "football",
+    "x": 40.27,
+    "y": 23.97,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 10,
+    "team": "football",
+    "x": 39.79,
+    "y": 23.98,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 11,
+    "team": "football",
+    "x": 39.28,
+    "y": 24.0,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 12,
+    "team": "football",
+    "x": 38.66,
+    "y": 24.01,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 13,
+    "team": "football",
+    "x": 37.95,
+    "y": 24.02,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 14,
+    "team": "football",
+    "x": 37.3,
+    "y": 24.04,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 15,
+    "team": "football",
+    "x": 36.97,
+    "y": 24.03,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 16,
+    "team": "football",
+    "x": 36.51,
+    "y": 24.04,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 17,
+    "team": "football",
+    "x": 36.26,
+    "y": 23.99,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 18,
+    "team": "football",
+    "x": 35.98,
+    "y": 23.99,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 19,
+    "team": "football",
+    "x": 35.72,
+    "y": 23.9,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 20,
+    "team": "football",
+    "x": 35.55,
+    "y": 23.9,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 21,
+    "team": "football",
+    "x": 35.35,
+    "y": 23.82,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 22,
+    "team": "football",
+    "x": 35.26,
+    "y": 23.81,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 23,
+    "team": "football",
+    "x": 35.09,
+    "y": 23.74,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 24,
+    "team": "football",
+    "x": 35.04,
+    "y": 23.73,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 25,
+    "team": "football",
+    "x": 34.88,
+    "y": 23.66,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 26,
+    "team": "football",
+    "x": 34.85,
+    "y": 23.66,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 27,
+    "team": "football",
+    "x": 34.83,
+    "y": 23.66,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 28,
+    "team": "football",
+    "x": 34.61,
+    "y": 23.56,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 29,
+    "team": "football",
+    "x": 34.35,
+    "y": 23.4,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 30,
+    "team": "football",
+    "x": 34.35,
+    "y": 23.4,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 31,
+    "team": "football",
+    "x": 34.02,
+    "y": 23.02,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 32,
+    "team": "football",
+    "x": 33.52,
+    "y": 22.33,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 33,
+    "team": "football",
+    "x": 33.45,
+    "y": 22.25,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 34,
+    "team": "football",
+    "x": 33.4,
+    "y": 22.05,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 35,
+    "team": "football",
+    "x": 33.4,
+    "y": 22.07,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 36,
+    "team": "football",
+    "x": 33.38,
+    "y": 22.02,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 37,
+    "team": "football",
+    "x": 33.34,
+    "y": 21.96,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 38,
+    "team": "football",
+    "x": 33.3,
+    "y": 21.88,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 39,
+    "team": "football",
+    "x": 33.25,
+    "y": 21.79,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 40,
+    "team": "football",
+    "x": 36.55,
+    "y": 19.21,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 41,
+    "team": "football",
+    "x": 37.77,
+    "y": 18.49,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 42,
+    "team": "football",
+    "x": 38.91,
+    "y": 17.79,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  },
+  {
+    "frameId": 43,
+    "team": "football",
+    "x": 40.07,
+    "y": 17.08,
+    "nflId": "",
+    "displayName": "football",
+    "officialPosition": "",
+    "pff_role": ""
+  }
+]
