@@ -1,0 +1,124 @@
+{
+  "width": 600,
+  "height": 300,
+  "view": {"fill": "#00b140"},
+  "padding": 20,
+  "title": {
+    "text": "GameId: 2021090900, PlayId: 97",
+    "subtitle": "13:33 Q1",
+    "subtitleColor": "#3a3b3c",
+    "fontSize": 20
+  },
+  "config": {"axis": {"grid": false}},
+  "encoding": {
+    "x": {"field": "x", "type": "quantitative", "axis": false},
+    "y": {"field": "y", "type": "quantitative", "axis": false}
+  },
+  "layer": [
+    {
+      "data": {
+        "values": [
+          {"x": 10, "y": 0, "y2": 50, "value": ""},
+          {"x": 15, "y": 0, "y2": 50, "value": ""},
+          {"x": 20, "y": 0, "y2": 50, "value": "1 0"},
+          {"x": 25, "y": 0, "y2": 50, "value": ""},
+          {"x": 30, "y": 0, "y2": 50, "value": "2 0"},
+          {"x": 35, "y": 0, "y2": 50, "value": ""},
+          {"x": 40, "y": 0, "y2": 50, "value": "3 0"},
+          {"x": 45, "y": 0, "y2": 50, "value": ""},
+          {"x": 50, "y": 0, "y2": 50, "value": "4 0"},
+          {"x": 55, "y": 0, "y2": 50, "value": ""},
+          {"x": 60, "y": 0, "y2": 50, "value": "5 0"},
+          {"x": 65, "y": 0, "y2": 50, "value": ""},
+          {"x": 70, "y": 0, "y2": 50, "value": "4 0"},
+          {"x": 75, "y": 0, "y2": 50, "value": ""},
+          {"x": 80, "y": 0, "y2": 50, "value": "3 0"},
+          {"x": 85, "y": 0, "y2": 50, "value": ""},
+          {"x": 90, "y": 0, "y2": 50, "value": "2 0"},
+          {"x": 95, "y": 0, "y2": 50, "value": ""},
+          {"x": 100, "y": 0, "y2": 50, "value": "1 0"},
+          {"x": 105, "y": 0, "y2": 50, "value": ""},
+          {"x": 110, "y": 0, "y2": 50, "value": ""},
+          {"x": 115, "y": 0, "y2": 50, "value": ""},
+          {"x": 120, "y": 0, "y2": 50, "value": ""}
+        ]
+      },
+      "encoding": {
+        "opacity": {
+          "condition": {"test": "datum['x'] > 110", "value": 0},
+          "value": 1
+        }
+      },
+      "layer": [
+        {
+          "mark": {"type": "rule", "stroke": "white", "strokeWidth": 1},
+          "encoding": {"y2": {"field": "y2", "type": "quantitative"}}
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 20,
+            "align": "center",
+            "fill": "#ddd",
+            "dy": -20
+          },
+          "encoding": {"text": {"field": "value"}}
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 20,
+            "align": "center",
+            "fill": "#ddd",
+            "dy": -275
+          },
+          "encoding": {"text": {"field": "value"}}
+        }
+      ]
+    },
+    {
+      "data": {
+        "url": "https://gist.githubusercontent.com/MufaroMakiwa/0665dd095b7de4686fef6120e4bfc342/raw/f617ecc1f3c2f3761db33b15aff05e5410cbe125/nil_play_2021090900_97.json"
+      },
+      "mark": "circle",
+      "params": [
+        {
+          "name": "frameId",
+          "select": {"type": "point", "on": "timer"},
+          "bind": {"input": "range", "min": 1, "max": 43, "step": 1}
+        },
+        {
+          "name": "pts",
+          "select": {"type": "point", "on": "mouseover", "fields": ["nflId"]}
+        }
+      ],
+      "transform": [
+        {"filter": {"param": "frameId"}},
+        {"sort": [{"field": "frameId", "order": "ascending"}]}
+      ],
+      "encoding": {
+        "color": {
+          "field": "team",
+          "title": null,
+          "scale": {"range": ["blue", "red", "orange"]},
+          "legend": {"offset": 30}
+        },
+        "tooltip": [
+          {"field": "nflId", "type": "nominal", "title": "NFL ID"},
+          {"field": "displayName", "type": "nominal", "title": "PLAYER NAME"},
+          {"field": "officialPosition", "type": "nominal", "title": "POSITION"},
+          {"field": "pff_role", "type": "nominal", "title": "ROLE"}
+        ],
+        "size": {
+          "condition": {"param": "pts", "value": 150, "empty": false},
+          "value": 30
+        },
+        "time": {
+          "field": "frameId",
+          "scale": {"range": [0, 5000]},
+          "key": {"field": "nflId"}
+        }
+      }
+    }
+  ]
+}
